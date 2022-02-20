@@ -58,6 +58,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Tower_RotateRight",
+                    "type": "Button",
+                    "id": "800511be-cd3d-4153-b07d-e46f77f4f562",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -168,6 +177,17 @@
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "RotateDrag",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7ca40b9c-bdc1-47c6-81d5-1183d6728213",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Tower_RotateRight",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

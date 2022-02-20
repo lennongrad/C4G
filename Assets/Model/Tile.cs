@@ -3,19 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class Tile{
+public class Tile {
     public enum TileType { Floor, Wall, Raised, Barrier, Entrance, Exit };
-    public enum TileDirection { None = -1, Left = 0, Up = 90, Right = 180, Down = 270 };
+
+    [Flags] public enum TileDirection {
+        None = 0,
+        Left = 1 << 0,
+        Up = 1 << 1,
+        Right = 1 << 2,
+        Down = 1 << 3,
+    };
+
     static public Dictionary<TileDirection, TileDirection> InverseDirection = new Dictionary<TileDirection, TileDirection>()
     {
         {TileDirection.Left, TileDirection.Right }, {TileDirection.Up, TileDirection.Down }, {TileDirection.Right, TileDirection.Left }, {TileDirection.Down, TileDirection.Up }
     };
 
     Action<Tile> cbTypeChanged;
-    Action<Tile> cbDirectionChanged;
+    Action<Tile> cbDirectionsChanged;
 
     TileType type = TileType.Floor;
-    public TileType Type{
+    public TileType Type {
         get
         {
             return type;
@@ -28,42 +36,49 @@ public class Tile{
         }
     }
 
-    TileDirection direction = TileDirection.None;
-    public TileDirection Direction
+    (TileDirection from, TileDirection to) directions = (TileDirection.None, TileDirection.None);
+    public (TileDirection from, TileDirection to) Directions
     {
         get
         {
-            return direction;
+            return directions;
         }
 
         set
         {
-            direction = value;
-            cbDirectionChanged(this);
+            directions = value;
+            cbDirectionsChanged(this);
         }
     }
 
     public Dictionary<TileDirection, Tile> neighbors;
-
-    // for debug
-    public void printneighbors()
-    {
-        foreach (KeyValuePair<TileDirection, Tile> kvp in neighbors)
-        {
-            Debug.Log(kvp.Key + ": " + kvp.Value);
-        }
-    }
-
-    Tower tower;
+    public Tower presentTower;
 
     World world;
     int x;
     int y;
+    float collisionWidth = 1f;
+    float collisionHeight = 1f;
+    Rect collisionRect;
+    public Rect CollisionRect
+    {
+        get
+        {
+            return collisionRect;
+        }
+    }
 
     public Tile(World world, int x, int y){
         this.world = world;
         this.x = x;
         this.y = y;
+
+        collisionRect = new Rect(GetPosition().x - collisionWidth / 2, GetPosition().y - collisionHeight / 2, collisionWidth, collisionHeight);
+    }
+
+    public Vector2 GetPosition()
+    {
+        return new Vector2(-x + world.Width / 2 - (float)(1 - world.Width % 2) / 2, y - world.Height / 2 + (float)(1 - world.Height % 2) / 2);
     }
 
     public void RegisterTypeChangedCB(Action<Tile> cb)
@@ -71,8 +86,8 @@ public class Tile{
         cbTypeChanged += cb;
     }
 
-    public void RegisterDirectionChangedCB(Action<Tile> cb)
+    public void RegisterDirectionsChangedCB(Action<Tile> cb)
     {
-        cbDirectionChanged += cb;
+        cbDirectionsChanged += cb;
     }
 }

@@ -3,13 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class Tower
+public class Projectile
 {
-    Action<Tower> cbPositionChanged;
-    Action<Tower> cbRotationChanged;
-    Action<Tower, Projectile> cbProjectileReleased;
 
-    Tile parentTile = null;
+    Action<Projectile> cbPositionChanged;
+    Action<Projectile> cbRotationChanged;
+    Action<Projectile> cbDespawned;
+
+    float collisionWidth = .25f;
+    float collisionHeight = .25f;
+    Rect collisionRect;
+    public Rect CollisionRect
+    {
+        get
+        {
+            return collisionRect;
+        }
+    }
 
     Vector2 position = new Vector2(0f, 0f);
     public Vector2 Position
@@ -22,6 +32,9 @@ public class Tower
         set
         {
             position = value;
+            collisionRect.x = value.x - collisionWidth / 2;
+            collisionRect.y = value.y - collisionHeight / 2;
+
             cbPositionChanged(this);
         }
     }
@@ -54,16 +67,15 @@ public class Tower
         }
     }
 
-    public Tower(Tile spawnTile, Tile.TileDirection direction)
+    public Projectile(Tile spawnTile, Tile.TileDirection direction)
     {
-        this.parentTile = spawnTile;
-        FacingDirection = direction;
+        position = spawnTile.GetPosition();
+        FacingDirection = direction; 
+        collisionRect = new Rect(0, 0, collisionWidth, collisionHeight);
     }
 
-    int timer = 70;
     public void LogicTick()
     {
-        Position = parentTile.GetPosition();
         switch (facingDirection)
         {
             case Tile.TileDirection.Left: RotationAngle = 0f; break;
@@ -72,25 +84,24 @@ public class Tower
             case Tile.TileDirection.Down: RotationAngle = 270f; break;
         }
 
-        timer += 1;
-        if(timer > 100)
-        {
-            timer = 0;
-            Projectile newProjectile = new Projectile(parentTile, facingDirection);
-            cbProjectileReleased(this, newProjectile);
-        }
+        Position = Position + Vector2.right.Rotated(-rotationAngle) * .1f;
     }
 
-    public void RegisterPositionChangedCB(Action<Tower> cb)
+    public void Despawn()
+    {
+        cbDespawned(this);
+    }
+
+    public void RegisterPositionChangedCB(Action<Projectile> cb)
     {
         cbPositionChanged += cb;
     }
-    public void RegisterRotationChangedCB(Action<Tower> cb)
+    public void RegisterRotationChangedCB(Action<Projectile> cb)
     {
         cbRotationChanged += cb;
     }
-    public void RegisterProjectileReleasedCB(Action<Tower, Projectile> cb)
+    public void RegisterDespawnedCB(Action<Projectile> cb)
     {
-        cbProjectileReleased += cb;
+        cbDespawned += cb;
     }
 }

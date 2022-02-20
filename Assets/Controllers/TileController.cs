@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class TileController : MonoBehaviour
 {
@@ -9,7 +10,9 @@ public class TileController : MonoBehaviour
     Color baseColor;
 
     public GameObject cube;
-    public GameObject arrow;
+    public GameObject directionsDisplay;
+    public Material cornerMaterial;
+    public Material acrossMaterial;
     bool hovered = false;
 
     const float wallHeight = 1.522f;
@@ -19,6 +22,8 @@ public class TileController : MonoBehaviour
 
     public int x;
     public int y;
+
+    Action<TileController> cbHovered;
 
     // Start is called before the first frame update
     void Start()
@@ -63,7 +68,7 @@ public class TileController : MonoBehaviour
 
         cube.transform.localScale = new Vector3(1f, height, 1f); ;
         cube.transform.localPosition = new Vector3(0, height / 2, 0);
-        arrow.transform.localPosition = new Vector3(0, height + .01f, 0);
+        directionsDisplay.transform.localPosition = new Vector3(0, height + .001f, 0);
 
         if ((x + y) % 2 == 0)
         {
@@ -71,22 +76,53 @@ public class TileController : MonoBehaviour
         }
     }
 
-    public void SetDirection(Tile.TileDirection direction)
+    public void SetDirections((Tile.TileDirection from, Tile.TileDirection to) directions)
     {
-        if(direction != Tile.TileDirection.None)
+        if(directions.from == Tile.TileDirection.None || directions.to == Tile.TileDirection.None)
         {
-            arrow.transform.localEulerAngles = new Vector3(arrow.transform.localEulerAngles.x, (float)direction + 180f, arrow.transform.localEulerAngles.z);
-            arrow.SetActive(true);
+            directionsDisplay.SetActive(false);
         }
         else
         {
-            arrow.SetActive(false);
+            float baseRotation = 0f;
+
+            switch (directions.from | directions.to)
+            {
+                case Tile.TileDirection.Left | Tile.TileDirection.Right:
+                    baseRotation = 90f;
+                    directionsDisplay.GetComponent<Renderer>().material = acrossMaterial;
+                    break;
+                case Tile.TileDirection.Up | Tile.TileDirection.Down:
+                    baseRotation = 0f;
+                    directionsDisplay.GetComponent<Renderer>().material = acrossMaterial;
+                    break;
+                case Tile.TileDirection.Down | Tile.TileDirection.Left:
+                    baseRotation = 0f;
+                    directionsDisplay.GetComponent<Renderer>().material = cornerMaterial;
+                    break;
+                case Tile.TileDirection.Left | Tile.TileDirection.Up:
+                    baseRotation = 90f;
+                    directionsDisplay.GetComponent<Renderer>().material = cornerMaterial;
+                    break;
+                case Tile.TileDirection.Up | Tile.TileDirection.Right:
+                    baseRotation = 180f;
+                    directionsDisplay.GetComponent<Renderer>().material = cornerMaterial;
+                    break;
+                case Tile.TileDirection.Right | Tile.TileDirection.Down:
+                    baseRotation = 270f;
+                    directionsDisplay.GetComponent<Renderer>().material = cornerMaterial;
+                    break;
+            }
+
+            directionsDisplay.transform.localEulerAngles = new Vector3(directionsDisplay.transform.localEulerAngles.x, baseRotation, directionsDisplay.transform.localEulerAngles.z);
+            directionsDisplay.SetActive(true);
         }
     }
 
     public void Hover()
     {
         hovered = true;
+        cbHovered(this);
     }
 
     // Update is called once per frame
@@ -102,5 +138,10 @@ public class TileController : MonoBehaviour
             cubeMaterial.color = baseColor;
         }
         hovered = false;
+    }
+
+    public void RegisterHoveredCB(Action<TileController> cb)
+    {
+        cbHovered += cb;
     }
 }

@@ -141,7 +141,7 @@ public class CameraController : MonoBehaviour
     {
         if(tileHovered != null)
         {
-            worldController.RandomizePaths();
+            worldController.Click(tileHovered);
         }
     }
 
