@@ -655,7 +655,7 @@ MonoBehaviour:
   enemyPrefab: {fileID: 2976261093610815630, guid: e6890087b6ffbd5409a767f186086141, type: 3}
   towerPrefab: {fileID: 1820236534691553018, guid: f59e3ea2126e75b4ba167962b745df6b, type: 3}
   projectilePrefab: {fileID: 122478342928279008, guid: f850750258766744d97cda29aae63098, type: 3}
-  stageData: {fileID: 11400000, guid: e8e88bc2930503f4f8a18245659aba92, type: 2}
+  stageData: {fileID: 0}
   minimapCamera: {fileID: 519495948}
   cameraController: {fileID: 1853594730}
   minimapBorder: {fileID: 1132138406}

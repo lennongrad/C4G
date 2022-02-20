@@ -3,62 +3,85 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+/// <summary>
+///     The class that manages all of the inner game logic, including passing along LogicTick() calls.
+/// </summary>
 public class World {
     Tile[,] tiles;
     StageData stageData;
+    List<Tile> entrances = new List<Tile>();
+    List<Tile> exits = new List<Tile>();
+
     List<Enemy> activeEnemies = new List<Enemy>();
     List<Tower> activeTowers = new List<Tower>();
     List<Tile> activeEntrances = new List<Tile>();
     List<Projectile> activeProjectiles = new List<Projectile>();
 
-    List<Tile> entrances = new List<Tile>();
-    List<Tile> exits = new List<Tile>();
-
+    /// <summary>
+    /// Projectiles that will get despawned at the end of each LogicTick()
+    /// </summary>
     List<Projectile> projectilesToDespawn = new List<Projectile>();
+    /// <summary>
+    /// Enemies that will get despawned at the end of each LogicTick()
+    /// </summary>
     List<Enemy> enemiesToDespawn = new List<Enemy>();
 
-    int width;
-    public int Width{
+    /// <summary>
+    /// Public accessor for the width by tiles of the stage.
+    /// </summary>
+    public int Width
+    {
         get
         {
-            return width;
+            return stageData.Width;
         }
     }
 
-    int height;
-    public int Height{
+    /// <summary>
+    /// Public accessor for the height by tiles of the stage.
+    /// </summary>
+    public int Height
+    {
         get
         {
-            return height;
+            return stageData.Height;
         }
     }
 
+    /// <summary>
+    /// Functions that are called when the world spawns a new enemy.
+    /// </summary>
     Action<Enemy> cbEnemySpawn;
+    /// <summary>
+    /// Functions that are called when the world spawns a new tower.
+    /// </summary>
     Action<Tower> cbTowerSpawn;
 
     public World(StageData stageData){
         this.stageData = stageData;
-        width = stageData.layout[0].tiles.Length;
-        height = stageData.layout.Length;
 
-        tiles = new Tile[width, height];
+        tiles = new Tile[stageData.Width, stageData.Height];
 
-        for(int x = 0; x < width; x++)
+        for(int x = 0; x < stageData.Width; x++)
         {
-            for(int y = 0; y < height; y++)
+            for(int y = 0; y < stageData.Height; y++)
             {
                 tiles[x, y] = new Tile(this, x, y);
             }
         }
     }
 
+    /// <summary>
+    /// A second initializer that sets up the values of all the tiles once their game objects have been created
+    /// Have to wait to make visual objects before their callbacks can be registered and changes recognized
+    /// </summary>
     public void SetWorld()
     {
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < stageData.Width; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < stageData.Height; y++)
             {
-                tiles[x, y].Type = stageData.layout[y].tiles[x];
+                tiles[x, y].Type = stageData.Layout[y].tiles[x];
                 tiles[x, y].Directions = (Tile.TileDirection.None, Tile.TileDirection.None);
 
                 if (tiles[x, y].Type == Tile.TileType.Entrance)
@@ -69,11 +92,11 @@ public class World {
                 Dictionary<Tile.TileDirection, Tile> neighbors = new Dictionary<Tile.TileDirection, Tile>();
                 if (x != 0)
                     neighbors[Tile.TileDirection.Left] = tiles[x - 1, y];
-                if (x != width - 1)
+                if (x != stageData.Width - 1)
                     neighbors[Tile.TileDirection.Right] = tiles[x + 1, y];
                 if (y != 0)
                     neighbors[Tile.TileDirection.Up] = tiles[x, y - 1];
-                if (y != height - 1)
+                if (y != stageData.Height - 1)
                     neighbors[Tile.TileDirection.Down] = tiles[x, y + 1];
 
                 tiles[x, y].neighbors = neighbors;
@@ -83,6 +106,9 @@ public class World {
         RandomizePaths();
     }
 
+    /// <summary>
+    /// Sets the enemy travel paths at random. Always tries to make exactly three paths. Uses GeneratePath().
+    /// </summary>
     public void RandomizePaths()
     {
         int totalSuccesses = 0;
@@ -91,9 +117,9 @@ public class World {
         while (totalSuccesses != 3 && totalAttempts < 50)
         {
             totalSuccesses = 0;
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < stageData.Width; x++)
             {
-                for (int y = 0; y < height; y++)
+                for (int y = 0; y < stageData.Height; y++)
                 {
                     tiles[x, y].Directions = (Tile.TileDirection.None, Tile.TileDirection.None);
                 }
@@ -111,9 +137,9 @@ public class World {
         }
 
         activeEntrances.Clear();
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < stageData.Width; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < stageData.Height; y++)
             {
                 if(tiles[x,y].Type == Tile.TileType.Entrance && tiles[x,y].Directions.to != Tile.TileDirection.None)
                 {
@@ -123,6 +149,10 @@ public class World {
         }
     }
 
+    /// <summary>
+    /// Create one enemy walking path for RandomizePath().
+    /// </summary>
+    /// <returns></returns>
     private bool GeneratePath()
     { 
         Tile entrance = entrances[UnityEngine.Random.Range(0, entrances.Count)];
@@ -147,7 +177,6 @@ public class World {
         {
             Tile nextTile = queue.Dequeue();
             List<Tile.TileDirection> keys = new List<Tile.TileDirection>(nextTile.neighbors.Keys);
-            keys = ShuffleList<Tile.TileDirection>(keys);
 
             foreach (Tile.TileDirection direction in keys)
             {
@@ -202,61 +231,10 @@ public class World {
         }
     }
 
-    List<T> ShuffleList<T>(List<T> inputList)
-    {
-        for (int i = 0; i < inputList.Count - 1; i++)
-        {
-            T temp = inputList[i];
-            int rand = UnityEngine.Random.Range(i, inputList.Count);
-            inputList[i] = inputList[rand];
-            inputList[rand] = temp;
-        }
-        return inputList;
-    }
-
-    public void RandomizeTiles()
-    {
-        for(int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                if (UnityEngine.Random.Range(0, 2) == 0)
-                {
-                    // mostly flat tiles
-                    GetTileAt(x, y).Type = Tile.TileType.Floor;
-
-                    // but at the edges, possible change to entrances/exits or wall if corner
-                    if ((x == 0 || x == width - 1) && (y == 0 || y == height - 1))
-                    {
-                        // at corner
-                        GetTileAt(x, y).Type = Tile.TileType.Wall;
-                    }
-                    else if (x == 0 || y == 0)
-                    {
-                        GetTileAt(x, y).Type = Tile.TileType.Entrance;
-                    }
-                    else if (x == width - 1 || y == height - 1)
-                    {
-                        GetTileAt(x, y).Type = Tile.TileType.Exit;
-                    }
-                }
-                else
-                {
-                    // tall tile
-                    if (UnityEngine.Random.Range(0, 2) == 0 || (x == 0 || x == width - 1) && (y == 0 || y == height - 1))
-                    {
-                        GetTileAt(x, y).Type = Tile.TileType.Wall;
-                    }
-                    else
-                    {
-                        GetTileAt(x, y).Type = Tile.TileType.Barrier;
-                    }
-                }
-            }
-        }
-    }
-
     int enemySpawnTimer = 90; // debug
+    /// <summary>
+    /// Called once per physics update call to WorldController, propogates to all other logical objects
+    /// </summary>
     public void LogicTick()
     {
         enemySpawnTimer += 1;
@@ -289,13 +267,14 @@ public class World {
         activeEnemies.RemoveAll(x => enemiesToDespawn.Contains(x));
         enemiesToDespawn = new List<Enemy>();
     }
-
-    bool IsInBounds(Vector2 position)
-    {
-        return !(position.x < -10 || position.x > 10 || position.y < -10 || position.y > 10);
-    }
-
+    
     List<Tile.TileType> canPlaceTiles = new List<Tile.TileType>() { Tile.TileType.Floor, Tile.TileType.Raised }; // temporary, will probably be per tower type
+    /// <summary>
+    /// Registers a click to place a tower. Probably debug
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="direction">The direction the tower should be facing</param>
     public void Click(int x, int y, Tile.TileDirection direction)
     {
         if(GetTileAt(x,y) != null && canPlaceTiles.Contains(GetTileAt(x, y).Type) && GetTileAt(x,y).presentTower == null)
@@ -304,6 +283,10 @@ public class World {
         }
     }
 
+    /// <summary>
+    /// Spawns a new enemy at a certain entrance
+    /// </summary>
+    /// <param name="entrance">The entrance the enemy will walk out of</param>
     public void EnemySpawn(Tile entrance)
     {
         Enemy newEnemy = new Enemy(entrance);
@@ -312,6 +295,11 @@ public class World {
         newEnemy.RegisterDespawnedCB((enemy) => { enemiesToDespawn.Add(enemy); });
     }
 
+    /// <summary>
+    /// Creates a new tower at a certain tile
+    /// </summary>
+    /// <param name="parentTile">The tile that tower rests on</param>
+    /// <param name="direction">The direction the tower should be facing</param>
     public void TowerSpawn(Tile parentTile, Tile.TileDirection direction)
     {
         Tower newTower = new Tower(parentTile, direction);
@@ -321,6 +309,10 @@ public class World {
         newTower.RegisterProjectileReleasedCB((tower, projectile) => { ProjectileSpawn(projectile); });
     }
 
+    /// <summary>
+    /// Callback function called when a projectile is spanwed
+    /// </summary>
+    /// <param name="newProjectile">The projectile being spawned</param>
     void ProjectileSpawn(Projectile newProjectile)
     {
         activeProjectiles.Add(newProjectile);
@@ -328,12 +320,15 @@ public class World {
         newProjectile.RegisterDespawnedCB((projectile) => { projectilesToDespawn.Add(projectile); });
     }
 
+    /// <summary>
+    /// Called whenever a projectile moves to determine if it should collide with anything
+    /// </summary>
     void ProjectileCollisionCheck(Projectile projectile)
     {
         bool inBounds = false;
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < stageData.Width; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < stageData.Height; y++)
             {
                 if (tiles[x, y].CollisionRect.Overlaps(projectile.CollisionRect))
                 {
@@ -357,8 +352,14 @@ public class World {
             projectile.Despawn();
     }
 
+    /// <summary>
+    /// Checks if a tile is in bound then returns it if it is
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
     public Tile GetTileAt(int x, int y){
-        if(x < 0 || x > width || y < 0 || y > height)
+        if(x < 0 || x > stageData.Width || y < 0 || y > stageData.Height)
         {
             Debug.LogError("Tile (" + x + ", " + y + ") is out of range.");
             return null;
@@ -366,11 +367,26 @@ public class World {
         return tiles[x, y];
     }
 
+    /// <summary>
+    /// Gets the physical position of the middle of a tile off of its x/y coordinates
+    /// </summary>
+    public Vector2 GetTilePosition(int x, int y)
+    {
+        return new Vector2(-x + stageData.Width / 2 - (float)(1 - stageData.Width % 2) / 2, y - stageData.Height / 2 + (float)(1 - stageData.Height % 2) / 2);
+    }
+
+    /// <summary>
+    /// Registers a new function to be called when an enemy spawns
+    /// </summary>
     public void RegisterEnemySpawnCB(Action<Enemy> cb)
     {
         cbEnemySpawn += cb;
     }
 
+    /// <summary>
+    /// Register a new function to be called when a tower spawns
+    /// </summary>
+    /// <param name="cb"></param>
     public void RegisterTowerSpawnCB(Action<Tower> cb)
     {
         cbTowerSpawn += cb;

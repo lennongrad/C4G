@@ -78,7 +78,7 @@ public class Tile {
 
     public Vector2 GetPosition()
     {
-        return new Vector2(-x + world.Width / 2 - (float)(1 - world.Width % 2) / 2, y - world.Height / 2 + (float)(1 - world.Height % 2) / 2);
+        return world.GetTilePosition(x, y);
     }
 
     public void RegisterTypeChangedCB(Action<Tile> cb)

@@ -92,17 +92,17 @@ public class StageGenerator : EditorWindow
         {
             string path = AssetDatabase.GUIDToAssetPath(result[0]);
             StageData loadedData = (StageData)AssetDatabase.LoadAssetAtPath(path, typeof(StageData));
-            stageTitle = loadedData.stageTitle;
+            stageTitle = loadedData.StageTitle;
 
-            if(loadedData.layout.Length != 0)
+            if(loadedData.Layout.Length != 0)
             {
-                stageDimensions.y = loadedData.layout.Length;
-                stageDimensions.x = loadedData.layout[0].tiles.Length;
+                stageDimensions.y = loadedData.Layout.Length;
+                stageDimensions.x = loadedData.Layout[0].tiles.Length;
                 for (int y = 0; y < stageDimensions.y; y++)
                 {
                     for (int x = 0; x < stageDimensions.x; x++)
                     {
-                        tiles[x,y] = loadedData.layout[y].tiles[x];
+                        tiles[x,y] = loadedData.Layout[y].tiles[x];
                     }
                 }
             }
@@ -124,9 +124,9 @@ public class StageGenerator : EditorWindow
     {
         StageData stageData = CreateInstance<StageData>();
 
-        stageData.stageTitle = stageTitle;
+        stageData.StageTitle = stageTitle;
 
-        stageData.layout = new StageLayout[stageDimensions.y];
+        stageData.Layout = new StageLayout[stageDimensions.y];
         for (int y = 0; y < stageDimensions.y; y++)
         {
             Tile.TileType[] row = new Tile.TileType[stageDimensions.x];
@@ -134,8 +134,11 @@ public class StageGenerator : EditorWindow
             {
                 row[x] = tiles[x, y];
             }
-            stageData.layout[y] = new StageLayout(row);
+            stageData.Layout[y] = new StageLayout(row);
         }
+
+        stageData.Width = stageData.Layout[0].tiles.Length;
+        stageData.Height = stageData.Layout.Length;
 
         string fileName = stagePath + stageName + ".asset";
         AssetDatabase.CreateAsset(stageData, fileName);
