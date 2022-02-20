@@ -77,9 +77,9 @@ public class WorldController : MonoBehaviour
         minimapCamera.orthographicSize = Mathf.Min(minimapWidth, minimapHeight) / 24;
 
         // preload a bunch of prefabs
-        SimplePool.Preload(projectilePrefab, 60);
-        SimplePool.Preload(enemyPrefab, 20);
-        SimplePool.Preload(towerPrefab, 20);
+        SimplePool.Preload(projectilePrefab, 60, this.transform);
+        SimplePool.Preload(enemyPrefab, 20, this.transform);
+        SimplePool.Preload(towerPrefab, 20, this.transform);
     }
 
     // Update is called once per frame
@@ -102,6 +102,7 @@ public class WorldController : MonoBehaviour
 
         enemyObject.transform.parent = this.transform;
         newEnemy.RegisterPositionChangedCB((enemy) => { enemyController.SetPosition(enemy.Position); });
+        newEnemy.RegisterDespawnedCB((enemy) => { SimplePool.Despawn(enemyObject); });
     }
 
     void TowerSpawn(Tower newTower)

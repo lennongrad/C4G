@@ -22,7 +22,9 @@ public class Tower
         set
         {
             position = value;
-            cbPositionChanged(this);
+
+            if(cbPositionChanged != null)
+                cbPositionChanged(this);
         }
     }
 
@@ -36,7 +38,9 @@ public class Tower
         set
         {
             rotationAngle = value;
-            cbRotationChanged(this);
+
+            if(cbRotationChanged != null)
+                cbRotationChanged(this);
         }
     }
 

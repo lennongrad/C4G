@@ -164,7 +164,7 @@ public static class SimplePool
     /// Spawn/Despawn sequence is going to be pretty darn quick and
     /// this avoids code duplication.
     /// </summary>
-    static public void Preload(GameObject prefab, int qty = 1)
+    static public void Preload(GameObject prefab, int qty = 1, Transform parent = null)
     {
         Init(prefab, qty);
 
@@ -173,6 +173,8 @@ public static class SimplePool
         for (int i = 0; i < qty; i++)
         {
             obs[i] = Spawn(prefab, Vector3.zero, Quaternion.identity);
+            if (parent != null)
+                obs[i].transform.parent = parent;
         }
 
         // Now despawn them all.

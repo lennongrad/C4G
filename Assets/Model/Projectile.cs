@@ -35,7 +35,8 @@ public class Projectile
             collisionRect.x = value.x - collisionWidth / 2;
             collisionRect.y = value.y - collisionHeight / 2;
 
-            cbPositionChanged(this);
+            if (cbPositionChanged != null)
+                cbPositionChanged(this);
         }
     }
 
@@ -49,7 +50,9 @@ public class Projectile
         set
         {
             rotationAngle = value;
-            cbRotationChanged(this);
+
+            if(cbRotationChanged != null)
+                cbRotationChanged(this);
         }
     }
 
@@ -66,6 +69,8 @@ public class Projectile
             facingDirection = value;
         }
     }
+
+    public bool NotDespawned = true;
 
     public Projectile(Tile spawnTile, Tile.TileDirection direction)
     {
@@ -89,7 +94,11 @@ public class Projectile
 
     public void Despawn()
     {
-        cbDespawned(this);
+        if(cbDespawned != null && NotDespawned)
+        {
+            cbDespawned(this);
+            NotDespawned = false;
+        }
     }
 
     public void RegisterPositionChangedCB(Action<Projectile> cb)

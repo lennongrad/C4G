@@ -14,6 +14,9 @@ public class World {
     List<Tile> entrances = new List<Tile>();
     List<Tile> exits = new List<Tile>();
 
+    List<Projectile> projectilesToDespawn = new List<Projectile>();
+    List<Enemy> enemiesToDespawn = new List<Enemy>();
+
     int width;
     public int Width{
         get
@@ -254,8 +257,6 @@ public class World {
     }
 
     int enemySpawnTimer = 90; // debug
-    List<Projectile> projectilesToDespawn = new List<Projectile>();
-    int logicTimer = 0;
     public void LogicTick()
     {
         enemySpawnTimer += 1;
@@ -284,7 +285,9 @@ public class World {
         }
 
         activeProjectiles.RemoveAll(x => projectilesToDespawn.Contains(x));
-        projectilesToDespawn = new List<Projectile>(); 
+        projectilesToDespawn = new List<Projectile>();
+        activeEnemies.RemoveAll(x => enemiesToDespawn.Contains(x));
+        enemiesToDespawn = new List<Enemy>();
     }
 
     bool IsInBounds(Vector2 position)
@@ -306,6 +309,7 @@ public class World {
         Enemy newEnemy = new Enemy(entrance);
         activeEnemies.Add(newEnemy);
         cbEnemySpawn(newEnemy);
+        newEnemy.RegisterDespawnedCB((enemy) => { enemiesToDespawn.Add(enemy); });
     }
 
     public void TowerSpawn(Tile parentTile, Tile.TileDirection direction)
@@ -321,36 +325,36 @@ public class World {
     {
         activeProjectiles.Add(newProjectile);
         newProjectile.RegisterPositionChangedCB(ProjectileCollisionCheck);
+        newProjectile.RegisterDespawnedCB((projectile) => { projectilesToDespawn.Add(projectile); });
     }
 
     void ProjectileCollisionCheck(Projectile projectile)
     {
-        if (!IsInBounds(projectile.Position))
+        bool inBounds = false;
+        for (int x = 0; x < width; x++)
         {
-            DespawnProjectile(projectile);
-        }
-        else
-        {
-            for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
             {
-                for (int y = 0; y < height; y++)
+                if (tiles[x, y].CollisionRect.Overlaps(projectile.CollisionRect))
                 {
-                    if(tiles[x,y].Type == Tile.TileType.Wall)
-                    {
-                        if (tiles[x, y].CollisionRect.Overlaps(projectile.CollisionRect))
-                        {
-                            DespawnProjectile(projectile);
-                        }
-                    }
+                    if (tiles[x, y].Type == Tile.TileType.Wall)
+                        projectile.Despawn();
+                    inBounds = true;
                 }
             }
         }
-    }
 
-    void DespawnProjectile(Projectile projectile)
-    {
-        projectilesToDespawn.Add(projectile);
-        projectile.Despawn();
+        foreach(Enemy enemy in activeEnemies)
+        {
+            if(enemy.CollisionRect.Overlaps(projectile.CollisionRect))
+            {
+                projectile.Despawn();
+                enemy.ProjectileDamage(projectile);
+            }
+        }
+
+        if (!inBounds && projectile.NotDespawned)
+            projectile.Despawn();
     }
 
     public Tile GetTileAt(int x, int y){
