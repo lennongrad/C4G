@@ -1,12 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class TowerController : MonoBehaviour
 {
-    public GameObject cube;
+    public GameObject ProjectilePrefab;
 
+    public GameObject cube;
     Material defaultMaterial;
+
+    public TileController ParentTile = null;
+
+    Tile.TileDirection facingDirection = Tile.TileDirection.None;
+    public Tile.TileDirection FacingDirection
+    {
+        get
+        {
+            return facingDirection;
+        }
+
+        set
+        {
+            facingDirection = value;
+            this.RotateToFace(value);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -14,31 +33,34 @@ public class TowerController : MonoBehaviour
         defaultMaterial = cube.GetComponent<MeshRenderer>().material;
     }
 
+    int timer = 70;
     // Update is called once per frame
     void Update()
     {
-
-    }
-
-    public void SetPosition(Vector2 newPosition)
-    {
-        transform.position = new Vector3(newPosition.x, 0, newPosition.y);
-    } 
-
-    public void SetRotationByDirection(Tile.TileDirection facingDirection)
-    {
-        switch(facingDirection)
+        if(ParentTile != null)
         {
-            case Tile.TileDirection.Left: SetRotation(0f); break;
-            case Tile.TileDirection.Up: SetRotation(90f); break;
-            case Tile.TileDirection.Right: SetRotation(180f); break;
-            case Tile.TileDirection.Down: SetRotation(270f); break;
+            transform.position = ParentTile.transform.position;
+
+            timer += 1;
+            if (timer > 100)
+            {
+                timer = 0;
+                SpawnProjectile();
+            }
         }
     }
 
-    public void SetRotation(float newAngle)
+    void SpawnProjectile()
     {
-        transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, newAngle, transform.localEulerAngles.z);
+        float yPosition = 1f;
+
+        Vector3 projectilePosition = new Vector3(0f, yPosition, 0f);
+        GameObject projectileObject = SimplePool.Spawn(ProjectilePrefab, projectilePosition, Quaternion.identity);
+        ProjectileController projectileController = projectileObject.GetComponent<ProjectileController>();
+
+        projectileController.SetPosition(new Vector2(transform.position.x, transform.position.z));
+        projectileController.FacingDirection = facingDirection;
+        projectileController.yPosition = yPosition;
     }
 
     public void SetTransparent(bool isTransparent)
