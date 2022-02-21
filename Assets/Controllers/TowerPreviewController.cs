@@ -7,6 +7,7 @@ using System;
 public class TowerPreviewController : MonoBehaviour
 {
     public GameObject towerPrefab;
+    public GameObject projectilePrefab;
 
     GameObject previewTower;
 
@@ -15,8 +16,8 @@ public class TowerPreviewController : MonoBehaviour
 
     List<Tile.TileType> canPlaceTiles = new List<Tile.TileType>() { Tile.TileType.Floor, Tile.TileType.Raised }; // temporary, will probably be per tower type
 
-    Action<TileController, Tile.TileDirection> cbTowerSpawned;
-    public void RegisterTowerSpawnedCB(Action<TileController, Tile.TileDirection> cb) { cbTowerSpawned += cb; }
+    //Action<TileController, Tile.TileDirection> cbTowerSpawned;
+    //public void RegisterTowerSpawnedCB(Action<TileController, Tile.TileDirection> cb) { cbTowerSpawned += cb; }
 
     void Start()
     {
@@ -24,14 +25,31 @@ public class TowerPreviewController : MonoBehaviour
         previewTower.transform.parent = this.transform;
         previewTower.GetComponent<TowerController>().SetTransparent(true);
         previewTower.GetComponent<TowerController>().FacingDirection = previewDirection;
+
+        SimplePool.Preload(towerPrefab, 20, this.transform);
+        SimplePool.Preload(projectilePrefab, 20, this.transform);
     }
 
     void placeTower(TileController hoveredTile)
     {
         if (canPlaceTiles.Contains(hoveredTile.Type) && hoveredTile.PresentTower == null)
         {
-            cbTowerSpawned(hoveredTile, previewDirection);
+            towerSpawn(hoveredTile, previewDirection);
         }
+    }
+
+    void towerSpawn(TileController parentTile, Tile.TileDirection facingDirection)
+    {
+        Vector3 towerPosition = parentTile.transform.position;
+        GameObject towerObject = SimplePool.Spawn(towerPrefab, towerPosition, Quaternion.identity);
+        TowerController towerController = towerObject.GetComponent<TowerController>();
+
+        parentTile.PresentTower = towerController;
+        towerController.ParentTile = parentTile;
+        towerController.FacingDirection = facingDirection;
+        towerController.ProjectilePrefab = projectilePrefab;
+
+        towerObject.transform.parent = this.transform;
     }
 
     public void TileHovered(TileController tile)

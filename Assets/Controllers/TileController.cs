@@ -14,15 +14,12 @@ public class TileController : MonoBehaviour
     public Material acrossMaterial;
     bool hovered = false;
 
-    public WorldController World;
-
     const float wallHeight = 1.522f;
     const float barrierHeight = .75f;
     const float raisedHeight = .2f;
     const float floorHeight = .1f;
 
-    public int x;
-    public int y;
+    public bool parity = false;
 
     Action<TileController> cbHovered;
     public void RegisterHoveredCB(Action<TileController> cb){ cbHovered += cb; }
@@ -49,7 +46,7 @@ public class TileController : MonoBehaviour
         }
     }
 
-    public Dictionary<Tile.TileDirection, TileController> neighbors;
+    public Dictionary<Tile.TileDirection, TileController> neighbors = new Dictionary<Tile.TileDirection, TileController>();
     public TowerController PresentTower;
 
     // Start is called before the first frame update
@@ -111,7 +108,7 @@ public class TileController : MonoBehaviour
         cube.transform.localPosition = new Vector3(0, height / 2, 0);
         directionsDisplay.transform.localPosition = new Vector3(0, height + .001f, 0);
 
-        if ((x + y) % 2 == 0)
+        if (parity)
         {
             baseColor *= new Color(.8f, .8f, .8f);
         }
