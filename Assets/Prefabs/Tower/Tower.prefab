@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6421332404865393083}
   - component: {fileID: 7041861877160403108}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,10 +42,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1820236534691553018}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cde0e6f0002ce304087e97c64b389e16, type: 3}
+  m_Script: {fileID: 11500000, guid: c7fbb7a2c7d2903478abb1f6f7a66650, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ProjectilePrefab: {fileID: 122478342928279008, guid: f850750258766744d97cda29aae63098, type: 3}
   cube: {fileID: 6600753668476555265}
+  ParentTile: {fileID: 0}
 --- !u!1 &3448369053931172979
 GameObject:
   m_ObjectHideFlags: 0
@@ -57,7 +59,7 @@ GameObject:
   - component: {fileID: 4528268380077170074}
   - component: {fileID: 7315357336185543058}
   - component: {fileID: 2816867886689915358}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FrontIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,13 +73,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3448369053931172979}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.225, y: 1, z: 0}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 1, z: 0.227}
   m_LocalScale: {x: 0.05, y: 0.4, z: 0.4}
   m_Children: []
   m_Father: {fileID: 6421332404865393083}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &7315357336185543058
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -139,7 +141,7 @@ GameObject:
   - component: {fileID: 6367184540531158344}
   - component: {fileID: 2200581392869944844}
   - component: {fileID: 2557742382800542127}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

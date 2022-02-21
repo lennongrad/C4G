@@ -15,11 +15,7 @@ public class TowerController : MonoBehaviour
     Tile.TileDirection facingDirection = Tile.TileDirection.None;
     public Tile.TileDirection FacingDirection
     {
-        get
-        {
-            return facingDirection;
-        }
-
+        get { return facingDirection; }
         set
         {
             facingDirection = value;
@@ -35,7 +31,7 @@ public class TowerController : MonoBehaviour
 
     int timer = 70;
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if(ParentTile != null)
         {
@@ -58,9 +54,8 @@ public class TowerController : MonoBehaviour
         GameObject projectileObject = SimplePool.Spawn(ProjectilePrefab, projectilePosition, Quaternion.identity);
         ProjectileController projectileController = projectileObject.GetComponent<ProjectileController>();
 
-        projectileController.SetPosition(new Vector2(transform.position.x, transform.position.z));
+        projectileController.transform.position = new Vector3(transform.position.x, yPosition, transform.position.z);
         projectileController.FacingDirection = facingDirection;
-        projectileController.yPosition = yPosition;
     }
 
     public void SetTransparent(bool isTransparent)

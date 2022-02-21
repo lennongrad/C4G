@@ -24,17 +24,19 @@ public class EnemyController : MonoBehaviour
     float hp = 1;
 
     Action<EnemyController> cbDespawned;
-    public void RegisterDespawnedCB(Action<EnemyController> cb)
+    public void RegisterDespawnedCB(Action<EnemyController> cb){ cbDespawned += cb; }
+
+    void OnEnable()
     {
-        cbDespawned += cb;
+        hp = 1;
+        distance = 0f;
     }
 
     void Update()
     {
         if (Vector2.Distance(toTile.FlatPosition(), this.FlatPosition()) < .02f)
         {
-            fromTile = toTile;
-            toTile = null;
+            FromTile = toTile;
             distance = 0f;
         }
         else
@@ -49,8 +51,15 @@ public class EnemyController : MonoBehaviour
             cbDespawned(this);
     }
 
-    public void ProjectileDamage(ProjectileController projectile)
+    public void OnTriggerEnter(Collider trigger)
+    {
+        ProjectileController projectileHitBy = trigger.transform.parent.GetComponent<ProjectileController>();
+        projectileDamage(projectileHitBy);
+    }
+
+    void projectileDamage(ProjectileController projectile)
     {
         hp -= 2f;
+        projectile.HitEnemy();
     }
 }

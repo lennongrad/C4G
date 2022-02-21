@@ -23,8 +23,6 @@ public class CameraController : MonoBehaviour
     bool holdingPan;
     bool holdingRotate;
 
-    TileController tileHovered;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -32,7 +30,7 @@ public class CameraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         ClickDragUpdate();
         
@@ -112,15 +110,12 @@ public class CameraController : MonoBehaviour
     {
         RaycastHit hit;
         Ray ray = cameraObject.ScreenPointToRay(Mouse.current.position.ReadValue());
+        LayerMask mask = LayerMask.GetMask("Tile");
 
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
         {
-            tileHovered = hit.transform.parent.GetComponent<TileController>();
+            TileController tileHovered = hit.transform.parent.GetComponent<TileController>();
             tileHovered.Hover();
-        }
-        else
-        {
-            tileHovered = null;
         }
     }
 
@@ -134,15 +129,6 @@ public class CameraController : MonoBehaviour
     {
 
         return Mouse.current.position.ReadValue().x < 60 || Mouse.current.position.ReadValue().x > Screen.width - 60 || Mouse.current.position.ReadValue().y < 60 || Mouse.current.position.ReadValue().y > Screen.height - 60;
-    }
-
-    // called by input manager
-    void OnSelect(InputValue value)
-    {
-        if(tileHovered != null)
-        {
-            worldController.Click(tileHovered);
-        }
     }
 
     void OnPan(InputValue value)

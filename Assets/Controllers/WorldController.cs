@@ -15,6 +15,7 @@ public class WorldController : MonoBehaviour
 
     public Camera minimapCamera;
     public GameObject cameraController;
+    public GameObject towerPreviewController;
     public Image minimapBorder;
     public RawImage minimapImage;
 
@@ -23,18 +24,10 @@ public class WorldController : MonoBehaviour
     List<TileController> exits = new List<TileController>();
     public List<TileController> activeEntrances = new List<TileController>();
 
-    GameObject previewTower;
-    Tile.TileDirection previewDirection = Tile.TileDirection.Left;
-
     // Start is called before the first frame update
     void Start()
     {
-
         Tiles = new TileController[stageData.Width, stageData.Height];
-        // preview tower (will be elsewhere)
-        previewTower = (GameObject)Instantiate(towerPrefab, Vector3.zero, Quaternion.identity);
-        previewTower.transform.parent = this.transform;
-        previewTower.GetComponent<TowerController>().SetTransparent(true);
 
         // fill in tile objects
         for (int y = 0; y < stageData.Height; y++)
@@ -51,9 +44,7 @@ public class WorldController : MonoBehaviour
                 tile.name = "Tile_" + x + "_" + y;
                 tile.transform.parent = this.transform;
 
-                tile.RegisterHoveredCB((tileController) => {
-                    previewTower.GetComponent<TowerController>().transform.position = tile.transform.position;
-                });
+                tile.RegisterHoveredCB(towerPreviewController.GetComponent<TowerPreviewController>().TileHovered);
 
                 Tiles[x, y] = tile;
             }
@@ -77,6 +68,9 @@ public class WorldController : MonoBehaviour
         SimplePool.Preload(projectilePrefab, 60, this.transform);
         SimplePool.Preload(enemyPrefab, 20, this.transform);
         SimplePool.Preload(towerPrefab, 20, this.transform);
+
+        // connect with TowerPreviewController
+        towerPreviewController.GetComponent<TowerPreviewController>().RegisterTowerSpawnedCB(towerSpawn);
 
 
         for (int x = 0; x < stageData.Width; x++)
@@ -189,17 +183,17 @@ public class WorldController : MonoBehaviour
                 if (tile.Type == Tile.TileType.Exit)
                 {
                     stopSearching = true;
-                    fromDirection[tile] = Tile.InverseDirection[direction];
+                    fromDirection[tile] = direction.Inversed();
                     goalTile = tile;
                     path.Add(tile);
-                    goalTile.Directions = (Tile.InverseDirection[direction], direction);
+                    goalTile.Directions = (direction.Inversed(), direction);
                 }
                 else if (!visited.Contains(tile) && tile.Type == Tile.TileType.Floor && tile.Directions.from == Tile.TileDirection.None && UnityEngine.Random.Range(0, 5) != 0)
                 {
                     visited.Add(tile);
                     unvisited.Remove(tile);
                     queue.Enqueue(tile);
-                    fromDirection[tile] = Tile.InverseDirection[direction];
+                    fromDirection[tile] = direction.Inversed();
                 }
             }
         }
@@ -216,11 +210,11 @@ public class WorldController : MonoBehaviour
                 if (nextTile.Type == Tile.TileType.Entrance)
                 {
                     stopSearching = true;
-                    nextTile.Directions = (fromDirection[goalTile], Tile.InverseDirection[fromDirection[goalTile]]);
+                    nextTile.Directions = (fromDirection[goalTile], fromDirection[goalTile].Inversed());
                 }
                 else
                 {
-                    nextTile.Directions = (fromDirection[nextTile], Tile.InverseDirection[fromDirection[goalTile]]);
+                    nextTile.Directions = (fromDirection[nextTile], fromDirection[goalTile].Inversed());
                 }
 
                 goalTile = nextTile;
@@ -237,29 +231,20 @@ public class WorldController : MonoBehaviour
 
     int enemySpawnTimer = 90; // debug
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         enemySpawnTimer += 1;
         if (enemySpawnTimer > 100)
         {
-            if (enemies.Count < 1 && activeEntrances.Count != 0)
+            if (enemies.Count < 3 && activeEntrances.Count != 0)
             {
-                EnemySpawn(activeEntrances[UnityEngine.Random.Range(0, activeEntrances.Count)]);
+                enemySpawn(activeEntrances[UnityEngine.Random.Range(0, activeEntrances.Count)]);
             }
             enemySpawnTimer = 0;
         }
     }
 
-    List<Tile.TileType> canPlaceTiles = new List<Tile.TileType>() { Tile.TileType.Floor, Tile.TileType.Raised }; // temporary, will probably be per tower type
-    public void Click(TileController hoveredTile)
-    {
-        if (GetTileAt(hoveredTile.x, hoveredTile.y) != null && canPlaceTiles.Contains(GetTileAt(hoveredTile.x, hoveredTile.y).Type) && GetTileAt(hoveredTile.x, hoveredTile.y).presentTower == null)
-        {
-            TowerSpawn(GetTileAt(hoveredTile.x, hoveredTile.y), previewDirection);
-        }
-    }
-
-    void EnemySpawn(TileController entrance)
+    void enemySpawn(TileController entrance)
     {
         Vector3 enemyPosition = new Vector3(0f, 0f, 0f);
         GameObject enemyObject = SimplePool.Spawn(enemyPrefab, enemyPosition, Quaternion.identity);
@@ -268,35 +253,23 @@ public class WorldController : MonoBehaviour
         enemyController.FromTile = entrance;
 
         enemyObject.transform.parent = this.transform;
-        enemyController.RegisterDespawnedCB((enemy) => { SimplePool.Despawn(enemyObject); });
+        enemyController.RegisterDespawnedCB((enemy) => { SimplePool.Despawn(enemyObject); enemies.Remove(enemy); });
 
         enemies.Add(enemyController);
     }
 
-    void TowerSpawn(TileController parentTile, Tile.TileDirection facingDirection)
+    void towerSpawn(TileController parentTile, Tile.TileDirection facingDirection)
     {
-        Vector3 towerPosition = new Vector3(0f, 0f, 0f);
+        Vector3 towerPosition = parentTile.transform.position;
         GameObject towerObject = SimplePool.Spawn(towerPrefab, towerPosition, Quaternion.identity);
         TowerController towerController = towerObject.GetComponent<TowerController>();
 
-        parentTile.presentTower = towerController;
+        parentTile.PresentTower = towerController;
         towerController.ParentTile = parentTile;
         towerController.FacingDirection = facingDirection;
         towerController.ProjectilePrefab = projectilePrefab;
 
         towerObject.transform.parent = this.transform;
-    }
-
-    public void OnTower_RotateRight()
-    {
-        switch (previewDirection)
-        {
-            case Tile.TileDirection.Right: previewDirection = Tile.TileDirection.Down; break;
-            case Tile.TileDirection.Down:  previewDirection = Tile.TileDirection.Left; break;
-            case Tile.TileDirection.Left:  previewDirection = Tile.TileDirection.Up; break;
-            case Tile.TileDirection.Up:    previewDirection = Tile.TileDirection.Right; break;
-        }
-        previewTower.GetComponent<TowerController>().FacingDirection = previewDirection;
     }
 
     /// <summary>
@@ -315,4 +288,3 @@ public class WorldController : MonoBehaviour
         return Tiles[x, y];
     }
 }
-

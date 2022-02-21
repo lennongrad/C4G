@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1949934823181098121}
   - component: {fileID: 2424372155796322360}
   - component: {fileID: 1875068091175823459}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Directions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 5430831776679349653}
   - component: {fileID: 7979141725939142794}
   - component: {fileID: 4121116924101285650}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Tile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -187,8 +187,10 @@ MonoBehaviour:
   directionsDisplay: {fileID: 4727353768949321014}
   cornerMaterial: {fileID: 2100000, guid: 9a75ace8f02a4f3478cc3fdcd32004df, type: 2}
   acrossMaterial: {fileID: 2100000, guid: 27cb3d03a46bf0a4eae167ae71b233d6, type: 2}
+  World: {fileID: 0}
   x: 0
   y: 0
+  presentTower: {fileID: 0}
 --- !u!1 &7059586701975733756
 GameObject:
   m_ObjectHideFlags: 0
@@ -201,7 +203,7 @@ GameObject:
   - component: {fileID: 4744497860551348297}
   - component: {fileID: 8935107261942205399}
   - component: {fileID: 1513767718119239817}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

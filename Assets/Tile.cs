@@ -16,9 +16,4 @@ static public class Tile
         Right = 1 << 2,
         Down = 1 << 3,
     };
-
-    static public Dictionary<TileDirection, TileDirection> InverseDirection = new Dictionary<TileDirection, TileDirection>()
-    {
-        {TileDirection.Left, TileDirection.Right }, {TileDirection.Up, TileDirection.Down }, {TileDirection.Right, TileDirection.Left }, {TileDirection.Down, TileDirection.Up }
-    };
 }

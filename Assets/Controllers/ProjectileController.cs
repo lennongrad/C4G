@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class ProjectileController : MonoBehaviour
 {
-    public float yPosition = 0;
-
     Tile.TileDirection facingDirection;
     public Tile.TileDirection FacingDirection
     {
@@ -22,19 +20,52 @@ public class ProjectileController : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
-
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        SetPosition(new Vector2(transform.position.x, transform.position.z) + Vector2.right.Rotated(transform.localEulerAngles.y) * .1f);
+        if(GetComponent<Rigidbody>().velocity.magnitude < .01)
+        {
+            GetComponent<Rigidbody>().AddForce(100 * transform.forward);
+        }
+
+        TileController underTile;
+        if(detectTile(out underTile))
+        {
+            //underTile.Hover();
+        }
+        else
+        {
+            Despawn();
+        }
     }
 
-    public void SetPosition(Vector2 newPosition)
+    bool detectTile(out TileController tile)
     {
-        transform.position = new Vector3(newPosition.x, yPosition, newPosition.y);
+        RaycastHit hit;
+        Ray ray = new Ray(transform.position, Vector3.down);
+        LayerMask mask = LayerMask.GetMask("Tile");
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
+        {
+            tile = hit.transform.parent.GetComponent<TileController>();
+            return true;
+        }
+
+        tile = null;
+        return false;
+    }
+
+    void Despawn()
+    {
+        SimplePool.Despawn(gameObject);
+    }
+
+    public void HitEnemy()
+    {
+        Despawn();
     }
 }

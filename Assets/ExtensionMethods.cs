@@ -30,10 +30,46 @@ public static class ExtensionMethods
     {
         switch (facingDirection)
         {
-            case Tile.TileDirection.Left: obj.SetRotation(0f); break;
-            case Tile.TileDirection.Up: obj.SetRotation(90f); break;
-            case Tile.TileDirection.Right: obj.SetRotation(180f); break;
-            case Tile.TileDirection.Down: obj.SetRotation(270f); break;
+            case Tile.TileDirection.Down: obj.SetRotation(0f); break;
+            case Tile.TileDirection.Left: obj.SetRotation(90f); break;
+            case Tile.TileDirection.Up: obj.SetRotation(180f); break;
+            case Tile.TileDirection.Right: obj.SetRotation(270f); break;
         }
+    }
+
+    static public Tile.TileDirection Inversed(this Tile.TileDirection direction)
+    {
+        switch (direction)
+        {
+            case Tile.TileDirection.Right: return Tile.TileDirection.Left;
+            case Tile.TileDirection.Down: return Tile.TileDirection.Up;
+            case Tile.TileDirection.Left: return Tile.TileDirection.Right;
+            case Tile.TileDirection.Up: return Tile.TileDirection.Down;
+        }
+        return Tile.TileDirection.None;
+    }
+
+    static public Tile.TileDirection RotatedCW(this Tile.TileDirection direction)
+    {
+        switch (direction)
+        {
+            case Tile.TileDirection.Right: return Tile.TileDirection.Down;
+            case Tile.TileDirection.Down: return Tile.TileDirection.Left;
+            case Tile.TileDirection.Left: return Tile.TileDirection.Up;
+            case Tile.TileDirection.Up: return Tile.TileDirection.Right;
+        }
+        return Tile.TileDirection.None;
+    }
+
+    static public Tile.TileDirection RotatedCCW(this Tile.TileDirection direction)
+    {
+        switch (direction)
+        {
+            case Tile.TileDirection.Right: return Tile.TileDirection.Up;
+            case Tile.TileDirection.Down: return Tile.TileDirection.Right;
+            case Tile.TileDirection.Left: return Tile.TileDirection.Down;
+            case Tile.TileDirection.Up: return Tile.TileDirection.Left;
+        }
+        return Tile.TileDirection.None;
     }
 }

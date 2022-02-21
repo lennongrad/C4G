@@ -60,9 +60,18 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Tower_RotateRight",
+                    "name": "TowerRotateCW",
                     "type": "Button",
                     "id": "800511be-cd3d-4153-b07d-e46f77f4f562",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "TowerRotateCCW",
+                    "type": "Button",
+                    "id": "534c03a1-f160-448f-8b46-fc0c1ad0101d",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -187,7 +196,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
-                    "action": "Tower_RotateRight",
+                    "action": "TowerRotateCW",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "006df746-a600-43d0-b6df-f2d8152b4bbb",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "TowerRotateCCW",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
