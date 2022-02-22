@@ -55,6 +55,12 @@ public class StageGenerator : EditorWindow
         window.minSize = new Vector2(400, 200);
     }
 
+    void CreateGUI()
+    {
+        if (stageName != "")
+            LoadStage();
+    }
+
     void OnGUI()
     {
         // Basic stage data entry fields
@@ -121,16 +127,9 @@ public class StageGenerator : EditorWindow
 
             // use loadedData to get information about stage file
             stageTitle = loadedData.StageTitle;
-            if(loadedData.Layout.Length != 0)
-            {
-                // get width and height in this weird way because of serialization problems
-                stageDimensions.y = loadedData.Layout.Length;
-                stageDimensions.x = loadedData.Layout[0].tiles.Length;
-
-                for (int y = 0; y < stageDimensions.y; y++)
-                    for (int x = 0; x < stageDimensions.x; x++)
-                        tiles[x,y] = loadedData.Layout[y].tiles[x];
-            }
+            stageDimensions.y = loadedData.Height;
+            stageDimensions.x = loadedData.Width;
+            tiles = loadedData.TileTypes;
         }
     }
 
@@ -165,16 +164,7 @@ public class StageGenerator : EditorWindow
         }
 
         stageData.StageTitle = stageTitle;
-        stageData.Layout = new StageLayout[stageDimensions.y];
-        for (int y = 0; y < stageDimensions.y; y++)
-        {
-            Tile.TileType[] row = new Tile.TileType[stageDimensions.x];
-            for (int x = 0; x < stageDimensions.x; x++)
-                row[x] = tiles[x, y];
-            stageData.Layout[y] = new StageLayout(row);
-        }
-        stageData.Width = stageData.Layout[0].tiles.Length;
-        stageData.Height = stageData.Layout.Length;
+        stageData.SetData(tiles, stageDimensions);
 
         // if we have to create this new asset from scratch rather than saving to existing
         if(result.Length == 0)
