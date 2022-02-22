@@ -183,14 +183,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dddeea09506aff42b98eefbd46b7dda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cube: {fileID: 7059586701975733756}
-  directionsDisplay: {fileID: 4727353768949321014}
-  cornerMaterial: {fileID: 2100000, guid: 9a75ace8f02a4f3478cc3fdcd32004df, type: 2}
-  acrossMaterial: {fileID: 2100000, guid: 27cb3d03a46bf0a4eae167ae71b233d6, type: 2}
-  World: {fileID: 0}
-  x: 0
-  y: 0
-  presentTower: {fileID: 0}
+  Cube: {fileID: 7059586701975733756}
+  DirectionsDisplay: {fileID: 4727353768949321014}
+  CornerMaterial: {fileID: 2100000, guid: 9a75ace8f02a4f3478cc3fdcd32004df, type: 2}
+  AcrossMaterial: {fileID: 2100000, guid: 27cb3d03a46bf0a4eae167ae71b233d6, type: 2}
+  PresentTower: {fileID: 0}
 --- !u!1 &7059586701975733756
 GameObject:
   m_ObjectHideFlags: 0

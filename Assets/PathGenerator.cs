@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// A static class to do the work of setting up enemy paths for the tile collection
+/// Really messy and relies on luck to do it well, but we might not use random paths anyways so
+/// we can optimize it better later if needed, otherwise its Good enough
+/// </summary>
 public static class PathGenerator
 {
     /// <summary>
@@ -57,11 +62,11 @@ public static class PathGenerator
         while (queue.Count > 0 && !stopSearching)
         {
             TileController nextTile = queue.Dequeue();
-            List<Tile.TileDirection> keys = new List<Tile.TileDirection>(nextTile.neighbors.Keys);
+            List<Tile.TileDirection> keys = new List<Tile.TileDirection>(nextTile.Neighbors.Keys);
 
             foreach (Tile.TileDirection direction in keys)
             {
-                TileController tile = nextTile.neighbors[direction];
+                TileController tile = nextTile.Neighbors[direction];
 
                 if (tile.Type == Tile.TileType.Exit)
                 {
@@ -89,7 +94,7 @@ public static class PathGenerator
             stopSearching = false;
             while (!stopSearching)
             {
-                TileController nextTile = goalTile.neighbors[fromDirection[goalTile]];
+                TileController nextTile = goalTile.Neighbors[fromDirection[goalTile]];
                 path.Add(nextTile);
 
                 if (nextTile.Type == Tile.TileType.Entrance)

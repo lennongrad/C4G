@@ -3,27 +3,38 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+/// <summary>
+/// Class that manages spawning enemies in waves
+/// </summary>
 public class EnemySpawnController : MonoBehaviour
 {
+    //debug variables
     public GameObject enemyPrefab;
+    int enemySpawnTimer = 90;
 
     public List<TileController> activeEntrances;
     /// <summary>
-    /// The entrances that
+    /// The entrances that are available to spawn enemies out of
     /// </summary>
     public List<TileController> ActiveEntrances
     {
         set { activeEntrances = value; }
     }
 
-    int enemySpawnTimer = 90;
+    /// <summary>
+    /// The list of active enemies on screen
+    /// </summary>
     List<EnemyController> enemies = new List<EnemyController>();
 
     Action<EnemyController> cbEnemySpawned;
+    /// <summary>
+    /// Register a function to be called whenever the an enemy is spawned
+    /// </summary>
     public void RegisterEnemySpawnedCB(Action<EnemyController> cb) { cbEnemySpawned += cb; }
 
     void Start()
     {
+        // Preload a certain number of each enemy type
         SimplePool.Preload(enemyPrefab, 20, this.transform);
     }
 
@@ -40,6 +51,9 @@ public class EnemySpawnController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Spawns an enemy at a specified entrance
+    /// </summary>
     void enemySpawn(TileController entrance)
     {
         Vector3 enemyPosition = new Vector3(0f, 0f, 0f);

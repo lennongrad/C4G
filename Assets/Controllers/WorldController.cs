@@ -32,7 +32,7 @@ public class WorldController : MonoBehaviour
                 Tiles[x, y] = tile;
 
                 // set personal variables
-                tile.parity = (x + y) % 2 == 0;
+                tile.Parity = (x + y) % 2 == 0;
                 tile.name = "Tile_" + x + "_" + y;
                 Tiles[x, y].Type = stageData.Layout[y].tiles[x];
 
@@ -58,13 +58,13 @@ public class WorldController : MonoBehaviour
             for (int y = 0; y < stageData.Height; y++)
             {
                 if (x != 0)
-                    Tiles[x, y].neighbors[Tile.TileDirection.Left] = Tiles[x - 1, y];
+                    Tiles[x, y].Neighbors[Tile.TileDirection.Left] = Tiles[x - 1, y];
                 if (x != stageData.Width - 1)
-                    Tiles[x, y].neighbors[Tile.TileDirection.Right] = Tiles[x + 1, y];
+                    Tiles[x, y].Neighbors[Tile.TileDirection.Right] = Tiles[x + 1, y];
                 if (y != 0)
-                    Tiles[x, y].neighbors[Tile.TileDirection.Up] = Tiles[x, y - 1];
+                    Tiles[x, y].Neighbors[Tile.TileDirection.Up] = Tiles[x, y - 1];
                 if (y != stageData.Height - 1)
-                    Tiles[x, y].neighbors[Tile.TileDirection.Down] = Tiles[x, y + 1];
+                    Tiles[x, y].Neighbors[Tile.TileDirection.Down] = Tiles[x, y + 1];
             }
         }
 

@@ -19,7 +19,6 @@ public class ProjectileController : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
     void OnEnable()
     {
         GetComponent<Rigidbody>().velocity = Vector3.zero;
@@ -33,16 +32,15 @@ public class ProjectileController : MonoBehaviour
         }
 
         TileController underTile;
-        if(detectTile(out underTile))
-        {
-            //underTile.Hover();
-        }
-        else
-        {
+        if(!detectTile(out underTile) || underTile.Type == Tile.TileType.Wall)
+        { 
             Despawn();
         }
     }
 
+    /// <summary>
+    /// Detects if there is a tile beneath the project and outputs it
+    /// </summary>
     bool detectTile(out TileController tile)
     {
         RaycastHit hit;
@@ -59,11 +57,17 @@ public class ProjectileController : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Destroys the projectile
+    /// </summary>
     void Despawn()
     {
         SimplePool.Despawn(gameObject);
     }
 
+    /// <summary>
+    /// Called when the projectile collides wihth an enemy
+    /// </summary>
     public void HitEnemy()
     {
         Despawn();

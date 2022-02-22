@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ProjectilePrefab: {fileID: 122478342928279008, guid: f850750258766744d97cda29aae63098, type: 3}
-  cube: {fileID: 6600753668476555265}
+  Cube: {fileID: 6600753668476555265}
   ParentTile: {fileID: 0}
 --- !u!1 &3448369053931172979
 GameObject:

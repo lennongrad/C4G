@@ -3,33 +3,69 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
 
+/// <summary>
+/// Class that manages camera movement input and gets raycasts from the camera to determine what objects are hovered over
+/// </summary>
 public class CameraController : MonoBehaviour
 {
+    /// <summary>
+    /// The actual camera being controlled; used for raycasting
+    /// </summary>
     public Camera cameraObject;
-    public WorldController worldController; //debug only
 
+    /// <summary>
+    /// The speed the camera moves at when dragging with the mouse to pan
+    /// </summary>
     public float dragPanModifier = .02f;
+    /// <summary>
+    /// The speed the camera moves at when using the keyboard to pan
+    /// </summary>
     public float keyPanModifier = .2f;
+    /// <summary>
+    /// The speed the camera rotates at
+    /// </summary>
     public float rotateModifier = .75f;
+    /// <summary>
+    /// The speed the camera zoom in and out at
+    /// </summary>
     public float zoomModifier = .01f;
 
+    /// <summary>
+    /// The zoom distance that the user wants to go to; uses smooth damp to transition to it smoothly
+    /// </summary>
     float goalScrollDistance;
+    /// <summary>
+    /// Used in the smooth damp function to transition to the desired zoom level
+    /// </summary>
     float goalScrollSpeed;
 
+    /// <summary>
+    /// The last 3D position of the mouse cursor
+    /// </summary>
     Vector3 lastPosition;
+    /// <summary>
+    /// Whether or not the user's mouse cursor was within the window last frame
+    /// </summary>
     bool wasInWindowLast;
 
+    /// <summary>
+    /// The last pan direction input from the keyboard
+    /// </summary>
     Vector3 keyPan;
+    /// <summary>
+    /// Whether the user is holding down their pan button for the mouse pan
+    /// </summary>
     bool holdingPan;
+    /// <summary>
+    /// Whenther the user is holding down their rotate button for the mouse rotate
+    /// </summary>
     bool holdingRotate;
 
-    // Start is called before the first frame update
     void Start()
     {
         goalScrollDistance = transform.position.y;
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         ClickDragUpdate();
@@ -119,12 +155,19 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    // used in update
+    /// <summary>
+    /// Gets the 3D position of the mouse cursor in space, limited to the edges of the screen
+    /// I.E., if the user's cursor is outside the screen, it will return the closest point within the screen to their cursor,
+    /// so check with GetMouseOutsideWindow() before using for best results
+    /// </summary>
     Vector3 GetMousePosition()
     {
         return new Vector3(Mathf.Clamp(Mouse.current.position.ReadValue().x, 60, Screen.width - 60) - 60, 0, Mathf.Clamp(Mouse.current.position.ReadValue().y, 60, Screen.height - 60) - 60);
     }
 
+    /// <summary>
+    /// Returns whether the mouse cursor is outside the bounds of the current window
+    /// </summary>
     bool GetMouseOutsideWindow()
     {
 

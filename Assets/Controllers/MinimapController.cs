@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Controls the minimap UI display and the camera to capture the minimap
+/// </summary>
 public class MinimapController : MonoBehaviour
 {
 

@@ -6,13 +6,23 @@ using System;
 public class TowerController : MonoBehaviour
 {
     public GameObject ProjectilePrefab;
+    public GameObject Cube;
 
-    public GameObject cube;
+    /// <summary>
+    /// The material of the tower's model by default. Must be stored in case it is changed to become transparent or otherwise
+    /// </summary>
     Material defaultMaterial;
 
+    /// <summary>
+    /// The tile that the tower is sitting on
+    /// </summary>
     public TileController ParentTile = null;
 
     Tile.TileDirection facingDirection = Tile.TileDirection.None;
+    /// <summary>
+    /// The direction the tower is facing, usually used for the tower's attacks and graphics;
+    /// Sstting it publically automatically changed its graphics
+    /// </summary>
     public Tile.TileDirection FacingDirection
     {
         get { return facingDirection; }
@@ -23,14 +33,12 @@ public class TowerController : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
     void Start()
     {
-        defaultMaterial = cube.GetComponent<MeshRenderer>().material;
+        defaultMaterial = Cube.GetComponent<MeshRenderer>().material;
     }
 
     int timer = 70;
-    // Update is called once per frame
     void FixedUpdate()
     {
         if(ParentTile != null)
@@ -46,6 +54,9 @@ public class TowerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Creates a projectile object and shoots it
+    /// </summary>
     void SpawnProjectile()
     {
         float yPosition = 1f;
@@ -58,15 +69,19 @@ public class TowerController : MonoBehaviour
         projectileController.FacingDirection = facingDirection;
     }
 
+    /// <summary>
+    /// Makes the tower's material slightly transparent. Intended primarily for the placement preview tower
+    /// </summary>
+    /// <param name="isTransparent"></param>
     public void SetTransparent(bool isTransparent)
     {
         if(!isTransparent)
         {
-            cube.GetComponent<MeshRenderer>().material = defaultMaterial;
+            Cube.GetComponent<MeshRenderer>().material = defaultMaterial;
         }
         else
         {
-            Material material = cube.GetComponent<MeshRenderer>().material;
+            Material material = Cube.GetComponent<MeshRenderer>().material;
 
             material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
             material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
@@ -78,7 +93,7 @@ public class TowerController : MonoBehaviour
 
             material.color = new Color(material.color.r, material.color.g, material.color.b, 0.1f);
 
-            cube.GetComponent<MeshRenderer>().material = material;
+            Cube.GetComponent<MeshRenderer>().material = material;
         }
     }
 }
