@@ -742,7 +742,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 5995369394112928195, guid: 1913d6b5efbbcc2438c46ba357b0e5aa, type: 3}
-  stageData: {fileID: 11400000, guid: 72cd060486f9b344dae0d48845582ee2, type: 2}
+  stageData: {fileID: 11400000, guid: e8e88bc2930503f4f8a18245659aba92, type: 2}
   cameraController: {fileID: 1853594730}
   towerPreviewController: {fileID: 306759813}
   enemySpawnController: {fileID: 1719810932}
