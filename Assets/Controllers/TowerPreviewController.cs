@@ -12,7 +12,6 @@ public class TowerPreviewController : MonoBehaviour
     // debug variables
     List<Tile.TileType> canPlaceTiles = new List<Tile.TileType>() { Tile.TileType.Floor, Tile.TileType.Raised }; // temporary, will probably be per tower type
     public GameObject TowerPrefab;
-    public GameObject ProjectilePrefab;
 
     /// <summary>
     /// A TowerController that is placed at the tile selected by the user as a preview
@@ -40,7 +39,7 @@ public class TowerPreviewController : MonoBehaviour
     {
         previewTower = (GameObject)Instantiate(TowerPrefab, Vector3.zero, Quaternion.identity);
         previewTower.transform.parent = this.transform;
-        previewTower.GetComponent<TowerController>().SetTransparent(true);
+        previewTower.GetComponent<TowerController>().PerformBehaviours = false;
         previewTower.GetComponent<TowerController>().FacingDirection = previewDirection;
 
         // Preload a certain number of each type of tower
@@ -59,10 +58,7 @@ public class TowerPreviewController : MonoBehaviour
         parentTile.PresentTower = towerController;
         towerController.ParentTile = parentTile;
         towerController.FacingDirection = facingDirection;
-        towerController.ProjectilePrefab = ProjectilePrefab;
-
-        // Preload a few objects for the projectiles shot by the tower
-        SimplePool.Preload(ProjectilePrefab, 3, this.transform);
+        towerController.PerformBehaviours = true;
 
         towerObject.transform.parent = this.transform;
     }

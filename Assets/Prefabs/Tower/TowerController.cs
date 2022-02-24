@@ -5,7 +5,6 @@ using System;
 
 public class TowerController : MonoBehaviour
 {
-    public GameObject ProjectilePrefab;
     public GameObject Cube;
 
     /// <summary>
@@ -33,67 +32,55 @@ public class TowerController : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        defaultMaterial = Cube.GetComponent<MeshRenderer>().material;
-    }
+    /// <summary>
+    /// The behaviours for the tower to carry out, such as spawning materials, generating mana, etc.
+    /// </summary>
+    TowerBehaviour[] behaviours;
 
-    int timer = 70;
-    void FixedUpdate()
+    bool performBehaviours = false;
+    /// <summary>
+    /// Whether or not the tower should have its behaviours active. 
+    /// Setting false publically also causes the tower to become transparent
+    /// </summary>
+    public bool PerformBehaviours
     {
-        if(ParentTile != null)
+        get { return performBehaviours; }
+        set
         {
-            transform.position = ParentTile.transform.position;
+            performBehaviours = value;
 
-            timer += 1;
-            if (timer > 100)
+            // change towers transparency based on whether its enabled or not
+            if (performBehaviours)
+                Cube.GetComponent<MeshRenderer>().material = defaultMaterial;
+            else
             {
-                timer = 0;
-                SpawnProjectile();
+                // disabled so make transparenty
+                Material material = Cube.GetComponent<MeshRenderer>().material;
+
+                material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                material.SetInt("_ZWrite", 0);
+                material.DisableKeyword("_ALPHATEST_ON");
+                material.DisableKeyword("_ALPHABLEND_ON");
+                material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
+                material.renderQueue = 3000;
+
+                material.color = new Color(material.color.r, material.color.g, material.color.b, 0.1f);
+
+                Cube.GetComponent<MeshRenderer>().material = material;
             }
         }
     }
 
-    /// <summary>
-    /// Creates a projectile object and shoots it
-    /// </summary>
-    void SpawnProjectile()
+    void Start()
     {
-        float yPosition = 1f;
-
-        Vector3 projectilePosition = new Vector3(0f, yPosition, 0f);
-        GameObject projectileObject = SimplePool.Spawn(ProjectilePrefab, projectilePosition, Quaternion.identity);
-        ProjectileController projectileController = projectileObject.GetComponent<ProjectileController>();
-
-        projectileController.transform.position = new Vector3(transform.position.x, yPosition, transform.position.z);
-        projectileController.FacingDirection = facingDirection;
+        defaultMaterial = Cube.GetComponent<MeshRenderer>().material;
+        behaviours = GetComponents<TowerBehaviour>();
     }
 
-    /// <summary>
-    /// Makes the tower's material slightly transparent. Intended primarily for the placement preview tower
-    /// </summary>
-    /// <param name="isTransparent"></param>
-    public void SetTransparent(bool isTransparent)
+    void FixedUpdate()
     {
-        if(!isTransparent)
-        {
-            Cube.GetComponent<MeshRenderer>().material = defaultMaterial;
-        }
-        else
-        {
-            Material material = Cube.GetComponent<MeshRenderer>().material;
-
-            material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
-            material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-            material.SetInt("_ZWrite", 0);
-            material.DisableKeyword("_ALPHATEST_ON");
-            material.DisableKeyword("_ALPHABLEND_ON");
-            material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
-            material.renderQueue = 3000;
-
-            material.color = new Color(material.color.r, material.color.g, material.color.b, 0.1f);
-
-            Cube.GetComponent<MeshRenderer>().material = material;
-        }
+        if(ParentTile != null)
+            transform.position = ParentTile.transform.position;
     }
 }
