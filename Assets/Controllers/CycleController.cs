@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class CycleController : MonoBehaviour
 {
+    /// <summary>
+    /// The scriptable object that manages the players available resources
+    /// </summary>
+    public PlayerResourceManager playerResourceManager;
 
     /// <summary>
     /// Event that is invoked at the beginning of a cycle
@@ -18,7 +22,7 @@ public class CycleController : MonoBehaviour
     /// How many game ticks between the beginning and end of each cycle
     /// </summary>
     public int cycleDuration = 300;
-    public int cycleTimer;
+    int cycleTimer;
 
     public GameObject cycleProgressDisplay;
 
@@ -34,7 +38,12 @@ public class CycleController : MonoBehaviour
         if (cycleTimer < 0)
         {
             cycleTimer = cycleDuration;
+            
+            // end cycle 
             cycleEnd.Raise();
+            playerResourceManager.Reset();
+
+            // begin cycle
             cycleBegin.Raise();
         }
         cycleProgressDisplay.GetComponent<ProgressBarController>().Amount = cycleDuration - cycleTimer;

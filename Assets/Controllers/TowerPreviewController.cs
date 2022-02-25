@@ -23,6 +23,12 @@ public class TowerPreviewController : MonoBehaviour
     /// may not necessarily be a valid tile I.E. can be wrong type or already have a tower
     /// </summary>
     TileController tileHovered;
+    
+    /// <summary>
+    /// Time since the last time a tile was hovered over 
+    /// </summary>
+    int lastHovered = 0;
+
     /// <summary>
     /// The direction that the user has input for the preview tower to face,
     /// also used when the actual tower is placed downo
@@ -44,6 +50,14 @@ public class TowerPreviewController : MonoBehaviour
 
         // Preload a certain number of each type of tower
         SimplePool.Preload(TowerPrefab, 15, this.transform);
+    }
+
+    void FixedUpdate()
+    {
+        // we reset the last tile hovered if the user hasnt hovered recently since that likely means their mouse is off screen
+        lastHovered -= 1;
+        if(lastHovered == 0)
+            tileHovered = null;
     }
 
     /// <summary>
@@ -79,6 +93,7 @@ public class TowerPreviewController : MonoBehaviour
             previewTower.SetActive(false);
             tileHovered = null;
         }
+        lastHovered = 5;
     }
 
     public void OnTowerRotateCW()
@@ -96,8 +111,6 @@ public class TowerPreviewController : MonoBehaviour
     void OnSelect(InputValue value)
     {
         if (tileHovered != null && canPlaceTiles.Contains(tileHovered.Type) && tileHovered.PresentTower == null)
-        {
             towerSpawn(tileHovered, previewDirection);
-        }
     }
 }

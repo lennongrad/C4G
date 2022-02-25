@@ -8,12 +8,12 @@ public class ProduceMana : TowerBehaviour
     /// <summary>
     /// Event that is invoked at the end of a cycle
     /// </summary>
-    public GameEvent cycleEnd;
+    public GameEvent cycleBegin;
 
     /// <summary>
-    /// The player's mana pool
+    /// The scriptable object that manages the player's resources (including mana)
     /// </summary>
-    public ManaPoolController manaPool;
+    public PlayerResourceManager playerResourceManager;
 
     /// <summary>
     /// The mana type to be produced by the tower
@@ -22,15 +22,15 @@ public class ProduceMana : TowerBehaviour
 
     protected override void Initiate()
     {
-        cycleEnd.RegisterListener(OnCycleEnd);
+        cycleBegin.RegisterListener(OnCycleBegin);
     }
 
     // empty because mana tower reacts to cycles, not to behave calls
     protected override void Behave(){ return;  }
 
-    public void OnCycleEnd()
+    public void OnCycleBegin()
     {
         if(performBehaviour && mainController.PerformBehaviours)
-            manaPool.AddMana(Mana.ManaType.Spades, 1);
+            playerResourceManager.AddMana(Mana.ManaType.Spades, 1);
     }
 }

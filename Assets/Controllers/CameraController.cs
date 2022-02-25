@@ -74,22 +74,14 @@ public class CameraController : MonoBehaviour
         if(!holdingRotate)
         {
             while (transform.rotation.y < 0)
-            {
                 transform.Rotate(new Vector3(0, 1f, 0f), 360, Space.World);
-            }
 
             if (transform.eulerAngles.y % 90 >= 45)
-            {
                 transform.Rotate(new Vector3(0, 1f, 0f), 10, Space.World);
-            }
             else if (transform.eulerAngles.y % 90 < 45 && transform.eulerAngles.y % 90 > 10)
-            {
                 transform.Rotate(new Vector3(0, 1f, 0f), -10, Space.World);
-            }
             else if (transform.eulerAngles.y % 90 > 1)
-            {
                 transform.Rotate(new Vector3(0, 1f, 0f), -1, Space.World);
-            }
         }
 
         // process scroll wheel differences
@@ -126,15 +118,11 @@ public class CameraController : MonoBehaviour
 
         // drag the map under the camera with middle mouse button
         if (holdingPan)
-        {
             transform.Translate(diff * dragPanModifier, Space.Self);
-        }
 
         // rotate the map around camera with right mouse button
         if (holdingRotate)
-        {
             transform.Rotate(new Vector3(0, 1f, 0f), diff.x * rotateModifier, Space.World);
-        }
 
         // zoom up and down with scroll wheel
         goalScrollDistance += -Mouse.current.scroll.ReadValue().y * zoomModifier;

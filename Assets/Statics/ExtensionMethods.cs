@@ -98,4 +98,32 @@ public static class ExtensionMethods
         }
         return "Suitless";
     }
+
+    private static System.Random rng = new System.Random();
+
+    /// <summary>
+    /// Shuffles the list in place
+    /// </summary>
+    public static void Shuffle<T>(this IList<T> list)
+    {
+        int n = list.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = rng.Next(n + 1);
+            T value = list[k];
+            list[k] = list[n];
+            list[n] = value;
+        }
+    }
+
+    /// <summary>
+    /// Get a list contaiing just this object
+    /// </summary>
+    public static List<T> IndividualList<T>(this T individual)
+    {
+        List<T> newList = new List<T>();
+        newList.Add(individual);
+        return newList;
+    }
 }

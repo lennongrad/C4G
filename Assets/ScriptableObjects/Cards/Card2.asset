@@ -9,6 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c2039c21c7d9a749a0a52e013f560f7, type: 3}
-  m_Name: ManaPoolController
+  m_Script: {fileID: 11500000, guid: 1eae0be279bdd5f4caf48bac1284a64f, type: 3}
+  m_Name: Card2
   m_EditorClassIdentifier: 
+  CardName: Epic Card (2)

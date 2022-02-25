@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class DebugText : MonoBehaviour
 {
     public Text myText;
-    public ManaPoolController manaPool;
+    public PlayerResourceManager playerResourceManager;
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +17,6 @@ public class DebugText : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        myText.text = manaPool.debugString();
+        myText.text = playerResourceManager.debugString();
     }
 }

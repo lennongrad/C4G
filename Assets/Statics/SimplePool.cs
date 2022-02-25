@@ -174,7 +174,7 @@ public static class SimplePool
         {
             obs[i] = Spawn(prefab, Vector3.zero, Quaternion.identity);
             if (parent != null)
-                obs[i].transform.parent = parent;
+                obs[i].transform.SetParent(parent);
         }
 
         // Now despawn them all.

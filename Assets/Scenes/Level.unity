@@ -392,10 +392,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92cb4835c9b493f4eaa930204612d14b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerResourceManager: {fileID: 11400000, guid: 8f692e2ce7bfc8b48b38c3c44f84f4d5, type: 2}
   cycleBegin: {fileID: 11400000, guid: 407dd6d5e16b44544a6128772020c3b9, type: 2}
   cycleEnd: {fileID: 11400000, guid: 8f2969afe96018a488cb5c95ca53df53, type: 2}
   cycleDuration: 300
-  cycleTimer: 0
   cycleProgressDisplay: {fileID: 1560836209}
 --- !u!1 &955333173
 GameObject:
@@ -648,7 +648,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 6.6416016, y: 31.2}
-  m_SizeDelta: {x: 91.316, y: 68.0211}
+  m_SizeDelta: {x: 91.316, y: 108.9173}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1068828491
 MonoBehaviour:
@@ -760,6 +760,61 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1083674288}
   m_CullTransparentMesh: 1
+--- !u!1 &1104222494
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1104222495}
+  - component: {fileID: 1104222496}
+  m_Layer: 0
+  m_Name: CardGameController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1104222495
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1104222494}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1334423221}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1104222496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1104222494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0d3d04ac8d681c40a0141a288ea26a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerResourceManager: {fileID: 11400000, guid: 8f692e2ce7bfc8b48b38c3c44f84f4d5, type: 2}
+  cycleEnd: {fileID: 11400000, guid: 8f2969afe96018a488cb5c95ca53df53, type: 2}
+  InitialDeck:
+  - {fileID: 11400000, guid: e2ba6c43ec774a24ba26f3a3bee2a684, type: 2}
+  - {fileID: 11400000, guid: 83581d2d51ed733409e8dd39b1129f7f, type: 2}
+  - {fileID: 11400000, guid: 6124d9d0fb99f10418c120e136cb8931, type: 2}
+  - {fileID: 11400000, guid: 22da834ea1b3cdd4eba66ae89b61891c, type: 2}
+  - {fileID: 11400000, guid: 5c14b471abb99e64fb9d9392968738f0, type: 2}
+  - {fileID: 11400000, guid: 4adf4ca64d362b74dad4e6c31eceede8, type: 2}
+  - {fileID: 11400000, guid: 82c73753d3d185243a5a555f1c9ce59a, type: 2}
+  - {fileID: 11400000, guid: 6734dd2bdc53ff941b78cd3169bedf62, type: 2}
+  - {fileID: 11400000, guid: 5291a77ac8feda243956cf234813aa0c, type: 2}
 --- !u!1 &1132138404
 GameObject:
   m_ObjectHideFlags: 0
@@ -890,6 +945,7 @@ Transform:
   - {fileID: 1719810933}
   - {fileID: 955333174}
   - {fileID: 916140921}
+  - {fileID: 1104222495}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1050,7 +1106,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myText: {fileID: 1422656405}
-  manaPool: {fileID: 11400000, guid: 8f692e2ce7bfc8b48b38c3c44f84f4d5, type: 2}
+  playerResourceManager: {fileID: 11400000, guid: 8f692e2ce7bfc8b48b38c3c44f84f4d5, type: 2}
 --- !u!114 &1422656405
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1084,13 +1140,20 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Clubs 0
+  m_Text: 'Clubs: 5
 
-    Spades 0
+    Spades: 5
 
-    Hearts 0
+    Hearts: 5
 
-    Diamonds 0'
+    Diamonds: 5
+
+    Life: 20
+
+    Wisdom:
+    100
+
+    Creativity: 100'
 --- !u!222 &1422656406
 CanvasRenderer:
   m_ObjectHideFlags: 0

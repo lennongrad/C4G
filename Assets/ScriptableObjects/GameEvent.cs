@@ -6,7 +6,7 @@ using UnityEngine.Events;
 /// <summary>
 /// Essentially a scriptable object wrapper for a UnityEvent so that you can distribute it in the editor
 /// </summary>
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/GameEvent", order = 1), System.Serializable]
 public class GameEvent : ScriptableObject
 {
     private UnityEvent internalEvent;
