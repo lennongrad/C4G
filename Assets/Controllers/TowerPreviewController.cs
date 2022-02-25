@@ -12,6 +12,7 @@ public class TowerPreviewController : MonoBehaviour
     // debug variables
     List<Tile.TileType> canPlaceTiles = new List<Tile.TileType>() { Tile.TileType.Floor, Tile.TileType.Raised }; // temporary, will probably be per tower type
     public GameObject TowerPrefab;
+    public GameObject handDisplayController;
 
     /// <summary>
     /// A TowerController that is placed at the tile selected by the user as a preview
@@ -35,11 +36,10 @@ public class TowerPreviewController : MonoBehaviour
     /// </summary>
     Tile.TileDirection previewDirection = Tile.TileDirection.Left;
 
-    //Action<TileController, Tile.TileDirection> cbTowerSpawned;
     /// <summary>
-    /// Register a function to be called when a new tower is placed
+    /// Whether tower selection is enabled; is disabled while hovering other UI elements
     /// </summary>
-    //public void RegisterTowerSpawnedCB(Action<TileController, Tile.TileDirection> cb) { cbTowerSpawned += cb; }
+    bool canPlace = true;
 
     void Start()
     {
@@ -50,6 +50,9 @@ public class TowerPreviewController : MonoBehaviour
 
         // Preload a certain number of each type of tower
         SimplePool.Preload(TowerPrefab, 15, this.transform);
+
+        // set up function to receive info on whether the hand display is active (if so, disable user input on stage)
+        handDisplayController.GetComponent<HandDisplayController>().RegisterHoveredChanged(OnHandDisplayHoveredChanged);
     }
 
     void FixedUpdate()
@@ -110,7 +113,16 @@ public class TowerPreviewController : MonoBehaviour
 
     void OnSelect(InputValue value)
     {
-        if (tileHovered != null && canPlaceTiles.Contains(tileHovered.Type) && tileHovered.PresentTower == null)
+        if (tileHovered != null && canPlaceTiles.Contains(tileHovered.Type) && tileHovered.PresentTower == null && canPlace)
             towerSpawn(tileHovered, previewDirection);
+    }
+
+    /// <summary>
+    /// Called when the hand display is hovered over or unhovered
+    /// </summary>
+    /// <param name="isHovered"></param>
+    void OnHandDisplayHoveredChanged(bool isHovered)
+    {
+        canPlace = !isHovered;
     }
 }

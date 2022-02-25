@@ -29,7 +29,7 @@ public class CardGameController : MonoBehaviour
     /// The largest number of cards a player can have in hand without being prevented from drawing cards.
     /// See gameplay document for more information.
     /// </summary>
-    int maximumHandSize = 3; //7;
+    int maximumHandSize = 7; //7;
 
     void Start()
     {
@@ -39,8 +39,6 @@ public class CardGameController : MonoBehaviour
         cycleEnd.RegisterListener(OnCycleEnd);
 
         startRound();
-
-        HandZone.PrintDebug();
     }
 
     void FixedUpdate()
@@ -65,7 +63,7 @@ public class CardGameController : MonoBehaviour
     {
         for(int i = 0; i < numberOfCards; i++)
         {
-            if (!AtMaximumHandSize())
+            if (!AtMaximumHandSize() && DeckZone.Count > 0)
             {
                 HandZone.Add(DeckZone.Pop());
             }
@@ -78,7 +76,7 @@ public class CardGameController : MonoBehaviour
 
     public void OnCycleEnd()
     {
-        if(playerResourceManager.WisdomTotal > 20 && !AtMaximumHandSize())
+        if(true || playerResourceManager.WisdomTotal > 20 && !AtMaximumHandSize())
         {
             DrawCard();
         }
