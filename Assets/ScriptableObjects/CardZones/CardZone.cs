@@ -34,6 +34,9 @@ public class CardZone : ScriptableObject
     /// </summary>
     public void RegisterCardsRemoved(Action<List<CardModel>> cb) { cbCardsRemoved += cb; }
 
+    /// <summary>
+    /// Create new card models for the card data passed in then add it to this zone
+    /// </summary>
     public List<CardModel> ConjureList(List<CardData> cardDataList)
     {
         List<CardModel> addedCards = new List<CardModel>();
@@ -50,12 +53,9 @@ public class CardZone : ScriptableObject
         return addedCards;
     }
 
-    public void PrintDebug()
-    {
-        foreach (CardModel cardModel in cards)
-            Debug.Log(cardModel.Data.CardName);
-    }
-
+    /// <summary>
+    /// Randomize the order of the cards in the zone
+    /// </summary>
     public void Shuffle()
     {
         if(isOrdered)

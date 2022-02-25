@@ -8,6 +8,7 @@ using System;
 public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public GameObject visualCardPrefab;
+    public CardResolutionController cardResolutionController;
 
     public float HorizontalCardDisplacement;
     public float VerticalCardDisplacement;
@@ -24,7 +25,7 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
     /// </summary>
     public CardZone HandZone;
 
-    /// <summary>
+    /// <summary>reg
     /// List of the actual card objects the player sees
     /// </summary>
     List<GameObject> visualCards = new List<GameObject>();
@@ -130,6 +131,18 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
         }
     }
 
+    void onCardPlayed(VisualCardController visualCardController)
+    {
+        if(!cardResolutionController.IsBusy)
+        {
+            cardResolutionController.PlayCard(visualCardController);
+
+            visualCards.Remove(visualCardController.gameObject);
+            //SimplePool.Despawn(visualCardController.gameObject);
+            CardVisualUpdate();
+        }
+    }
+
     void OnCardsAdded(List<CardModel> addedCards)
     {
         foreach(CardModel model in addedCards)
@@ -142,6 +155,7 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
 
             visualCardController.RegisterHovered(onCardHover);
             visualCardController.RegisterUnhovered(onCardUnhover);
+            visualCardController.RegisterPlayed(onCardPlayed);
         }
 
         CardVisualUpdate();
