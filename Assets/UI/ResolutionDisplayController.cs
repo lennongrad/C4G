@@ -10,7 +10,7 @@ public class ResolutionDisplayController : MonoBehaviour
 
     GameObject visualCard;
 
-    void Start()
+    void Awake()
     {
         cardResolutionController.RegisterCardAdded(OnCardAdded);
         cardResolutionController.RegisterCardRemoved(OnCardRemoved);
@@ -24,19 +24,11 @@ public class ResolutionDisplayController : MonoBehaviour
         visualCardController.TargetX = 15;
         visualCardController.TargetY = 0;
         visualCardController.TargetRotation = 0;
-
-        //visualCard.SetActive(true);
-        //visualCard = SimplePool.Spawn(visualCardPrefab, this.transform.position, Quaternion.identity);
-
-        //VisualCardController visualCardController = visualCard.GetComponent<VisualCardController>();
-        //visualCardController.Model = cardModel;
     }
 
     void OnCardRemoved()
     {
         SimplePool.Despawn(visualCard);
         visualCard = null;
-        //if(visualCard.GetComponent<VisualCardController>().Model == cardModel)
-        //    visualCard.SetActive(false);
     }
 }

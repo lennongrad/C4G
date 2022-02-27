@@ -55,6 +55,16 @@ public class StageGenerator : EditorWindow
         window.minSize = new Vector2(400, 200);
     }
 
+    [MenuItem("Utilities/Close Stage Generator")]
+    public static void CloseWindow()
+    {
+        if (EditorWindow.HasOpenInstances<StageGenerator>())
+        {
+            var window = GetWindow<StageGenerator>("Stage Generator");
+            window.Close();
+        }
+    }
+
     void CreateGUI()
     {
         if (stageName != "")
@@ -119,7 +129,7 @@ public class StageGenerator : EditorWindow
         // list of assets that have the correct name
         string[] result = AssetDatabase.FindAssets(stageName);
 
-        if(result.Length != 0)
+        if(result.Length == 1)
         {
             // just use the first result, shouldnt be multiple generally
             string path = AssetDatabase.GUIDToAssetPath(result[0]);
@@ -152,7 +162,7 @@ public class StageGenerator : EditorWindow
         string[] result = AssetDatabase.FindAssets(stageName);
 
         // if one already exists with this name
-        if (result.Length != 0)
+        if (result.Length == 1)
         {
             // just use the first result, shouldnt be multiple generally
             string path = AssetDatabase.GUIDToAssetPath(result[0]);

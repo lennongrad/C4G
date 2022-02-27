@@ -38,12 +38,10 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
     Action<bool> cbHoveredChanged;
     public void RegisterHoveredChanged(Action<bool> cb) { cbHoveredChanged += cb; }
 
-    void Start()
+    void Awake()
     {
         cardHolder = transform.GetChild(0).gameObject;
-
         HandZone.RegisterCardsAdded(OnCardsAdded);
-
         SimplePool.Preload(visualCardPrefab, 7, cardHolder.transform);
     }
 
@@ -82,10 +80,6 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
 
             // set target rotation angle
             controller.TargetRotation = RotationCardDisplacement * -((float)i - (float)(visualCards.Count - 1) / 2f);
-
-            // move the cards downward slightly if they are rotated ccw
-            //if (controller.TargetRotation > 0)
-            //    controller.TargetY -= controller.Width * Mathf.Sin(Mathf.Deg2Rad * controller.TargetRotation);
 
             // if a card is hovered we have a move others over
             if (lastHovered != null)
@@ -149,6 +143,7 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
         {
             GameObject newCard = SimplePool.Spawn(visualCardPrefab, this.transform.position, Quaternion.identity);
             visualCards.Add(newCard);
+            newCard.transform.SetParent(this.transform);
 
             VisualCardController visualCardController = newCard.GetComponent<VisualCardController>();
             visualCardController.Model = model;

@@ -44,7 +44,6 @@ public class CardGameController : MonoBehaviour
 
         cycleEnd.RegisterListener(OnCycleEnd);
 
-        // will probably have a separate round controller
         startRound();
     }
 

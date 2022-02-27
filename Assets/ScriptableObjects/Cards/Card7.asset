@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1eae0be279bdd5f4caf48bac1284a64f, type: 3}
   m_Name: Card7
   m_EditorClassIdentifier: 
-  CardName: Epic Card (7)
+  CardTitle: 7

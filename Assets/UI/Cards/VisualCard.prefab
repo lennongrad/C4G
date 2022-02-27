@@ -90,10 +90,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CardName: {fileID: 8408186143013245883}
+  horizontalEdge: 0
+  verticalEdge: 3
   TargetX: 0
   TargetY: 0
   TargetRotation: 0
+  TargetScaleX: 1
+  TargetScaleY: 1
   Width: 112
+  doubleClickedTimer: 0
 --- !u!1 &8110563402116098469
 GameObject:
   m_ObjectHideFlags: 0

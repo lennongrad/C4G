@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/CardData", order = 1), System.Serializable]
 public class CardData : ScriptableObject
 {
-    public string CardName = "";
+    public string CardTitle = "";
 
+    public CardEffect cardEffect;
 }

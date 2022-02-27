@@ -25,7 +25,16 @@ public class EnemyController : MonoBehaviour
             transform.position = value.transform.position;
 
             if (value.Directions.to != Tile.TileDirection.None)
-                toTile = value.Neighbors[fromTile.Directions.to];
+            {
+                if (value.Neighbors.ContainsKey(fromTile.Directions.to))
+                {
+                    toTile = value.Neighbors[fromTile.Directions.to];
+                }
+                else
+                {
+                    cbDespawned(this);
+                }
+            }
         }
     }
 
@@ -48,6 +57,7 @@ public class EnemyController : MonoBehaviour
     {
         hp = 1;
         distance = 0f;
+        cbDespawned = null;
     }
 
     void FixedUpdate()
@@ -59,14 +69,17 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            distance += .002f;
+            distance += .2f;
                 
             Vector2 flatPosition = Vector2.Lerp(fromTile.FlatPosition(), toTile.FlatPosition(), distance);
             transform.position = new Vector3(flatPosition.x, 0, flatPosition.y);
         }
 
         if (hp < 0f)
+        {
+            Debug.Log("died");
             cbDespawned(this);
+        }
     }
 
     /// <summary>

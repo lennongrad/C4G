@@ -419,7 +419,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 425183d831da54e4e826c4143a122d20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visualCard: {fileID: 882553275}
+  visualCardPrefab: {fileID: 249478343349996322, guid: 35c5665446b0a874ba6e983b76184255, type: 3}
+  cardResolutionController: {fileID: 607832950}
 --- !u!1 &562556781
 GameObject:
   m_ObjectHideFlags: 0
@@ -631,11 +632,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 60, y: 60, z: 0}
---- !u!1 &882553275 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 249478343349996322, guid: 35c5665446b0a874ba6e983b76184255, type: 3}
-  m_PrefabInstance: {fileID: 461579989}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &882553276 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2297306253071692150, guid: 35c5665446b0a874ba6e983b76184255, type: 3}
@@ -1746,6 +1742,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   visualCardPrefab: {fileID: 249478343349996322, guid: 35c5665446b0a874ba6e983b76184255, type: 3}
+  cardResolutionController: {fileID: 607832950}
   HorizontalCardDisplacement: 20
   VerticalCardDisplacement: 30
   RotationCardDisplacement: 5

@@ -24,7 +24,7 @@ public class EnemySpawnController : MonoBehaviour
     /// <summary>
     /// The list of active enemies on screen
     /// </summary>
-    List<EnemyController> enemies = new List<EnemyController>();
+    int enemiesCount = 0;
 
     Action<EnemyController> cbEnemySpawned;
     /// <summary>
@@ -35,15 +35,15 @@ public class EnemySpawnController : MonoBehaviour
     void Start()
     {
         // Preload a certain number of each enemy type
-        SimplePool.Preload(enemyPrefab, 20, this.transform);
+        SimplePool.Preload(enemyPrefab, 2, this.transform);
     }
 
     void FixedUpdate()
     {
         enemySpawnTimer += 1;
-        if (enemySpawnTimer > 100)
+        if (enemySpawnTimer > 10)
         {
-            if (enemies.Count < 3 && activeEntrances.Count != 0)
+            if (enemiesCount < 3 && activeEntrances.Count != 0)
             {
                 enemySpawn(activeEntrances[UnityEngine.Random.Range(0, activeEntrances.Count)]);
             }
@@ -62,10 +62,11 @@ public class EnemySpawnController : MonoBehaviour
 
         enemyController.FromTile = entrance;
 
-        enemyObject.transform.parent = this.transform;
-        enemyController.RegisterDespawnedCB((enemy) => { SimplePool.Despawn(enemyObject); enemies.Remove(enemy); });
+        enemyObject.transform.SetParent(this.transform);
+        enemyController.RegisterDespawnedCB((enemy) => { SimplePool.Despawn(enemyObject); enemiesCount -= 1; });
 
-        enemies.Add(enemyController);
+        //enemies.Add(enemyController);
+        enemiesCount += 1;
 
         if(cbEnemySpawned != null)
             cbEnemySpawned(enemyController);

@@ -113,7 +113,7 @@ public class VisualCardController : MonoBehaviour, IPointerEnterHandler, IPointe
     {
         CardData data = cardModel.Data;
 
-        CardName.text = data.CardName;
+        CardName.text = data.CardTitle;
     }
 
     void FixedUpdate()

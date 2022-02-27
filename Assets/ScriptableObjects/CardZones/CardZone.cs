@@ -67,6 +67,8 @@ public class CardZone : ScriptableObject
     {
         if (cbCardsAdded != null)
             cbCardsAdded(card.IndividualList());
+        else
+            Debug.Log("no card added function");
         cards.Add(card);
     }
 

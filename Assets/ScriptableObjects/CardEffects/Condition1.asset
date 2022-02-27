@@ -9,10 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1eae0be279bdd5f4caf48bac1284a64f, type: 3}
-  m_Name: Card1
+  m_Script: {fileID: 11500000, guid: 7c565aec3b8aa0f408bccacdc3ed4ea4, type: 3}
+  m_Name: Condition1
   m_EditorClassIdentifier: 
-  CardTitle: 1
-  cardEffect:
-    text: 
-    cardEffectCondition: {fileID: 11400000, guid: 024aceab354cb1e4f9241e16377221e2, type: 2}
+  text: fefsafe

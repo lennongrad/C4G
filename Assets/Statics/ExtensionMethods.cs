@@ -89,7 +89,7 @@ public static class ExtensionMethods
     /// </summary>
     static public string ToString(this Mana.ManaType type)
     {
-        switch(type)
+        switch (type)
         {
             case Mana.ManaType.Clubs: return "Clubs";
             case Mana.ManaType.Spades: return "Spades";
