@@ -13,4 +13,25 @@ namespace Card
         Spell = 1 << 1,
         Skill = 1 << 2
     };
+
+    [Flags]
+    public enum TowerSubtype
+    {
+        None = 0,
+        Mana = 1 << 0,
+        Damage = 1 << 1
+    }
+
+    [Flags]
+    public enum SpellSubtype
+    {
+        None = 0
+    }
+
+    [Flags]
+    public enum SkillSubtype
+    {
+        None = 0,
+        Injury = 1 << 0
+    }
 }

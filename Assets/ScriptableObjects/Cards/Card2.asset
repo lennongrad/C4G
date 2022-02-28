@@ -13,3 +13,8 @@ MonoBehaviour:
   m_Name: Card2
   m_EditorClassIdentifier: 
   CardTitle: 2
+  Type: 0
+  CardEffects: []
+  TowerPrefab: {fileID: 1820236534691553018, guid: 1c091981d9f811a43963c2f7ad62de40, type: 3}
+  references:
+    version: 1

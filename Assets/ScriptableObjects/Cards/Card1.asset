@@ -13,6 +13,19 @@ MonoBehaviour:
   m_Name: Card1
   m_EditorClassIdentifier: 
   CardTitle: 1
-  cardEffect:
-    text: 
-    cardEffectCondition: {fileID: 11400000, guid: 024aceab354cb1e4f9241e16377221e2, type: 2}
+  Type: 2
+  TowerSubtypes: 2
+  SpellSubtypes: 0
+  SkillSubtypes: 0
+  CardEffects:
+  - conditionScript: {fileID: 11500000, guid: 34d0453de5febdb40a8775e3805d7f53, type: 3}
+    condition:
+      id: 0
+  TowerPrefab: {fileID: 0}
+  references:
+    version: 1
+    00000000:
+      type: {class: CardEffectConditionTest, ns: , asm: Assembly-CSharp}
+      data:
+        texty: 
+        val: 0

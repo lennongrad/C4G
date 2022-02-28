@@ -41,6 +41,12 @@ public class CardResolutionController : MonoBehaviour
             return activeCard != null;
         }
     }
+
+    void FixedUpdate()
+    {
+        if (activeCard != null)
+            attemptResolution();
+    }
     
     /// <summary>
     /// Request for a card to be played.
@@ -58,6 +64,12 @@ public class CardResolutionController : MonoBehaviour
         {
             return false;
         }
+    }
+
+    private void attemptResolution()
+    {
+        if(activeCard.Data.CardEffects.Count > 0)
+            Debug.Log(activeCard.Data.CardEffects[0].condition.CheckCondition());
     }
 
     private void setActiveCard(CardModel cardModel)

@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/CardEffectCondition", order = 1), System.Serializable]
-public class CardEffectCondition : ScriptableObject
+[System.Serializable]
+public abstract class CardEffectCondition
 {
-    public string text;
+    public abstract void InputGUI();
+    public abstract bool CheckCondition();
 }
