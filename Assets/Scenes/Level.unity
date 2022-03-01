@@ -539,6 +539,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4e02ad639792374394059360c69e5a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  worldInfo: {fileID: 11400000, guid: 523d4ba8fa444e24bbddab59b8085233, type: 2}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1097,7 +1098,7 @@ MonoBehaviour:
   playerResourceManager: {fileID: 11400000, guid: 8f692e2ce7bfc8b48b38c3c44f84f4d5, type: 2}
   cycleEnd: {fileID: 11400000, guid: 8f2969afe96018a488cb5c95ca53df53, type: 2}
   InitialDeck:
-  - {fileID: 11400000, guid: e2ba6c43ec774a24ba26f3a3bee2a684, type: 2}
+  - {fileID: 11400000, guid: 1246e6f1642aab541a5ca270e539599d, type: 2}
   - {fileID: 11400000, guid: 83581d2d51ed733409e8dd39b1129f7f, type: 2}
   - {fileID: 11400000, guid: 6124d9d0fb99f10418c120e136cb8931, type: 2}
   - {fileID: 11400000, guid: 22da834ea1b3cdd4eba66ae89b61891c, type: 2}

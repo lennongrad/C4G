@@ -14,18 +14,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CardTitle: 1
   Type: 2
-  TowerSubtypes: 2
+  TowerSubtypes: 0
   SpellSubtypes: 0
   SkillSubtypes: 0
   CardEffects:
-  - conditionScript: {fileID: 11500000, guid: 34d0453de5febdb40a8775e3805d7f53, type: 3}
+  - minTargets: 1
+    maxTargets: 2
+    conditionScript: {fileID: 11500000, guid: 34d0453de5febdb40a8775e3805d7f53, type: 3}
     condition:
       id: 0
+    qualityScript: {fileID: 11500000, guid: e317f98d998ecc3428e605869d7abd67, type: 3}
+    targetQuality:
+      id: 1
+    predicateScript: {fileID: 11500000, guid: 754414bc38590094ba5938183dafdb1e, type: 3}
+    predicate:
+      id: 2
   TowerPrefab: {fileID: 0}
   references:
     version: 1
     00000000:
-      type: {class: CardEffectConditionTest, ns: , asm: Assembly-CSharp}
+      type: {class: Condition_Test, ns: , asm: Assembly-CSharp}
       data:
         texty: 
         val: 0
+    00000001:
+      type: {class: Quality_Test, ns: , asm: Assembly-CSharp}
+      data:
+        type: 0
+    00000002:
+      type: {class: Predicate_Test, ns: , asm: Assembly-CSharp}
+      data:
+        damage: 0

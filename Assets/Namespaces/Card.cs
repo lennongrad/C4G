@@ -5,13 +5,12 @@ using System;
 
 namespace Card
 {
-    [Flags]
     public enum CardType
     {
-        None = 0,
-        Tower = 1 << 0,
-        Spell = 1 << 1,
-        Skill = 1 << 2
+        None,
+        Tower, 
+        Spell,
+        Skill
     };
 
     [Flags]
@@ -33,5 +32,24 @@ namespace Card
     {
         None = 0,
         Injury = 1 << 0
+    }
+
+    [Flags]
+    public enum TargetType
+    {
+        None = 0,
+        Tiles = 1 << 0,
+        Towers = 1 << 1,
+        Enemies = 1 << 2,
+        Cards = 1 << 3
+    }
+
+    [Flags]
+    public enum CardZones
+    {
+        None,
+        Deck,
+        Hand,
+        Discard
     }
 }

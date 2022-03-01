@@ -4,40 +4,37 @@ using UnityEngine;
 using UnityEditor;
 
 /// <summary>
-/// Class that card effect conditions inherit from.
-/// A condition is a script that is run when trying to resolve a 
-/// card effect to determine if that effect should happen.
+/// Class that card effect predicates inherit from.
+/// A predicate is the actual effect of the card effect, such
+/// as dealing damage to targets.
 /// </summary>
 [System.Serializable]
-public abstract class CardEffectCondition
+public abstract class CardEffectPredicate
 {
     /// <summary>
     /// Used to easily duplicate a base class script for a new condition
     /// </summary>
-    [MenuItem("Utilities/Card Effects/Make Empty Condition")]
-    public static void MakeEmptyCondition()
+    [MenuItem("Utilities/Card Effects/Make Empty Predicate")]
+    public static void MakeEmptyPredicate()
     {
-        string[] result = AssetDatabase.FindAssets("Condition_ l:Sample");
+        string[] result = AssetDatabase.FindAssets("Predicate_ l:Sample");
         if (result.Length == 1)
         {
             string path = AssetDatabase.GUIDToAssetPath(result[0]);
-            string newPath = "Assets/ScriptableObjects/CardEffects/CardConditions/Condition_.cs";
+            string newPath = "Assets/ScriptableObjects/CardEffects/CardPredicates/Predicate_.cs";
 
             if (!AssetDatabase.CopyAsset(path, newPath))
                 Debug.LogWarning($"Failed to copy {path}");
         }
     }
 
+    public abstract Card.TargetType TargetType { get; }
+
     /// <summary>
     /// Called to set up GUI for class-specific customization
     /// </summary>
     public abstract void InputGUI();
-    /// <summary>
-    /// Method called during runtime to actually check if the condition
-    /// is true (and whether to run the effect preedicate)
-    /// </summary>
-    public abstract bool CheckCondition(WorldInfo worldInfo, ResolutionInfo resolutionInfo);
-
+    public abstract void PerformPredicate(TargetInfo targetInfo, WorldInfo worldInfo, ResolutionInfo resolutionInfo);
     public abstract string GetDescription();
 
     /// <summary>

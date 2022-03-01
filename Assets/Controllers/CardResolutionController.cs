@@ -8,6 +8,8 @@ using System;
 /// </summary>
 public class CardResolutionController : MonoBehaviour
 {
+    public WorldInfo worldInfo;
+
     Action<CardModel> cbResolutionFinished;
     /// <summary>
     /// Register a function to be called when this card's resolution is complete
@@ -68,8 +70,16 @@ public class CardResolutionController : MonoBehaviour
 
     private void attemptResolution()
     {
-        if(activeCard.Data.CardEffects.Count > 0)
-            Debug.Log(activeCard.Data.CardEffects[0].condition.CheckCondition());
+        if(activeCard != null && activeCard.Data.CardEffects.Count > 0)
+        {
+            ResolutionInfo resolutionInfo = new ResolutionInfo();
+            if (activeCard.Data.CardEffects[0].condition.CheckCondition(worldInfo, resolutionInfo))
+            {
+                TargetInfo targetInfo = new TargetInfo();
+                activeCard.Data.CardEffects[0].predicate.PerformPredicate(targetInfo, worldInfo, resolutionInfo);
+                removeActiveCard();
+            }
+        }
     }
 
     private void setActiveCard(CardModel cardModel)

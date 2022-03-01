@@ -13,7 +13,7 @@ public class CardGenerator : EditorWindow
     /// <summary>
     /// Path which cards are automatically saved at
     /// </summary>
-    private string cardPath = "ScriptableObjects/Cards/";
+    private string cardPath = "Assets/ScriptableObjects/Cards/";
 
     /// <summary>
     /// Card name used in filename of the card
@@ -43,7 +43,7 @@ public class CardGenerator : EditorWindow
 
     GUIStyle boldStyle = new GUIStyle();
 
-    [MenuItem("Utilities/Card Generator")]
+    [MenuItem("Utilities/Card Generator/Open Window")]
     public static void ShowWindow()
     {
         EditorWindow window = GetWindow<CardGenerator>("Card Generator");
@@ -51,7 +51,7 @@ public class CardGenerator : EditorWindow
         window.Show();
     }
 
-    [MenuItem("Utilities/Close Card Generator")]
+    [MenuItem("Utilities/Card Generator/Close Window")]
     public static void CloseWindow()
     {
         if (EditorWindow.HasOpenInstances<CardGenerator>())
@@ -152,34 +152,11 @@ public class CardGenerator : EditorWindow
         for(int i = 0; i < cardEffects.Count; i++)
         {
             EditorGUILayout.LabelField("Effect " + i, EditorStyles.boldLabel);
-            effectInfo(cardEffects[i]);
+            cardEffects[i].OnInputGUI();
             EditorGUILayout.Space(5);
         }
 
-
         EditorGUILayout.EndFoldoutHeaderGroup();
-    }
-
-    void effectInfo(CardEffect cardEffect)
-    {
-        EditorGUI.indentLevel++;
-
-        MonoScript lastConditionScript = cardEffect.conditionScript;
-        cardEffect.conditionScript = (MonoScript)EditorGUILayout.ObjectField("Condition", cardEffect.conditionScript, typeof(MonoScript), false);
-        if (cardEffect.conditionScript != null)
-        {
-            if (cardEffect.conditionScript != lastConditionScript)
-                cardEffect.condition = (CardEffectCondition)Activator.CreateInstance(cardEffect.conditionScript.GetClass());
-        }
-        else
-        {
-            cardEffect.condition = null;
-        }
-
-        if (cardEffect.condition != null)
-            cardEffect.condition.InputGUI();
-
-        EditorGUI.indentLevel--;
     }
 
     /// <summary>
@@ -240,7 +217,7 @@ public class CardGenerator : EditorWindow
     /// </summary>
     void resetCard()
     {
-       
+        cardEffects = new List<CardEffect>();
     }
 
     void saveCard()
