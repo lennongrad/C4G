@@ -72,7 +72,18 @@ public class TowerController : MonoBehaviour
         }
     }
 
-    void Start()
+    /// <summary>
+    /// Set to true when the tower is hovered over which is then monitored in the next FixedUpdate()
+    /// </summary>
+    bool hovered = false;
+
+    Action<TowerController> cbHovered;
+    /// <summary>
+    /// Register a method to be called when the tower is hovered over by the user's mouse cursor
+    /// </summary>
+    public void RegisterHoveredCB(Action<TowerController> cb) { cbHovered += cb; }
+
+    void OnEnable()
     {
         defaultMaterial = Cube.GetComponent<MeshRenderer>().material;
         behaviours = GetComponents<TowerBehaviour>();
@@ -81,6 +92,27 @@ public class TowerController : MonoBehaviour
     void FixedUpdate()
     {
         if(ParentTile != null)
+        {
             transform.position = ParentTile.transform.position;
+            if (hovered)
+            {
+                transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
+            }
+            else
+            {
+                transform.localScale = new Vector3(1, 1, 1);
+            }
+        }
+        hovered = false;
+    }
+
+    /// <summary>
+    /// Called when the tower is hovered over by the user's mouse cursor. Sets hovered to true and calls hovered callback
+    /// </summary>
+    public void Hover()
+    {
+        hovered = true;
+        if(cbHovered != null)
+            cbHovered(this);
     }
 }

@@ -8,7 +8,9 @@ using System;
 /// </summary>
 public class CardResolutionController : MonoBehaviour
 {
+    public WorldController worldController;
     public WorldInfo worldInfo;
+    public TargetSelectionController targetSelectionController;
 
     Action<CardModel> cbResolutionFinished;
     /// <summary>
@@ -28,10 +30,28 @@ public class CardResolutionController : MonoBehaviour
     /// </summary>
     public void RegisterCardRemoved(Action cb) { cbCardRemoved += cb; }
 
+    Action<int, int, bool> cbTargetCountChanged;
+    /// <summary>
+    /// Register a function to be called when the number of targets changes, returning the number of targets now, max number of targets, and if the user can submit yet
+    /// </summary>
+    public void RegisterTargetCountChanged(Action<int, int, bool> cb) { cbTargetCountChanged += cb; }
+
     /// <summary>
     /// The card that the controller is attempting to resolve
     /// </summary>
     CardModel activeCard = null;
+    /// <summary>
+    /// The index of the effect currently being resolved on the active card
+    /// </summary>
+    int activeEffectIndex;
+    /// <summary>
+    /// The information on what targets have been chosen so far for the current effect
+    /// </summary>
+    TargetInfo currentTargetInfo;
+    /// <summary>
+    /// Information on previous effects that resolved on this same card
+    /// </summary>
+    ResolutionInfo resolutionInfo;
 
     /// <summary>
     /// Public access to tell whether a card is currently resolving
@@ -44,10 +64,11 @@ public class CardResolutionController : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    void Start()
     {
-        if (activeCard != null)
-            attemptResolution();
+        targetSelectionController.RegisterSelectTileCB(OnSelectTile);
+        targetSelectionController.RegisterSelectTowerCB(OnSelectTower);
+        targetSelectionController.RegisterSelectEnemyCB(OnSelectEnemy);
     }
     
     /// <summary>
@@ -68,29 +89,151 @@ public class CardResolutionController : MonoBehaviour
         }
     }
 
+    bool checkedCondition;
+    /// <summary>
+    /// Try to resolve as much as a card as possible, usuallly until having to choose targets
+    /// </summary>
     private void attemptResolution()
     {
-        if(activeCard != null && activeCard.Data.CardEffects.Count > 0)
+        if (activeCard == null)
+            return;
+
+        if(activeCard.Data.Type == Card.CardType.Tower)
         {
-            ResolutionInfo resolutionInfo = new ResolutionInfo();
-            if (activeCard.Data.CardEffects[0].condition.CheckCondition(worldInfo, resolutionInfo))
+            // resolving a tower is pretty different so use different function
+            resolveTower();
+            return;
+        }
+
+        if(activeEffectIndex >= activeCard.Data.CardEffects.Count)
+        {
+            // have gone past last effect, so end resolution
+            removeActiveCard();
+            return;
+        }
+
+        // since we know the active effect is valid now, just get it by index for the rest of the method
+        CardEffect activeEffect = activeCard.Data.CardEffects[activeEffectIndex];
+
+        if (!checkedCondition)
+        {
+            // just got to this effect, so check if it is true
+            if (activeEffect.condition.CheckCondition(worldInfo, resolutionInfo))
             {
-                TargetInfo targetInfo = new TargetInfo();
-                activeCard.Data.CardEffects[0].predicate.PerformPredicate(targetInfo, worldInfo, resolutionInfo);
-                removeActiveCard();
+                // is true, so skip this later
+                checkedCondition = true;
+                // set up new target info
+                currentTargetInfo = new TargetInfo();
+            }
+            else
+            {
+                //not true, so skip this entire effect
+                activeEffectIndex += 1;
+                attemptResolution();
+                return;
             }
         }
+
+        int targetCount = currentTargetInfo.GetTargetCount(activeEffect.predicate.TargetType);
+        if (targetCount < activeEffect.maxTargets && !currentTargetInfo.StoppedBeforeMax)
+        {
+            // not enough targets selected
+
+            bool canSubmit = targetCount >= activeEffect.minTargets;
+            targetSelectionController.StartTargetSelection(activeEffect.predicate.TargetType, activeEffect.targetQuality, resolutionInfo, canSubmit);
+
+            if (cbTargetCountChanged != null)
+                cbTargetCountChanged(targetCount, activeEffect.maxTargets, canSubmit);
+
+            return;
+        }
+
+        /// after all that we actually get to do the effect lol
+        activeEffect.predicate.PerformPredicate(currentTargetInfo, worldInfo, resolutionInfo);
+        activeEffectIndex += 1;
+        attemptResolution();
     }
 
+    /// <summary>
+    /// Separate function for handling a tower card since its not like spells/skills
+    /// </summary>
+    private void resolveTower()
+    {
+        if (currentTargetInfo.Tiles == null || currentTargetInfo.Tiles.Count < 1)
+        {
+            currentTargetInfo = new TargetInfo();
+            targetSelectionController.StartTowerPreview(activeCard.Data.TowerPrefab, resolutionInfo);
+            return;
+        }
+
+        worldController.SpawnTower(activeCard.Data.TowerPrefab, currentTargetInfo.Tiles[0], currentTargetInfo.Direction);
+        removeActiveCard();
+    }
+
+    /// <summary>
+    /// Sets which card needs to be currently resolved
+    /// </summary>
     private void setActiveCard(CardModel cardModel)
     {
         activeCard = cardModel;
+
+        activeEffectIndex = 0;
+        resolutionInfo = new ResolutionInfo();
+        currentTargetInfo = new TargetInfo();
+        checkedCondition = false;
+
+        attemptResolution();
     }
 
+    /// <summary>
+    /// Removes the current active card likely because it has finished resolving
+    /// </summary>
     private void removeActiveCard()
     {
         activeCard = null;
         if (cbCardRemoved != null)
             cbCardRemoved();
+        if (cbTargetCountChanged != null)
+            cbTargetCountChanged(0, 0, false);
+    }
+
+    /// <summary>
+    /// Called when the player selects a tile to be targetted
+    /// </summary>
+    public void OnSelectTile(TileController tile, Tile.TileDirection direction)
+    {
+        if (tile != null)
+            currentTargetInfo.Add(tile);
+        else
+            currentTargetInfo.StoppedBeforeMax = true;
+
+        currentTargetInfo.Direction = direction;
+        attemptResolution();
+    }
+
+    /// <summary>
+    /// Called when the player selects a tower to be targetted
+    /// </summary>
+    public void OnSelectTower(TowerController tower)
+    {
+        if (tower != null)
+            currentTargetInfo.Add(tower);
+        else
+            currentTargetInfo.StoppedBeforeMax = true;
+
+        attemptResolution();
+    }
+
+    /// <summary>
+    /// Called when the player selects an enemy to be targetted
+    /// </summary>
+    public void OnSelectEnemy(EnemyController enemy)
+    {
+        if (enemy != null)
+            currentTargetInfo.Add(enemy);
+        else
+            currentTargetInfo.StoppedBeforeMax = true;
+
+        attemptResolution();
     }
 }

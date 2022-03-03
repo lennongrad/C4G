@@ -18,7 +18,7 @@ public class Condition_Test : CardEffectCondition
 
     public override bool CheckCondition(WorldInfo worldInfo, ResolutionInfo resolutionInfo)
     {
-        return (Random.Range(1, val + 1) == 1);
+        return true;// (Random.Range(1, val + 1) == 1);
     }
 
     public override string GetDescription()

@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1eae0be279bdd5f4caf48bac1284a64f, type: 3}
   m_Name: Card1
   m_EditorClassIdentifier: 
-  CardTitle: 1
-  Type: 2
+  CardTitle: Mana Tower
+  Type: 1
   TowerSubtypes: 0
   SpellSubtypes: 0
   SkillSubtypes: 0
   CardEffects:
-  - minTargets: 1
-    maxTargets: 2
+  - minTargets: 0
+    maxTargets: 4
     conditionScript: {fileID: 11500000, guid: 34d0453de5febdb40a8775e3805d7f53, type: 3}
     condition:
       id: 0
@@ -29,13 +29,13 @@ MonoBehaviour:
     predicateScript: {fileID: 11500000, guid: 754414bc38590094ba5938183dafdb1e, type: 3}
     predicate:
       id: 2
-  TowerPrefab: {fileID: 0}
+  TowerPrefab: {fileID: 1820236534691553018, guid: 1c091981d9f811a43963c2f7ad62de40, type: 3}
   references:
     version: 1
     00000000:
       type: {class: Condition_Test, ns: , asm: Assembly-CSharp}
       data:
-        texty: 
+        texty: 5
         val: 0
     00000001:
       type: {class: Quality_Test, ns: , asm: Assembly-CSharp}

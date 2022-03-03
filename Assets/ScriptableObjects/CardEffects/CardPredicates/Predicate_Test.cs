@@ -6,18 +6,19 @@ using UnityEditor;
 [System.Serializable]
 public class Predicate_Test : CardEffectPredicate
 {
-    public override Card.TargetType TargetType { get { return Card.TargetType.Tiles; } }
+    public override Card.TargetType TargetType { get { return Card.TargetType.Enemies; } }
 
-    public int damage = 0;
+    public float damage = 1f;
 
     public override void InputGUI()
     {
-        damage = EditorGUILayout.IntField("Damage: ", damage);
+        damage = EditorGUILayout.FloatField("Damage: ", damage);
     }
 
     public override void PerformPredicate(TargetInfo targetInfo, WorldInfo worldInfo, ResolutionInfo resolutionInfo)
     {
-        Debug.Log(damage);
+        foreach (EnemyController enemy in targetInfo.Enemies)
+            enemy.DirectDamage(damage);
     }
 
     public override string GetDescription()

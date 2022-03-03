@@ -10,8 +10,8 @@ public class WorldController : MonoBehaviour
     public StageData stageData;
 
     public GameObject cameraController;
-    public GameObject towerPreviewController;
     public GameObject enemySpawnController;
+    public TargetSelectionController targetSelectionController;
     public GameObject minimapCameraController;
     public GameObject tilesContainer;
 
@@ -42,7 +42,7 @@ public class WorldController : MonoBehaviour
                 tile.transform.parent = tilesContainer.transform;
 
                 // register callbacks
-                tile.RegisterHoveredCB(towerPreviewController.GetComponent<TowerPreviewController>().TileHovered);
+                tile.RegisterHoveredCB(targetSelectionController.GetComponent<TargetSelectionController>().TileHovered);
 
                 // add to relevant lists for easy access
                 if (Tiles[x, y].Type == Tile.TileType.Entrance)
@@ -85,5 +85,24 @@ public class WorldController : MonoBehaviour
         List<TileController> activeEntrances = new List<TileController>();
         PathGenerator.RandomizePaths(Tiles, entrances, exits, activeEntrances);
         enemySpawnController.GetComponent<EnemySpawnController>().ActiveEntrances = activeEntrances;
+    }
+
+    /// <summary>
+    /// Creates a new tower object with the parameters as settings and places it in the world
+    /// </summary>
+    public void SpawnTower(GameObject towerPrefab, TileController parentTile, Tile.TileDirection facingDirection)
+    {
+        Vector3 towerPosition = parentTile.transform.position;
+        GameObject towerObject = SimplePool.Spawn(towerPrefab, towerPosition, Quaternion.identity);
+        TowerController towerController = towerObject.GetComponent<TowerController>();
+
+        parentTile.PresentTower = towerController;
+        towerController.ParentTile = parentTile;
+        towerController.FacingDirection = facingDirection;
+        towerController.PerformBehaviours = true;
+
+        towerObject.transform.parent = this.transform;
+
+        towerController.RegisterHoveredCB(targetSelectionController.TowerHovered);
     }
 }

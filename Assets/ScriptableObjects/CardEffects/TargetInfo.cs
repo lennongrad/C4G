@@ -6,22 +6,30 @@ using UnityEngine;
 /// Structure holding lists of different data type to enable
 /// predicates to requst different target types
 /// </summary>
-public struct TargetInfo
+public class TargetInfo
 {
-    public TargetInfo(
-        List<TileController> tiles = null,
-        List<TowerController> towers = null,
-        List<EnemyController> enemies = null,
-        List<CardModel> cards = null)
-    {
-        this.Tiles = tiles;
-        this.Towers = towers;
-        this.Enemies = enemies;
-        this.Cards = cards;
-    }
+    public List<TileController> Tiles { get; } = new List<TileController>();
+    public List<TowerController> Towers { get; } = new List<TowerController>();
+    public List<EnemyController> Enemies { get; } = new List<EnemyController>();
+    public List<CardModel> Cards { get; } = new List<CardModel>();
 
-    public List<TileController> Tiles { get; }
-    public List<TowerController> Towers { get; }
-    public List<EnemyController> Enemies { get; }
-    public List<CardModel> Cards { get; }
+    public void Add(TileController tile) { Tiles.Add(tile); }
+    public void Add(TowerController tower) { Towers.Add(tower); }
+    public void Add(EnemyController enemy) { Enemies.Add(enemy); }
+    public void Add(CardModel card) { Cards.Add(card); }
+
+    public Tile.TileDirection Direction { get; set; } = Tile.TileDirection.None;
+    public bool StoppedBeforeMax = false;
+
+    public int GetTargetCount(Card.TargetType type)
+    {
+        switch (type)
+        {
+            case Card.TargetType.Tiles:   return Tiles.Count;
+            case Card.TargetType.Towers:  return Towers.Count;
+            case Card.TargetType.Enemies: return Enemies.Count;
+            case Card.TargetType.Cards:   return Cards.Count;
+        }
+        return 0;
+    }
 }

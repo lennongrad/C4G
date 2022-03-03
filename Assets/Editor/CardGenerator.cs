@@ -198,7 +198,7 @@ public class CardGenerator : EditorWindow
         {
             // just use the first result, shouldnt be multiple generally
             string path = AssetDatabase.GUIDToAssetPath(result[0]);
-            CardData loadedData = (CardData)AssetDatabase.LoadAssetAtPath(path, typeof(CardData));
+            CardData loadedData = Instantiate((CardData)AssetDatabase.LoadAssetAtPath(path, typeof(CardData)));
 
             // use loadedData to get information about card file
             cardTitle = loadedData.CardTitle;

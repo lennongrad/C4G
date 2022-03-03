@@ -222,6 +222,7 @@ public class TileController : MonoBehaviour
     public void Hover()
     {
         hovered = true;
-        cbHovered(this);
+        if(cbHovered != null)
+            cbHovered(this);
     }
 }

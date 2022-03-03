@@ -8,6 +8,8 @@ using System;
 /// </summary>
 public class EnemySpawnController : MonoBehaviour
 {
+    public TargetSelectionController targetSelectionController;
+
     //debug variables
     public GameObject enemyPrefab;
     int enemySpawnTimer = 90;
@@ -64,8 +66,8 @@ public class EnemySpawnController : MonoBehaviour
 
         enemyObject.transform.SetParent(this.transform);
         enemyController.RegisterDespawnedCB((enemy) => { SimplePool.Despawn(enemyObject); enemiesCount -= 1; });
+        enemyController.RegisterHoveredCB(targetSelectionController.EnemyHovered);
 
-        //enemies.Add(enemyController);
         enemiesCount += 1;
 
         if(cbEnemySpawned != null)

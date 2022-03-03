@@ -134,12 +134,26 @@ public class CameraController : MonoBehaviour
     {
         RaycastHit hit;
         Ray ray = cameraObject.ScreenPointToRay(Mouse.current.position.ReadValue());
-        LayerMask mask = LayerMask.GetMask("Tile");
 
+        LayerMask mask = LayerMask.GetMask("Tile");
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
         {
             TileController tileHovered = hit.transform.parent.GetComponent<TileController>();
-            tileHovered.Hover();
+            tileHovered?.Hover();
+        }
+
+        mask = LayerMask.GetMask("Tower");
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
+        {
+            TowerController towerHovered = hit.transform.parent.GetComponent<TowerController>(); 
+            towerHovered?.Hover();
+        }
+
+        mask = LayerMask.GetMask("Enemy");
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
+        {
+            EnemyController enemyHovered = hit.transform.GetComponent<EnemyController>();
+            enemyHovered?.Hover();
         }
     }
 
