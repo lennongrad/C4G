@@ -1071,8 +1071,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1246e6f1642aab541a5ca270e539599d, type: 2}
   - {fileID: 11400000, guid: 83581d2d51ed733409e8dd39b1129f7f, type: 2}
   - {fileID: 11400000, guid: 83581d2d51ed733409e8dd39b1129f7f, type: 2}
-  - {fileID: 11400000, guid: 83581d2d51ed733409e8dd39b1129f7f, type: 2}
-  - {fileID: 11400000, guid: 83581d2d51ed733409e8dd39b1129f7f, type: 2}
+  - {fileID: 11400000, guid: 6124d9d0fb99f10418c120e136cb8931, type: 2}
+  - {fileID: 11400000, guid: 6124d9d0fb99f10418c120e136cb8931, type: 2}
   - {fileID: 11400000, guid: 6124d9d0fb99f10418c120e136cb8931, type: 2}
   - {fileID: 11400000, guid: 6124d9d0fb99f10418c120e136cb8931, type: 2}
   DeckZone: {fileID: 11400000, guid: 6e9813d50e647c14c82a3b4473cc5f2c, type: 2}
@@ -1184,11 +1184,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 5995369394112928195, guid: 1913d6b5efbbcc2438c46ba357b0e5aa, type: 3}
+  initialManaTowerPrefab: {fileID: 1820236534691553018, guid: 1c091981d9f811a43963c2f7ad62de40, type: 3}
   stageData: {fileID: 11400000, guid: e8e88bc2930503f4f8a18245659aba92, type: 2}
-  cameraController: {fileID: 1853594730}
-  enemySpawnController: {fileID: 1719810932}
+  cameraController: {fileID: 1853594731}
+  enemySpawnController: {fileID: 1719810934}
   targetSelectionController: {fileID: 306759815}
-  minimapCameraController: {fileID: 519495946}
+  cardGameController: {fileID: 1104222496}
+  minimapCameraController: {fileID: 519495947}
   tilesContainer: {fileID: 955333173}
 --- !u!4 &1334423221
 Transform:
@@ -1646,6 +1648,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0ea978cb2d73c49b4f03609d27b5a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetSelectionController: {fileID: 306759815}
   enemyPrefab: {fileID: 2976261093610815630, guid: e6890087b6ffbd5409a767f186086141, type: 3}
   activeEntrances: []
 --- !u!1 &1853594730

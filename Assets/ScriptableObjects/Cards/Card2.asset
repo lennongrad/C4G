@@ -19,11 +19,11 @@ MonoBehaviour:
   SkillSubtypes: 0
   CardEffects:
   - minTargets: 0
-    maxTargets: 4
-    conditionScript: {fileID: 11500000, guid: 34d0453de5febdb40a8775e3805d7f53, type: 3}
+    maxTargets: 0
+    conditionScript: {fileID: 11500000, guid: cce934b28a7d1d44896c4bed0a3228cc, type: 3}
     condition:
       id: 0
-    qualityScript: {fileID: 11500000, guid: e317f98d998ecc3428e605869d7abd67, type: 3}
+    qualityScript: {fileID: 11500000, guid: f2068488a68b64e419622c24f457e729, type: 3}
     targetQuality:
       id: 1
     predicateScript: {fileID: 11500000, guid: 754414bc38590094ba5938183dafdb1e, type: 3}
@@ -33,15 +33,8 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: Condition_Test, ns: , asm: Assembly-CSharp}
-      data:
-        texty: 5
-        val: 0
+      type: {class: Condition_NoCondition, ns: , asm: Assembly-CSharp}
     00000001:
-      type: {class: Quality_Test, ns: , asm: Assembly-CSharp}
-      data:
-        type: 0
+      type: {class: Quality_Tiles_MatchesType, ns: , asm: Assembly-CSharp}
     00000002:
       type: {class: Predicate_Test, ns: , asm: Assembly-CSharp}
-      data:
-        damage: 0

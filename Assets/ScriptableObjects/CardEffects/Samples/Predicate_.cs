@@ -16,7 +16,7 @@ public class Predicate_ : CardEffectPredicate
     {
     }
 
-    public override string GetDescription()
+    public override string GetDescription(WorldInfo worldInfo)
     {
         return "";
     }

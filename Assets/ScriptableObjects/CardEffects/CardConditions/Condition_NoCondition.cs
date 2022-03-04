@@ -4,21 +4,16 @@ using UnityEngine;
 using UnityEditor;
 
 [System.Serializable]
-public class Condition_Test : CardEffectCondition
+public class Condition_NoCondition : CardEffectCondition
 {
-    public string texty;
-
-    public int val;
 
     public override void InputGUI()
     {
-        texty = EditorGUILayout.TextField("Texty:", texty);
-        val = EditorGUILayout.IntField("Val: ", val);
     }
 
     public override bool CheckCondition(WorldInfo worldInfo, ResolutionInfo resolutionInfo)
     {
-        return true;// (Random.Range(1, val + 1) == 1);
+        return true;
     }
 
     public override string GetDescription(WorldInfo worldInfo)

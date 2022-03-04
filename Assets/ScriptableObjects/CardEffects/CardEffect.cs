@@ -5,7 +5,7 @@ using UnityEditor;
 using System;
 
 [System.Serializable]
-public class CardEffect 
+public class CardEffect
 {
     public static int InfiniteTarget = 4;
     public int minTargets = 0;
@@ -24,18 +24,18 @@ public class CardEffect
     {
         EditorGUI.indentLevel++;
 
-        EditorGUILayout.LabelField(GetDescription());
+        EditorGUILayout.LabelField(GetDescription(null));
 
         EditorGUILayout.BeginHorizontal();
         string targetString;
-        if(maxTargets == InfiniteTarget)
+        if (maxTargets == InfiniteTarget)
         {
             if (minTargets == InfiniteTarget)
                 targetString = "all";
             else
                 targetString = minTargets + "+";
         }
-        else if(maxTargets == 0)
+        else if (maxTargets == 0)
         {
             targetString = "none";
         }
@@ -56,6 +56,9 @@ public class CardEffect
         EditorGUILayout.Space(4);
         predicateInfo();
 
+        if(predicate != null && targetQuality != null && predicate.TargetType != targetQuality.TargetType)
+            EditorGUILayout.HelpBox("The target type of the quality does not match the predicate.", MessageType.Error);
+
         EditorGUI.indentLevel--;
     }
 
@@ -66,15 +69,19 @@ public class CardEffect
     {
         MonoScript lastConditionScript = conditionScript;
         conditionScript = (MonoScript)EditorGUILayout.ObjectField("Condition", conditionScript, typeof(MonoScript), false);
-        if (conditionScript != null)
+        if (conditionScript == null)
         {
-            if (conditionScript != lastConditionScript)
-                condition = (CardEffectCondition)Activator.CreateInstance(conditionScript.GetClass());
+            string[] result = AssetDatabase.FindAssets("Condition_NoCondition");
+
+            if (result.Length == 1)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(result[0]);
+                conditionScript = (MonoScript)AssetDatabase.LoadAssetAtPath(path, typeof(MonoScript));
+            }
         }
-        else
-        {
-            condition = null;
-        }
+
+        if (conditionScript != lastConditionScript)
+            condition = (CardEffectCondition)Activator.CreateInstance(conditionScript.GetClass());
 
         if (condition != null)
             condition.OnInputGUI();
@@ -88,15 +95,19 @@ public class CardEffect
 
         MonoScript lastQualityScript = qualityScript;
         qualityScript = (MonoScript)EditorGUILayout.ObjectField("Quality", qualityScript, typeof(MonoScript), false);
-        if (qualityScript != null)
+        if (qualityScript == null)
         {
-            if (qualityScript != lastQualityScript)
-                targetQuality = (CardEffectQuality)Activator.CreateInstance(qualityScript.GetClass());
+            string[] result = AssetDatabase.FindAssets("Quality_Tiles_NoQuality");
+
+            if (result.Length == 1)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(result[0]);
+                qualityScript = (MonoScript)AssetDatabase.LoadAssetAtPath(path, typeof(MonoScript));
+            }
         }
-        else
-        {
-            targetQuality = null;
-        }
+
+        if (qualityScript != lastQualityScript)
+            targetQuality = (CardEffectQuality)Activator.CreateInstance(qualityScript.GetClass());
 
         if (targetQuality != null)
             targetQuality.OnInputGUI();
@@ -110,15 +121,19 @@ public class CardEffect
 
         MonoScript lastPredicateScript = predicateScript;
         predicateScript = (MonoScript)EditorGUILayout.ObjectField("Predicate", predicateScript, typeof(MonoScript), false);
-        if (predicateScript != null)
+        if (predicateScript == null)
         {
-            if (predicateScript != lastPredicateScript)
-                predicate = (CardEffectPredicate)Activator.CreateInstance(predicateScript.GetClass());
+            string[] result = AssetDatabase.FindAssets("Predicate_NoPredicate");
+
+            if (result.Length == 1)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(result[0]);
+                predicateScript = (MonoScript)AssetDatabase.LoadAssetAtPath(path, typeof(MonoScript));
+            }
         }
-        else
-        {
-            predicate = null;
-        }
+
+        if (predicateScript != lastPredicateScript)
+            predicate = (CardEffectPredicate)Activator.CreateInstance(predicateScript.GetClass());
 
         if (predicate != null)
             predicate.OnInputGUI();
@@ -127,16 +142,15 @@ public class CardEffect
     /// <summary>
     /// Textual description of the effect
     /// </summary>
-    public string GetDescription() {
+    public string GetDescription(WorldInfo worldInfo) {
         // no targets so just ignore targetting, or no predicate to get type from
         if (condition == null || targetQuality == null || predicate == null)
         {
             return "";
         }
 
-        string returnString = condition.GetDescription();
+        string returnString = condition.GetDescription(worldInfo);
 
-        /// if maxTargets is 0, card does not target at all, so dont even display qualities
         if(maxTargets > 0)
         {
             // need plural for qualities, ie "enemy" vs "enemies"
@@ -158,9 +172,10 @@ public class CardEffect
                     returnString += "For any number of target ";
                 }
             }
-            else 
+            else
             {
-                if(minTargets > 0)
+                /// if maxTargets is 0, card does not target at all, so dont even display qualities
+                if (minTargets > 0)
                 {
                     if(minTargets == 1 && maxTargets == 1)
                     {
@@ -189,10 +204,10 @@ public class CardEffect
                 }
             }
 
-            returnString += targetQuality.GetDescription(isPlural);
+            returnString += targetQuality.GetDescription(worldInfo, isPlural);
         }
 
-        returnString += predicate.GetDescription();
+        returnString += predicate.GetDescription(worldInfo);
 
         return returnString;
     }

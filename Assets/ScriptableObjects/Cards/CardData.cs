@@ -13,4 +13,14 @@ public class CardData : ScriptableObject
 
     public List<CardEffect> CardEffects = new List<CardEffect>();
     public GameObject TowerPrefab;
+
+    public string GetDescription(WorldInfo worldInfo)
+    {
+        string resultString = "";
+        foreach(CardEffect effect in CardEffects)
+        {
+            resultString += effect.GetDescription(worldInfo) + "\n";
+        }
+        return resultString;
+    }
 }

@@ -7,12 +7,15 @@ using UnityEngine.InputSystem;
 public class WorldController : MonoBehaviour
 {
     public GameObject tilePrefab;
+    public GameObject initialManaTowerPrefab;
     public StageData stageData;
 
-    public GameObject cameraController;
-    public GameObject enemySpawnController;
+    public CameraController cameraController;
+    public EnemySpawnController enemySpawnController;
     public TargetSelectionController targetSelectionController;
-    public GameObject minimapCameraController;
+    public CardGameController cardGameController;
+    public MinimapController minimapCameraController;
+
     public GameObject tilesContainer;
 
     public TileController[,] Tiles;
@@ -42,7 +45,7 @@ public class WorldController : MonoBehaviour
                 tile.transform.parent = tilesContainer.transform;
 
                 // register callbacks
-                tile.RegisterHoveredCB(targetSelectionController.GetComponent<TargetSelectionController>().TileHovered);
+                tile.RegisterHoveredCB(targetSelectionController.TileHovered);
 
                 // add to relevant lists for easy access
                 if (Tiles[x, y].Type == Tile.TileType.Entrance)
@@ -70,10 +73,13 @@ public class WorldController : MonoBehaviour
         }
 
         // set up minimap
-        minimapCameraController.GetComponent<MinimapController>().UpdateStageData(stageData);
+        minimapCameraController.UpdateStageData(stageData);
 
         // generate enemy paths
         RandomizePaths();
+
+        // randomly generate some number of mana towers for the player to start with
+        RandomizeInitialTowers();
     }
 
     /// <summary>
@@ -84,7 +90,24 @@ public class WorldController : MonoBehaviour
         /// Most of the work is done by the PathGenerator class
         List<TileController> activeEntrances = new List<TileController>();
         PathGenerator.RandomizePaths(Tiles, entrances, exits, activeEntrances);
-        enemySpawnController.GetComponent<EnemySpawnController>().ActiveEntrances = activeEntrances;
+        enemySpawnController.ActiveEntrances = activeEntrances;
+    }
+
+    /// <summary>
+    /// Player has to start with some mana towers in order to place more
+    /// </summary>
+    void RandomizeInitialTowers()
+    {
+        List<TileController> raisedTiles = new List<TileController>();
+        for (int x = 0; x < stageData.Width; x++)
+            for (int y = 0; y < stageData.Height; y++)
+                if (Tiles[x, y].Type == Tile.TileType.Raised)
+                    raisedTiles.Add(Tiles[x, y]);
+
+        raisedTiles.Shuffle();
+        if(raisedTiles.Count >= 2)
+            for (int i = 0; i < 2; i++)
+                SpawnTower(initialManaTowerPrefab, raisedTiles[i], Tile.TileDirection.Right);
     }
 
     /// <summary>

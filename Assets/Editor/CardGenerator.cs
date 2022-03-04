@@ -111,6 +111,8 @@ public class CardGenerator : EditorWindow
         }
         EditorGUI.indentLevel--;
 
+        //EditorGUILayout.LabelField(CardGetDescription(null));
+
         EditorGUILayout.EndFoldoutHeaderGroup();
     }
 

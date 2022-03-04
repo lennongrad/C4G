@@ -51,6 +51,10 @@ public class TileController : MonoBehaviour
     /// Set to true when the tile is hovered over which is then monitored in the next FixedUpdate()
     /// </summary>
     bool hovered = false;
+    /// <summary>
+    /// Set high when pinged (mostly for debug)
+    /// </summary>
+    int pinged = 0;
 
     Action<TileController> cbHovered;
     /// <summary>
@@ -105,17 +109,18 @@ public class TileController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (hovered)
+        cubeMaterial.color = baseColor;
+        if(hovered)
         {
-            // multiply cube base colour by blue if it was hovered recently
-            cubeMaterial.color = new Color(.3f, .3f, 1);
-            cubeMaterial.color *= baseColor;
+            cubeMaterial.color *= new Color(.3f, .3f, 1);
         }
-        else
+        if(pinged >= 0)
         {
-            cubeMaterial.color = baseColor;
+            cubeMaterial.color *= new Color(1, .3f, .3f);
         }
+
         hovered = false;
+        pinged -= 1;
     }
 
     /// <summary>
@@ -214,6 +219,14 @@ public class TileController : MonoBehaviour
             DirectionsDisplay.transform.localEulerAngles = new Vector3(DirectionsDisplay.transform.localEulerAngles.x, baseRotation, DirectionsDisplay.transform.localEulerAngles.z);
             DirectionsDisplay.SetActive(true);
         }
+    }
+
+    /// <summary>
+    /// Used for debug mostly to temporarily colour in a tile
+    /// </summary>
+    public void Ping(int amt = 15)
+    {
+        pinged = amt;
     }
 
     /// <summary>

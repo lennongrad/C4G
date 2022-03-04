@@ -4,18 +4,21 @@ using UnityEngine;
 using UnityEditor;
 
 [System.Serializable]
-public class Predicate_Test : CardEffectPredicate
+public class Predicate_EnemyDamage : CardEffectPredicate
 {
-    public override Card.TargetType TargetType { get { return Card.TargetType.Tiles; } }
+    public override Card.TargetType TargetType { get { return Card.TargetType.Enemies; } }
+
+    public float damage = 1f;
 
     public override void InputGUI()
     {
+        damage = EditorGUILayout.FloatField("Damage: ", damage);
     }
 
     public override void PerformPredicate(TargetInfo targetInfo, WorldInfo worldInfo, ResolutionInfo resolutionInfo)
     {
-        foreach (TileController tile in targetInfo.Tiles)
-            tile.Ping(60);
+        foreach (EnemyController enemy in targetInfo.Enemies)
+            enemy.DirectDamage(damage);
     }
 
     public override string GetDescription(WorldInfo worldInfo)

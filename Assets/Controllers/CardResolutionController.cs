@@ -78,9 +78,9 @@ public class CardResolutionController : MonoBehaviour
     {
         if(!IsBusy)
         {
-            setActiveCard(visualCard.Model);
             if (cbCardAdded != null)
                 cbCardAdded(visualCard);
+            setActiveCard(visualCard.Model);
             return true;
         }
         else

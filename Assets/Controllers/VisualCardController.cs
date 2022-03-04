@@ -10,10 +10,9 @@ using System;
 /// </summary>
 public class VisualCardController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    /// <summary>
-    /// The visual element showing the card's name
-    /// </summary>
     public Text CardName;
+    public Text CardDescription;
+    public WorldInfo worldInfo;
 
     CardModel cardModel;
     /// <summary>
@@ -114,6 +113,7 @@ public class VisualCardController : MonoBehaviour, IPointerEnterHandler, IPointe
         CardData data = cardModel.Data;
 
         CardName.text = data.CardTitle;
+        CardDescription.text = data.GetDescription(worldInfo);
     }
 
     void FixedUpdate()

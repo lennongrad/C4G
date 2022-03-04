@@ -40,6 +40,7 @@ public class StageGenerator : EditorWindow
     /// </summary>
     private Dictionary<Tile.TileType, Color> tileColor = new Dictionary<Tile.TileType, Color>()
     {
+        { Tile.TileType.None, Color.white },
         { Tile.TileType.Floor, Color.white },
         { Tile.TileType.Wall, Color.black },
         { Tile.TileType.Raised, new Color(.75f, .75f, .75f) }, // a lighter grey than the barrier

@@ -17,7 +17,7 @@ public abstract class CardEffectCondition
     [MenuItem("Utilities/Card Effects/Make Empty Condition")]
     public static void MakeEmptyCondition()
     {
-        string[] result = AssetDatabase.FindAssets("Condition_ l:Sample");
+        string[] result = AssetDatabase.FindAssets("Condition_", new string[] { "Assets/ScriptableObjects/CardEffects/Samples" });
         if (result.Length == 1)
         {
             string path = AssetDatabase.GUIDToAssetPath(result[0]);
@@ -38,7 +38,7 @@ public abstract class CardEffectCondition
     /// </summary>
     public abstract bool CheckCondition(WorldInfo worldInfo, ResolutionInfo resolutionInfo);
 
-    public abstract string GetDescription();
+    public abstract string GetDescription(WorldInfo worldInfo);
 
     /// <summary>
     /// Method called in CardGenerator window to display the information the
