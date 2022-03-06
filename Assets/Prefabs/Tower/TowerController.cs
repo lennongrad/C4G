@@ -89,6 +89,14 @@ public class TowerController : MonoBehaviour
         behaviours = GetComponents<TowerBehaviour>();
     }
 
+    public void Initiate()
+    {
+        foreach(TowerBehaviour behaviour in behaviours)
+        {
+            behaviour.OnInitiate();
+        }
+    }
+
     void FixedUpdate()
     {
         if(ParentTile != null)

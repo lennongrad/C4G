@@ -6,13 +6,13 @@ using System;
 
 public class ResolutionDisplayController : MonoBehaviour
 {
-    public GameObject visualCardPrefab;
+    public GameObject cardPrefab;
     public CardResolutionController cardResolutionController;
 
     public Text TargetCountText;
     public Button SubmitButton;
 
-    GameObject visualCard;
+    CardController currentCard;
 
     void Awake()
     {
@@ -21,20 +21,20 @@ public class ResolutionDisplayController : MonoBehaviour
         cardResolutionController.RegisterTargetCountChanged(onTargetCountChanged);
     }
 
-    void onCardAdded(VisualCardController visualCardController)
+    void onCardAdded(CardController cardController)
     {
-        visualCard = visualCardController.gameObject;
-        visualCard.transform.SetParent(this.transform);
-        visualCardController.horizontalEdge = RectTransform.Edge.Right;
-        visualCardController.TargetX = 15;
-        visualCardController.TargetY = 35;
-        visualCardController.TargetRotation = 0;
+        currentCard = cardController;
+
+        currentCard.transform.SetParent(this.transform);
+        currentCard.horizontalEdge = RectTransform.Edge.Right;
+        currentCard.TargetX = 15;
+        currentCard.TargetY = 35;
+        currentCard.TargetRotation = 0;
     }
 
     void onCardRemoved()
     {
-        SimplePool.Despawn(visualCard);
-        visualCard = null;
+        currentCard = null;
     }
 
     void onTargetCountChanged(int currentTargets, int targetsMax, bool allowSubmit)

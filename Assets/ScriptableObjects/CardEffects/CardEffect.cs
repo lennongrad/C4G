@@ -205,7 +205,10 @@ public class CardEffect
             returnString += targetQuality.GetDescription(worldInfo, isPlural);
         }
 
-        returnString += ", " + predicate.GetDescription(worldInfo);
+        if (returnString == "")
+            returnString += predicate.GetDescription(worldInfo).FirstCharToUpper();
+        else
+            returnString += ", " + predicate.GetDescription(worldInfo);
 
         return returnString;
     }

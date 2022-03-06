@@ -6,6 +6,8 @@ using System;
 [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/CardZone", order = 1), System.Serializable]
 public class CardZone : ScriptableObject
 {
+    public GameObject cardPrefab;
+
     /// <summary>
     /// Whether or not order matters in this zone. Typically only true for the deck
     /// </summary>
@@ -20,29 +22,30 @@ public class CardZone : ScriptableObject
     /// The list of cards in the zone currently
     /// </summary>
     [System.NonSerialized]
-    List<CardModel> cards = new List<CardModel>();
+    List<CardController> cards = new List<CardController>();
 
-    Action<List<CardModel>> cbCardsAdded;
+    Action<List<CardController>> cbCardsAdded;
     /// <summary>
     /// Register a function to be called whenever one or more new cards enters this zone
     /// </summary>
-    public void RegisterCardsAdded(Action<List<CardModel>> cb) { cbCardsAdded += cb; }
+    public void RegisterCardsAdded(Action<List<CardController>> cb) { cbCardsAdded += cb; }
 
-    Action<List<CardModel>> cbCardsRemoved;
+    Action<List<CardController>> cbCardsRemoved;
     /// <summary>
     /// Register a function to be called whenever one or more new cards are removed from this zone
     /// </summary>
-    public void RegisterCardsRemoved(Action<List<CardModel>> cb) { cbCardsRemoved += cb; }
+    public void RegisterCardsRemoved(Action<List<CardController>> cb) { cbCardsRemoved += cb; }
 
     /// <summary>
     /// Create new card models for the card data passed in then add it to this zone
     /// </summary>
-    public List<CardModel> ConjureList(List<CardData> cardDataList)
+    public List<CardController> ConjureList(List<CardData> cardDataList)
     {
-        List<CardModel> addedCards = new List<CardModel>();
+        List<CardController> addedCards = new List<CardController>();
         foreach (CardData cardData in cardDataList)
         {
-            CardModel newCard = new CardModel(cardData);
+            CardController newCard = Instantiate(cardPrefab, new Vector3(0,0,0), Quaternion.identity).GetComponent<CardController>();
+            newCard.Data = cardData;
 
             cards.Add(newCard);
             addedCards.Add(newCard);
@@ -62,28 +65,50 @@ public class CardZone : ScriptableObject
             cards.Shuffle();
     }
 
-    // might want better methods for moving between zones
-    public void Add(CardModel card)
+    /// <summary>
+    /// Move all the cards from one zone into this one
+    /// </summary>
+    public void AddAll(CardZone otherZone)
     {
+        while(otherZone.Count > 0)
+        {
+            CardController removedCard = otherZone.Pop();
+            Add(removedCard);
+        }
+    }
+
+    // might want better methods for moving between zones
+    public void Add(CardController card)
+    {
+        if (cards.Contains(card))
+            return;
+
         if (cbCardsAdded != null)
             cbCardsAdded(card.IndividualList());
-        else
-            Debug.Log("no card added function");
         cards.Add(card);
     }
 
-    public CardModel Pop()
+    public bool Remove(CardController card)
     {
-        if (!isOrdered)
-            return null;
-        else
+        if(cards.Contains(card))
         {
-            CardModel removedCard = cards[0];
-            cards.RemoveAt(0);
+            cards.Remove(card);
 
             if (cbCardsRemoved != null)
-                cbCardsRemoved(removedCard.IndividualList());
-            return removedCard;
+                cbCardsRemoved(card.IndividualList());
+
+            return true;
         }
+        return false;
+    }
+
+    public CardController Pop()
+    {
+        CardController removedCard = cards[0];
+        cards.RemoveAt(0);
+
+        if (cbCardsRemoved != null)
+            cbCardsRemoved(removedCard.IndividualList());
+        return removedCard;
     }
 }

@@ -11,12 +11,12 @@ public class TargetInfo
     public List<TileController> Tiles { get; } = new List<TileController>();
     public List<TowerController> Towers { get; } = new List<TowerController>();
     public List<EnemyController> Enemies { get; } = new List<EnemyController>();
-    public List<CardModel> Cards { get; } = new List<CardModel>();
+    public List<CardController> Cards { get; } = new List<CardController>();
 
     public void Add(TileController tile) { Tiles.Add(tile); }
     public void Add(TowerController tower) { Towers.Add(tower); }
     public void Add(EnemyController enemy) { Enemies.Add(enemy); }
-    public void Add(CardModel card) { Cards.Add(card); }
+    public void Add(CardController card) { Cards.Add(card); }
 
     public Tile.TileDirection Direction { get; set; } = Tile.TileDirection.None;
     public bool StoppedBeforeMax = false;

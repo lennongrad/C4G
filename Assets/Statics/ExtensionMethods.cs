@@ -210,4 +210,9 @@ public static class ExtensionMethods
 
         return new Color(red, green, blue, color.a);
     }
+
+    public static string FirstCharToUpper(this string input)
+    {
+        return input[0].ToString().ToUpper() + input.Substring(1);
+    }
 }

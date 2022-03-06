@@ -8,7 +8,7 @@ using System;
 /// <summary>
 /// The UI element representing a card in the user's hand or otherwise viewable by the user
 /// </summary>
-public class VisualCardController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     public CostIcon CostIconPrefab;
 
@@ -17,16 +17,16 @@ public class VisualCardController : MonoBehaviour, IPointerEnterHandler, IPointe
     public GameObject CardCost;
     public WorldInfo worldInfo;
 
-    CardModel cardModel;
+    CardData data;
     /// <summary>
     /// The card that is being visually represented
     /// </summary>
-    public CardModel Model
+    public CardData Data
     {
-        get { return cardModel; }
+        get { return data; }
         set
         {
-            cardModel = value;
+            data = value;
             visualUpdate();
         }
     }
@@ -90,31 +90,29 @@ public class VisualCardController : MonoBehaviour, IPointerEnterHandler, IPointe
     /// </summary>
     public int doubleClickedTimer = 0;
 
-    Action<VisualCardController> cbHovered;
+    Action<CardController> cbHovered;
     /// <summary>
     /// Register a function to be called when the user hovers over this card
     /// </summary>
-    public void RegisterHovered(Action<VisualCardController> cb) { cbHovered += cb; }
+    public void RegisterHovered(Action<CardController> cb) { cbHovered -= cb; cbHovered += cb; }
 
-    Action<VisualCardController> cbUnhovered;
+    Action<CardController> cbUnhovered;
     /// <summary>
     /// Register a function to be called when the useer stops hovering over this card
     /// </summary>
-    public void RegisterUnhovered(Action<VisualCardController> cb) { cbUnhovered += cb; }
+    public void RegisterUnhovered(Action<CardController> cb) { cbUnhovered -= cb; cbUnhovered += cb; }
 
-    Action<VisualCardController> cbPlayed;
+    Action<CardController> cbPlayed;
     /// <summary>
     /// Register a function to be called when the user attempts to play this card
     /// </summary>
-    public void RegisterPlayed(Action<VisualCardController> cb) { cbPlayed += cb; }
+    public void RegisterPlayed(Action<CardController> cb) { cbPlayed -= cb; cbPlayed += cb; }
 
     /// <summary>
     /// Updates the card to match the model's data
     /// </summary>
     void visualUpdate()
     {
-        CardData data = cardModel.Data;
-
         CardName.text = data.CardTitle;
         CardDescription.text = data.GetDescription(worldInfo);
 

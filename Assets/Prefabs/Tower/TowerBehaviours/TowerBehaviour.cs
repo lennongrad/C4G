@@ -27,16 +27,27 @@ abstract public class TowerBehaviour : MonoBehaviour
     /// The main TowerController script of the tower this is attached to
     /// </summary>
     protected TowerController mainController;
-
-    void Start()
+    protected TowerController MainController
     {
-        mainController = GetComponent<TowerController>();
+        get
+        {
+            if (mainController == null)
+                mainController = GetComponent<TowerController>();
+            return mainController;
+        }
+    }
+
+    /// <summary>
+    /// Call when creating tower after setting it up
+    /// </summary>
+    public void OnInitiate()
+    {
         Initiate();
     }
 
     void FixedUpdate()
     {
-        if (performBehaviour && mainController.PerformBehaviours)
+        if (performBehaviour && MainController.PerformBehaviours)
             Behave();
     }
 }

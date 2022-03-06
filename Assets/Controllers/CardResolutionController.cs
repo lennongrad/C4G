@@ -11,18 +11,20 @@ public class CardResolutionController : MonoBehaviour
     public WorldController worldController;
     public WorldInfo worldInfo;
     public TargetSelectionController targetSelectionController;
+    public CardZone DiscardZone;
+    public CardZone ResolutionZone;
 
-    Action<CardModel> cbResolutionFinished;
+    Action<CardController> cbResolutionFinished;
     /// <summary>
     /// Register a function to be called when this card's resolution is complete
     /// </summary>
-    public void RegisterResolutionFinished(Action<CardModel> cb) { cbResolutionFinished += cb; }
+    public void RegisterResolutionFinished(Action<CardController> cb) { cbResolutionFinished += cb; }
 
-    Action<VisualCardController> cbCardAdded;
+    Action<CardController> cbCardAdded;
     /// <summary>
     /// Register a function to be called when a new active card is set.
     /// </summary>
-    public void RegisterCardAdded(Action<VisualCardController> cb) { cbCardAdded += cb; }
+    public void RegisterCardAdded(Action<CardController> cb) { cbCardAdded += cb; }
 
     Action cbCardRemoved;
     /// <summary>
@@ -39,7 +41,7 @@ public class CardResolutionController : MonoBehaviour
     /// <summary>
     /// The card that the controller is attempting to resolve
     /// </summary>
-    CardModel activeCard = null;
+    CardController activeCard = null;
     /// <summary>
     /// The index of the effect currently being resolved on the active card
     /// </summary>
@@ -74,13 +76,13 @@ public class CardResolutionController : MonoBehaviour
     /// <summary>
     /// Request for a card to be played.
     /// </summary>
-    public bool PlayCard(VisualCardController visualCard)
+    public bool PlayCard(CardController cardController)
     {
         if(!IsBusy)
         {
             if (cbCardAdded != null)
-                cbCardAdded(visualCard);
-            setActiveCard(visualCard.Model);
+                cbCardAdded(cardController);
+            setActiveCard(cardController);
             return true;
         }
         else
@@ -98,14 +100,14 @@ public class CardResolutionController : MonoBehaviour
         if (activeCard == null)
             return;
 
-        if(activeCard.Data.Type == Card.CardType.Tower)
+        if (activeCard.Data.Type == Card.CardType.Tower)
         {
             // resolving a tower is pretty different so use different function
             resolveTower();
             return;
         }
 
-        if(activeEffectIndex >= activeCard.Data.CardEffects.Count)
+        if (activeEffectIndex >= activeCard.Data.CardEffects.Count)
         {
             // have gone past last effect, so end resolution
             removeActiveCard();
@@ -173,9 +175,11 @@ public class CardResolutionController : MonoBehaviour
     /// <summary>
     /// Sets which card needs to be currently resolved
     /// </summary>
-    private void setActiveCard(CardModel cardModel)
+    private void setActiveCard(CardController CardController)
     {
-        activeCard = cardModel;
+        ResolutionZone.Add(CardController);
+
+        activeCard = CardController;
 
         activeEffectIndex = 0;
         resolutionInfo = new ResolutionInfo();
@@ -190,7 +194,11 @@ public class CardResolutionController : MonoBehaviour
     /// </summary>
     private void removeActiveCard()
     {
+        if(ResolutionZone.Remove(activeCard))
+            DiscardZone.Add(activeCard);
+
         activeCard = null;
+
         if (cbCardRemoved != null)
             cbCardRemoved();
         if (cbTargetCountChanged != null)

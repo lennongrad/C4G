@@ -30,7 +30,7 @@ public class ProduceMana : TowerBehaviour
 
     public void OnCycleBegin()
     {
-        if(performBehaviour && mainController.PerformBehaviours)
-            playerResourceManager.AddMana(Mana.ManaType.Spades, 1);
+        if(performBehaviour && MainController.PerformBehaviours)
+            playerResourceManager.AddMana(manaType, 1);
     }
 }

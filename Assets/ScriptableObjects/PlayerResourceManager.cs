@@ -7,7 +7,7 @@ public class PlayerResourceManager : ScriptableObject
     Dictionary<Mana.ManaType, int> manaTotal;
 
     int lifeTotal;
-    public int LifeTotal { get { return lifeTotal; } set { lifeTotal = value;  } }
+    public int LifeTotal { get { return lifeTotal; } set { lifeTotal = value; } }
 
     int wisdomTotal;
     public int WisdomTotal { get { return wisdomTotal; } set { wisdomTotal = value; } }
@@ -23,7 +23,7 @@ public class PlayerResourceManager : ScriptableObject
     public string debugString()
     {
         string returnString = "";
-        foreach(KeyValuePair<Mana.ManaType, int> kvp in manaTotal)
+        foreach (KeyValuePair<Mana.ManaType, int> kvp in manaTotal)
         {
             returnString += kvp.Key.ToString() + ": " + kvp.Value + "\n";
         }
@@ -34,10 +34,56 @@ public class PlayerResourceManager : ScriptableObject
         return returnString;
     }
 
-   public void Reset()
+    public bool CanAfford(Dictionary<Mana.ManaType, int> cost)
+    {
+        int totalUnused = 0;
+        foreach (KeyValuePair<Mana.ManaType, int> kvp in cost)
+        {
+            if(kvp.Key != Mana.ManaType.None)
+            {
+                if(manaTotal[kvp.Key] < kvp.Value)
+                    return false;
+                else
+                    totalUnused += manaTotal[kvp.Key] - kvp.Value;
+            }
+            else
+            {
+                totalUnused += manaTotal[kvp.Key];
+            }
+        }
+
+        return totalUnused >= cost[Mana.ManaType.None];
+    }
+
+    public void PayCost(Dictionary<Mana.ManaType, int> cost)
+    {
+        // pay non-generic costs
+        foreach (KeyValuePair<Mana.ManaType, int> kvp in cost)
+            if (kvp.Key != Mana.ManaType.None)
+                manaTotal[kvp.Key] -= kvp.Value;
+
+        // pay generic costs
+        int remainingGeneric = cost[Mana.ManaType.None];
+        foreach (KeyValuePair<Mana.ManaType, int> kvp in cost)
+        {
+            if(manaTotal[kvp.Key] >= remainingGeneric)
+            {
+                manaTotal[kvp.Key] -= remainingGeneric;
+                remainingGeneric = 0;
+            } 
+            else
+            {
+                remainingGeneric -= manaTotal[kvp.Key];
+                manaTotal[kvp.Key] = 0;
+            }
+        }
+    }
+
+    public void Reset()
     {
         manaTotal = new Dictionary<Mana.ManaType, int>()
         {
+            { Mana.ManaType.None, 0 },
             { Mana.ManaType.Clubs, 0 },
             { Mana.ManaType.Spades, 0 },
             { Mana.ManaType.Hearts, 0},

@@ -63,7 +63,7 @@ MonoBehaviour:
   performBehaviour: 1
   cycleBegin: {fileID: 11400000, guid: 407dd6d5e16b44544a6128772020c3b9, type: 2}
   playerResourceManager: {fileID: 11400000, guid: 8f692e2ce7bfc8b48b38c3c44f84f4d5, type: 2}
-  manaType: 1
+  manaType: 2
 --- !u!1 &4737372044174290543
 GameObject:
   m_ObjectHideFlags: 0

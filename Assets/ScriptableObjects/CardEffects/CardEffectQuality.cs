@@ -47,7 +47,7 @@ public abstract class CardEffectQuality
     {
         return false;
     }
-    public virtual bool CheckQuality(CardModel card, WorldInfo worldInfo, ResolutionInfo resolutionInfo)
+    public virtual bool CheckQuality(CardController card, WorldInfo worldInfo, ResolutionInfo resolutionInfo)
     {
         return false;
     }

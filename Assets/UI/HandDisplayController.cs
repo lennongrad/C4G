@@ -7,8 +7,8 @@ using System;
 
 public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public GameObject visualCardPrefab;
-    public CardResolutionController cardResolutionController;
+    public CardGameController cardGameController;
+    public PlayerResourceManager playerResourceManager;
 
     public float HorizontalCardDisplacement;
     public float VerticalCardDisplacement;
@@ -29,12 +29,12 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
     /// <summary>reg
     /// List of the actual card objects the player sees
     /// </summary>
-    List<GameObject> visualCards = new List<GameObject>();
+    List<CardController> cards = new List<CardController>();
 
     /// <summary>
     /// The last card in hand to be hovered over by the user. Null if they haven't hovered
     /// </summary>
-    VisualCardController lastHovered = null;
+    CardController lastHovered = null;
 
     Action<bool> cbHoveredChanged;
     public void RegisterHoveredChanged(Action<bool> cb) { cbHoveredChanged += cb; }
@@ -43,7 +43,6 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
     {
         cardHolder = transform.GetChild(0).gameObject;
         HandZone.RegisterCardsAdded(OnCardsAdded);
-        SimplePool.Preload(visualCardPrefab, 7, cardHolder.transform);
     }
 
     int debugTimer = 0;
@@ -54,6 +53,7 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
         {
             debugTimer = 0;
             CardVisualUpdate();
+
         }
     }
 
@@ -73,37 +73,39 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
             yPositionsBase.Add((float)Math.Sin(RotationCardDisplacement * Math.PI / 180f * i) + yPositionsBase[i - 1]);
         };
 
-        for (int i = 0; i < visualCards.Count; i++)
+        for (int i = 0; i < cards.Count; i++)
         {
-            RectTransform cardTransform = visualCards[i].GetComponent<RectTransform>();
-            VisualCardController controller = visualCards[i].GetComponent<VisualCardController>();
+            RectTransform cardTransform = cards[i].GetComponent<RectTransform>();
+            CardController controller = cards[i].GetComponent<CardController>();
+
+            controller.horizontalEdge = RectTransform.Edge.Left;
 
             // set the scales back to normal to start off
             controller.TargetScaleX = 1;
             controller.TargetScaleY = 1;
 
             // set target x position
-            controller.TargetX = (controller.Width - HorizontalCardDisplacement) * ((float)i - (float)visualCards.Count / 2f - .5f) + cardHolder.GetComponent<RectTransform>().rect.width / 2f;
+            controller.TargetX = (controller.Width - HorizontalCardDisplacement) * ((float)i - (float)cards.Count / 2f - .5f) + cardHolder.GetComponent<RectTransform>().rect.width / 2f;
 
             // set target y position, with cards in the middle being higher
-            controller.TargetY = VerticalCardDisplacement * cardTransform.rect.width * yPositions[(int)Math.Abs((float)i - ((float)visualCards.Count - 1f) / 2f)];
+            controller.TargetY = VerticalCardDisplacement * cardTransform.rect.width * yPositions[(int)Math.Abs((float)i - ((float)cards.Count - 1f) / 2f)];
 
             // set target rotation angle
-            controller.TargetRotation = RotationCardDisplacement * -((float)i - (float)(visualCards.Count - 1) / 2f);
+            controller.TargetRotation = RotationCardDisplacement * -((float)i - (float)(cards.Count - 1) / 2f);
 
             // if a card is hovered we have a move others over
             if (lastHovered != null)
             {
-                if (visualCards[i] == lastHovered.gameObject)
+                if (cards[i] == lastHovered)
                 {
                     pastHovered = true;
                     // make it bigger
                     controller.TargetScaleX = HoveredCardHorizontalScale;
                     controller.TargetScaleY = HoveredCardVerticalScale;
                     // shift since itll be bigger
-                    if(i < visualCards.Count / 2)
+                    if(i < cards.Count / 2)
                         controller.TargetX += HoveredCardHorizontalDisplacement * Math.Sign(controller.TargetX);
-                    else if(i > visualCards.Count / 2 || (i == visualCards.Count / 2 && visualCards.Count % 2 == 0))
+                    else if(i > cards.Count / 2 || (i == cards.Count / 2 && cards.Count % 2 == 0))
                         controller.TargetX -= HoveredCardHorizontalDisplacement * Math.Sign(controller.TargetX);
                     controller.TargetY = HoveredCardVerticalDisplacement;
                     // unrotate it for clarity
@@ -123,50 +125,43 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
         }
     }
 
-    void onCardHover(VisualCardController visualCardController)
+    void onCardHover(CardController cardController)
     {
-        if(visualCards.Contains(visualCardController.gameObject))
+        if(cards.Contains(cardController))
         {
-            lastHovered = visualCardController;
+            lastHovered = cardController;
             CardVisualUpdate();
         }
     }
 
-    void onCardUnhover(VisualCardController visualCardController)
+    void onCardUnhover(CardController cardController)
     {
-        if(lastHovered == visualCardController)
+        if(lastHovered == cardController)
         {
             lastHovered = null;
             CardVisualUpdate();
         }
     }
 
-    void onCardPlayed(VisualCardController visualCardController)
+    void onCardPlayed(CardController cardController)
     {
-        if(!cardResolutionController.IsBusy)
+        if(cardGameController.AttemptPlay(cardController))
         {
-            cardResolutionController.PlayCard(visualCardController);
-
-            visualCards.Remove(visualCardController.gameObject);
-            //SimplePool.Despawn(visualCardController.gameObject);
+            cards.Remove(cardController);
             CardVisualUpdate();
         }
     }
 
-    void OnCardsAdded(List<CardModel> addedCards)
+    void OnCardsAdded(List<CardController> addedCards)
     {
-        foreach(CardModel model in addedCards)
+        foreach(CardController card in addedCards)
         {
-            GameObject newCard = SimplePool.Spawn(visualCardPrefab, this.transform.position, Quaternion.identity);
-            visualCards.Add(newCard);
-            newCard.transform.SetParent(cardHolder.transform);
+            cards.Add(card);
+            card.transform.SetParent(cardHolder.transform);
 
-            VisualCardController visualCardController = newCard.GetComponent<VisualCardController>();
-            visualCardController.Model = model;
-
-            visualCardController.RegisterHovered(onCardHover);
-            visualCardController.RegisterUnhovered(onCardUnhover);
-            visualCardController.RegisterPlayed(onCardPlayed);
+            card.RegisterHovered(onCardHover);
+            card.RegisterUnhovered(onCardUnhover);
+            card.RegisterPlayed(onCardPlayed);
         }
 
         CardVisualUpdate();

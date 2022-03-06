@@ -9,5 +9,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/WorldInfo", order = 1)]
 public class WorldInfo : ScriptableObject
 {
-    
+    public CardZone DiscardZone;
+    public CardZone HandZone;
+    public CardZone DeckZone;
+    public CardZone ResolutionZone;
+
+    public CardGameController cardGameController { set; get;  }
 }

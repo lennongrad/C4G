@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Divination
   m_EditorClassIdentifier: 
   CardTitle: Divination
-  ManaCosts: 0100000000000000000000000200000000000000
+  ManaCosts: 0200000000000000000000000000000000000000
   Type: 3
   TowerSubtypes: 0
   SpellSubtypes: 0
@@ -24,7 +24,7 @@ MonoBehaviour:
     conditionScript: {fileID: 11500000, guid: cce934b28a7d1d44896c4bed0a3228cc, type: 3}
     condition:
       id: 0
-    qualityScript: {fileID: 11500000, guid: 3686132841abce34fbd6011a45f818f7, type: 3}
+    qualityScript: {fileID: 11500000, guid: f00bb7b1d429c3a4b998649b5802809b, type: 3}
     targetQuality:
       id: 1
     predicateScript: {fileID: 11500000, guid: 2273637f20fc6c948a1b5302b9df75e8, type: 3}
@@ -36,6 +36,8 @@ MonoBehaviour:
     00000000:
       type: {class: Condition_NoCondition, ns: , asm: Assembly-CSharp}
     00000001:
-      type: {class: Quality_Tiles_NoQuality, ns: , asm: Assembly-CSharp}
+      type: {class: Quality_NoQuality, ns: , asm: Assembly-CSharp}
     00000002:
-      type: {class: Predicate_NoPredicate, ns: , asm: Assembly-CSharp}
+      type: {class: Predicate_DrawCards, ns: , asm: Assembly-CSharp}
+      data:
+        cardAmount: 2

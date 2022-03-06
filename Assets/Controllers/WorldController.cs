@@ -10,6 +10,11 @@ public class WorldController : MonoBehaviour
     public GameObject initialManaTowerPrefab;
     public StageData stageData;
 
+    /// <summary>
+    /// The game event this script will invoke at the beginning of a round
+    /// </summary>
+    public GameEvent roundBegin;
+
     public CameraController cameraController;
     public EnemySpawnController enemySpawnController;
     public TargetSelectionController targetSelectionController;
@@ -17,6 +22,7 @@ public class WorldController : MonoBehaviour
     public MinimapController minimapCameraController;
 
     public GameObject tilesContainer;
+    public GameObject towersContainer;
 
     public TileController[,] Tiles;
     List<TileController> entrances = new List<TileController>();
@@ -80,6 +86,9 @@ public class WorldController : MonoBehaviour
 
         // randomly generate some number of mana towers for the player to start with
         RandomizeInitialTowers();
+
+        // begin the round
+        roundBegin.Raise();
     }
 
     /// <summary>
@@ -123,9 +132,10 @@ public class WorldController : MonoBehaviour
         towerController.ParentTile = parentTile;
         towerController.FacingDirection = facingDirection;
         towerController.PerformBehaviours = true;
-
-        towerObject.transform.parent = this.transform;
+        towerObject.transform.SetParent(towersContainer.transform);
 
         towerController.RegisterHoveredCB(targetSelectionController.TowerHovered);
+
+        towerController.Initiate();
     }
 }
