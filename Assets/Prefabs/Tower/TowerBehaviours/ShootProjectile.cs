@@ -13,6 +13,11 @@ public class ShootProjectile : TowerBehaviour
     public GameObject ProjectilePrefab;
 
     /// <summary>
+    /// The animator of the model that represents the tower
+    /// </summary>
+    public Animator TowerAnimator;
+
+    /// <summary>
     /// How long to wait before firing the next bullet after the last
     /// </summary>
     public int ProjectileInterval;
@@ -21,6 +26,16 @@ public class ShootProjectile : TowerBehaviour
     /// How long to wait when first created in addition to projectile interval
     /// </summary>
     public int InitialWait = 0;
+
+    /// <summary>
+    /// How long before the projectile is fired to trigger the animation
+    /// </summary>
+    public int AnimationWait = 5;
+
+    /// <summary>
+    /// Y position to spawn the projectile at
+    /// </summary>
+    public float ProjectileY = .5f;
 
     /// <summary>
     /// Amount of time units left until the tower fires a new projectile
@@ -39,8 +54,8 @@ public class ShootProjectile : TowerBehaviour
 
     protected override void Initiate()
     {
-        projectileTimer = InitialWait + ProjectileInterval;
-        displacement = displacement.Rotated(transform.localEulerAngles.y);
+        projectileTimer = InitialWait + AnimationWait;
+        displacement = displacement.Rotated(-transform.localEulerAngles.y);
 
         // Preload a few objects for the projectiles shot by the tower
         SimplePool.Preload(ProjectilePrefab, 3);
@@ -49,6 +64,12 @@ public class ShootProjectile : TowerBehaviour
     protected override void Behave()
     {
         projectileTimer -= 1;
+
+        if(projectileTimer == AnimationWait)
+        {
+            TowerAnimator.SetTrigger("Attack");
+        }
+
         if (projectileTimer < 0)
         {
             projectileTimer += ProjectileInterval;
@@ -61,9 +82,7 @@ public class ShootProjectile : TowerBehaviour
     /// </summary>
     void SpawnProjectile()
     {
-        float yPosition = 1f;
-
-        Vector3 projectilePosition = new Vector3(transform.position.x + displacement.x, yPosition, transform.position.z + displacement.y);
+        Vector3 projectilePosition = new Vector3(transform.position.x + displacement.x, ProjectileY, transform.position.z + displacement.y);
         GameObject projectileObject = SimplePool.Spawn(ProjectilePrefab, projectilePosition, Quaternion.identity);
         ProjectileController projectileController = projectileObject.GetComponent<ProjectileController>();
         projectileController.SetRotation(transform.localEulerAngles.y + rotation);

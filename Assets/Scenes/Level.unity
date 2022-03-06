@@ -1065,16 +1065,26 @@ MonoBehaviour:
   playerResourceManager: {fileID: 11400000, guid: 8f692e2ce7bfc8b48b38c3c44f84f4d5, type: 2}
   cycleEnd: {fileID: 11400000, guid: 8f2969afe96018a488cb5c95ca53df53, type: 2}
   InitialDeck:
-  - {fileID: 11400000, guid: 1246e6f1642aab541a5ca270e539599d, type: 2}
-  - {fileID: 11400000, guid: 1246e6f1642aab541a5ca270e539599d, type: 2}
-  - {fileID: 11400000, guid: 1246e6f1642aab541a5ca270e539599d, type: 2}
-  - {fileID: 11400000, guid: 1246e6f1642aab541a5ca270e539599d, type: 2}
-  - {fileID: 11400000, guid: 83581d2d51ed733409e8dd39b1129f7f, type: 2}
-  - {fileID: 11400000, guid: 83581d2d51ed733409e8dd39b1129f7f, type: 2}
-  - {fileID: 11400000, guid: 6124d9d0fb99f10418c120e136cb8931, type: 2}
-  - {fileID: 11400000, guid: 6124d9d0fb99f10418c120e136cb8931, type: 2}
-  - {fileID: 11400000, guid: 6124d9d0fb99f10418c120e136cb8931, type: 2}
-  - {fileID: 11400000, guid: 6124d9d0fb99f10418c120e136cb8931, type: 2}
+  - {fileID: 11400000, guid: eca6f7aade07fba44b00361de17ed117, type: 2}
+  - {fileID: 11400000, guid: eca6f7aade07fba44b00361de17ed117, type: 2}
+  - {fileID: 11400000, guid: eca6f7aade07fba44b00361de17ed117, type: 2}
+  - {fileID: 11400000, guid: eca6f7aade07fba44b00361de17ed117, type: 2}
+  - {fileID: 11400000, guid: eca6f7aade07fba44b00361de17ed117, type: 2}
+  - {fileID: 11400000, guid: 4a51a26d69dc64945a8cab193d3c5ab7, type: 2}
+  - {fileID: 11400000, guid: 4a51a26d69dc64945a8cab193d3c5ab7, type: 2}
+  - {fileID: 11400000, guid: 4a51a26d69dc64945a8cab193d3c5ab7, type: 2}
+  - {fileID: 11400000, guid: 4a51a26d69dc64945a8cab193d3c5ab7, type: 2}
+  - {fileID: 11400000, guid: 4a51a26d69dc64945a8cab193d3c5ab7, type: 2}
+  - {fileID: 11400000, guid: 642209350b7dfea42b4ce0e2509e00f1, type: 2}
+  - {fileID: 11400000, guid: 642209350b7dfea42b4ce0e2509e00f1, type: 2}
+  - {fileID: 11400000, guid: 642209350b7dfea42b4ce0e2509e00f1, type: 2}
+  - {fileID: 11400000, guid: 642209350b7dfea42b4ce0e2509e00f1, type: 2}
+  - {fileID: 11400000, guid: 642209350b7dfea42b4ce0e2509e00f1, type: 2}
+  - {fileID: 11400000, guid: 46cf01ca1ff6b3a4aa7e387eb2fc794e, type: 2}
+  - {fileID: 11400000, guid: 46cf01ca1ff6b3a4aa7e387eb2fc794e, type: 2}
+  - {fileID: 11400000, guid: b98305079f377634bb0ba2ecef736455, type: 2}
+  - {fileID: 11400000, guid: b98305079f377634bb0ba2ecef736455, type: 2}
+  - {fileID: 11400000, guid: b98305079f377634bb0ba2ecef736455, type: 2}
   DeckZone: {fileID: 11400000, guid: 6e9813d50e647c14c82a3b4473cc5f2c, type: 2}
   HandZone: {fileID: 11400000, guid: 9c1329845d257c94ca47cee3c04615bd, type: 2}
 --- !u!1 &1132138404
@@ -1184,7 +1194,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 5995369394112928195, guid: 1913d6b5efbbcc2438c46ba357b0e5aa, type: 3}
-  initialManaTowerPrefab: {fileID: 1820236534691553018, guid: 1c091981d9f811a43963c2f7ad62de40, type: 3}
+  initialManaTowerPrefab: {fileID: 1820236534691553018, guid: d0040d1cbb8ac55448eccba5d8260d17, type: 3}
   stageData: {fileID: 11400000, guid: e8e88bc2930503f4f8a18245659aba92, type: 2}
   cameraController: {fileID: 1853594731}
   enemySpawnController: {fileID: 1719810934}
@@ -1467,10 +1477,10 @@ RectTransform:
   m_Father: {fileID: 2089858762}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 956, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1693298758
 GameObject:
@@ -1908,10 +1918,10 @@ RectTransform:
   m_Father: {fileID: 1028137750}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -475.11023, y: 15}
-  m_SizeDelta: {x: 950.2206, y: 123.3633}
+  m_AnchoredPosition: {x: 125, y: 0}
+  m_SizeDelta: {x: -250, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2089858763
 MonoBehaviour:
@@ -1927,11 +1937,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visualCardPrefab: {fileID: 249478343349996322, guid: 35c5665446b0a874ba6e983b76184255, type: 3}
   cardResolutionController: {fileID: 607832950}
-  HorizontalCardDisplacement: 20
-  VerticalCardDisplacement: 30
-  RotationCardDisplacement: 5
-  HoveredCardHorizontalDisplacement: 10
-  HoveredCardVerticalDisplacement: 10
+  HorizontalCardDisplacement: 22
+  VerticalCardDisplacement: -1
+  RotationCardDisplacement: 4
+  HoveredCardHorizontalDisplacement: -10
+  NonHoveredCardHorizontalDisplacement: 25
+  HoveredCardVerticalDisplacement: 0
   HoveredCardHorizontalScale: 1.1
   HoveredCardVerticalScale: 1.1
   cardHolder: {fileID: 1688739967}

@@ -31,7 +31,7 @@ public class MinimapController : MonoBehaviour
 
         // Creates a new render texture with this size for the camera to render to
         RenderTexture minimapRenderTexture;
-        minimapRenderTexture = new RenderTexture((int)minimapWidth * 10, (int)minimapHeight * 10, 0);
+        minimapRenderTexture = new RenderTexture((int)minimapWidth * 20, (int)minimapHeight * 20, 0);
         minimapRenderTexture.Create();
         GetComponent<Camera>().targetTexture = minimapRenderTexture;
         minimapImage.texture = minimapRenderTexture;

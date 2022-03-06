@@ -24,8 +24,6 @@ public class CardEffect
     {
         EditorGUI.indentLevel++;
 
-        EditorGUILayout.LabelField(GetDescription(null));
-
         EditorGUILayout.BeginHorizontal();
         string targetString;
         if (maxTargets == InfiniteTarget)
@@ -207,7 +205,7 @@ public class CardEffect
             returnString += targetQuality.GetDescription(worldInfo, isPlural);
         }
 
-        returnString += predicate.GetDescription(worldInfo);
+        returnString += ", " + predicate.GetDescription(worldInfo);
 
         return returnString;
     }

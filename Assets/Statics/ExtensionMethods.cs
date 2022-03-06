@@ -178,4 +178,36 @@ public static class ExtensionMethods
 
         return words;
     }
+
+    public static Transform Clear(this Transform transform)
+    {
+        foreach (Transform child in transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+        return transform;
+    }
+
+    public static Color AdjustedBrightness(this Color color, float correctionFactor)
+    {
+        float red = color.r;
+        float green = color.g;
+        float blue = color.b;
+
+        if (correctionFactor < 0)
+        {
+            correctionFactor = 1f + correctionFactor;
+            red *= correctionFactor;
+            green *= correctionFactor;
+            blue *= correctionFactor;
+        }
+        else
+        {
+            red = (1f - red) * correctionFactor + red;
+            green = (1f - green) * correctionFactor + green;
+            blue = (1f - blue) * correctionFactor + blue;
+        }
+
+        return new Color(red, green, blue, color.a);
+    }
 }

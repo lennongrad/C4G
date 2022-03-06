@@ -23,6 +23,6 @@ public class Predicate_EnemyDamage : CardEffectPredicate
 
     public override string GetDescription(WorldInfo worldInfo)
     {
-        return "";
+        return "you deal " + damage + " damage to that enemy.";
     }
 }

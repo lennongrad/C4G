@@ -14,6 +14,7 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
     public float VerticalCardDisplacement;
     public float RotationCardDisplacement;
     public float HoveredCardHorizontalDisplacement;
+    public float NonHoveredCardHorizontalDisplacement;
     public float HoveredCardVerticalDisplacement;
     public float HoveredCardHorizontalScale = 1f;
     public float HoveredCardVerticalScale = 1f;
@@ -63,6 +64,15 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
     {
         bool pastHovered = false;
 
+        // this is a wee mess
+        List<float> yPositions = new List<float>() { 0 };
+        List<float> yPositionsBase = new List<float>() { 0 };
+        for(int i = 1; i < 4; i++)
+        {
+            yPositions.Add((float)Math.Sin(RotationCardDisplacement * Math.PI / 180f * i) / 2f + yPositionsBase[i - 1]);
+            yPositionsBase.Add((float)Math.Sin(RotationCardDisplacement * Math.PI / 180f * i) + yPositionsBase[i - 1]);
+        };
+
         for (int i = 0; i < visualCards.Count; i++)
         {
             RectTransform cardTransform = visualCards[i].GetComponent<RectTransform>();
@@ -76,7 +86,7 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
             controller.TargetX = (controller.Width - HorizontalCardDisplacement) * ((float)i - (float)visualCards.Count / 2f - .5f) + cardHolder.GetComponent<RectTransform>().rect.width / 2f;
 
             // set target y position, with cards in the middle being higher
-            controller.TargetY = VerticalCardDisplacement * Mathf.Log(1 + -Mathf.Abs(i + 1 - ((float)visualCards.Count + 1f) / 2f) + ((float)visualCards.Count - 1f) / 2f);
+            controller.TargetY = VerticalCardDisplacement * cardTransform.rect.width * yPositions[(int)Math.Abs((float)i - ((float)visualCards.Count - 1f) / 2f)];
 
             // set target rotation angle
             controller.TargetRotation = RotationCardDisplacement * -((float)i - (float)(visualCards.Count - 1) / 2f);
@@ -90,18 +100,24 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
                     // make it bigger
                     controller.TargetScaleX = HoveredCardHorizontalScale;
                     controller.TargetScaleY = HoveredCardVerticalScale;
-                    // shift up since itll be bigger
-                    controller.TargetY += HoveredCardVerticalDisplacement;
+                    // shift since itll be bigger
+                    if(i < visualCards.Count / 2)
+                        controller.TargetX += HoveredCardHorizontalDisplacement * Math.Sign(controller.TargetX);
+                    else if(i > visualCards.Count / 2 || (i == visualCards.Count / 2 && visualCards.Count % 2 == 0))
+                        controller.TargetX -= HoveredCardHorizontalDisplacement * Math.Sign(controller.TargetX);
+                    controller.TargetY = HoveredCardVerticalDisplacement;
+                    // unrotate it for clarity
+                    controller.TargetRotation *= .25f;
                 }
                 else if (pastHovered)
                 {
                     // already updated the hovered card so shift right
-                    controller.TargetX += HoveredCardHorizontalDisplacement;
+                    controller.TargetX += NonHoveredCardHorizontalDisplacement;
                 }
                 else
                 {
                     // havent updated the hovered card yet so shift left
-                    controller.TargetX -= HoveredCardHorizontalDisplacement;
+                    controller.TargetX -= NonHoveredCardHorizontalDisplacement;
                 }
             }
         }
@@ -143,7 +159,7 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
         {
             GameObject newCard = SimplePool.Spawn(visualCardPrefab, this.transform.position, Quaternion.identity);
             visualCards.Add(newCard);
-            newCard.transform.SetParent(this.transform);
+            newCard.transform.SetParent(cardHolder.transform);
 
             VisualCardController visualCardController = newCard.GetComponent<VisualCardController>();
             visualCardController.Model = model;

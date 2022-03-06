@@ -93,15 +93,12 @@ public class TowerController : MonoBehaviour
     {
         if(ParentTile != null)
         {
-            transform.position = ParentTile.transform.position;
+            transform.position = ParentTile.transform.position + new Vector3(0, ParentTile.Height, 0);
+
             if (hovered)
-            {
                 transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
-            }
             else
-            {
                 transform.localScale = new Vector3(1, 1, 1);
-            }
         }
         hovered = false;
     }

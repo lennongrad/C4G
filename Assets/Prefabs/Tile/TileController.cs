@@ -7,10 +7,31 @@ public class TileController : MonoBehaviour
 {
     Material cubeMaterial;
 
-    const float wallHeight = 1.522f;
-    const float barrierHeight = .75f;
-    const float raisedHeight = .2f;
-    const float floorHeight = .1f;
+    /// <summary>
+    /// List of heights associated with each tile type
+    /// </summary>
+    Dictionary<Tile.TileType, float> tileTypeHeight = new Dictionary<Tile.TileType, float>()
+    {
+            { Tile.TileType.Wall, 1.522f },
+            { Tile.TileType.Barrier, .75f },
+            { Tile.TileType.Raised, .2f },
+            { Tile.TileType.Entrance, .1f },
+            { Tile.TileType.Exit, .1f },
+            { Tile.TileType.Floor, .1f }
+    };
+
+    /// <summary>
+    /// List of colors associated with each tile type
+    /// </summary>
+    Dictionary<Tile.TileType, Color> tileTypeColors = new Dictionary<Tile.TileType, Color>()
+    {
+            { Tile.TileType.Wall, Color.black },
+            { Tile.TileType.Barrier, new Color(.25f, .25f, .25f) },
+            { Tile.TileType.Raised, new Color(.7f, .5f, .2f) },
+            { Tile.TileType.Entrance, Color.green },
+            { Tile.TileType.Exit, Color.red },
+            { Tile.TileType.Floor, Color.white }
+    };
 
     /// <summary>
     /// The color of the tile based on its current TileType. Multiplied with other values each frame
@@ -76,6 +97,11 @@ public class TileController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Public accessor for the height of the tile (based on its tile type)
+    /// </summary>
+    public float Height { get { return tileTypeHeight[type]; } }
+
     (Tile.TileDirection from, Tile.TileDirection to) directions = (Tile.TileDirection.None, Tile.TileDirection.None);
     /// <summary>
     /// The pair of TileDirections in and out of the tile for an enemy path going over the tile. Setting this automatically updates the tile's enemy path display graphics accordingly
@@ -111,13 +137,9 @@ public class TileController : MonoBehaviour
     {
         cubeMaterial.color = baseColor;
         if(hovered)
-        {
             cubeMaterial.color *= new Color(.3f, .3f, 1);
-        }
         if(pinged >= 0)
-        {
             cubeMaterial.color *= new Color(1, .3f, .3f);
-        }
 
         hovered = false;
         pinged -= 1;
@@ -128,49 +150,18 @@ public class TileController : MonoBehaviour
     /// </summary>
     void UpdateTypeDisplay()
     {
-        float height;
-
-        // set height and base colour of cube according to type
-        switch (type)
-        {
-            case Tile.TileType.Wall:
-                height = wallHeight;
-                baseColor = Color.black;
-                break;
-            case Tile.TileType.Barrier:
-                height = barrierHeight;
-                baseColor = new Color(.25f, .25f, .25f);
-                break;
-            case Tile.TileType.Raised:
-                height = raisedHeight;
-                baseColor = new Color(.7f, .5f, .2f);
-                break;
-            case Tile.TileType.Entrance:
-                height = floorHeight;
-                baseColor = Color.green;
-                break;
-            case Tile.TileType.Exit:
-                height = floorHeight;
-                baseColor = Color.red;
-                break;
-            default:
-                height = floorHeight;
-                baseColor = Color.white;
-                break;
-        }
+        baseColor = tileTypeColors[type];
 
         // increase height of cube and adjust its position
-        Cube.transform.localScale = new Vector3(1f, height, 1f); ;
-        Cube.transform.localPosition = new Vector3(0, height / 2, 0);
+        Cube.transform.localScale = new Vector3(1f, Height, 1f); ;
+        Cube.transform.localPosition = new Vector3(0, Height / 2, 0);
 
         // increase height of visual elements above cube oso they are not inside
-        DirectionsDisplay.transform.localPosition = new Vector3(0, height + .001f, 0);
+        DirectionsDisplay.transform.localPosition = new Vector3(0, Height + .001f, 0);
 
         // darken colour for every other tile to create checker pattern
         if (parity)
-        {
             baseColor *= new Color(.8f, .8f, .8f);
-        }
     }
 
     /// <summary>

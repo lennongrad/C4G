@@ -19,6 +19,6 @@ public class Quality_Enemies_NoQuality : CardEffectQuality
 
     public override string GetDescription(WorldInfo worldInfo, bool isPlural)
     {
-        return "";
+        return isPlural ? "enemies" : "enemy";
     }
 }

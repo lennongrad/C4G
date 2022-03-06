@@ -10,8 +10,11 @@ using System;
 /// </summary>
 public class VisualCardController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
+    public CostIcon CostIconPrefab;
+
     public Text CardName;
     public Text CardDescription;
+    public GameObject CardCost;
     public WorldInfo worldInfo;
 
     CardModel cardModel;
@@ -24,7 +27,7 @@ public class VisualCardController : MonoBehaviour, IPointerEnterHandler, IPointe
         set
         {
             cardModel = value;
-            modelChanged();
+            visualUpdate();
         }
     }
 
@@ -78,7 +81,7 @@ public class VisualCardController : MonoBehaviour, IPointerEnterHandler, IPointe
     public float Height {
         get
         {
-            return Width * 7f / 5f;
+            return Width * 1.45f;
         }
     }
     
@@ -106,20 +109,62 @@ public class VisualCardController : MonoBehaviour, IPointerEnterHandler, IPointe
     public void RegisterPlayed(Action<VisualCardController> cb) { cbPlayed += cb; }
 
     /// <summary>
-    /// Used when public Model is set to update card's visuals
+    /// Updates the card to match the model's data
     /// </summary>
-    void modelChanged()
+    void visualUpdate()
     {
         CardData data = cardModel.Data;
 
         CardName.text = data.CardTitle;
         CardDescription.text = data.GetDescription(worldInfo);
+
+        CardCost.transform.Clear();
+
+        int addedIconsTotal = 0;
+        foreach (KeyValuePair<Mana.ManaType, int> entry in data.ManaCostDictionary)
+        {
+            for (int i = 0; i < entry.Value; i++)
+            {
+                CostIcon newIcon = Instantiate(CostIconPrefab, CardCost.transform.position, Quaternion.identity);
+                newIcon.Type = entry.Key;
+                newIcon.transform.SetParent(CardCost.transform);
+                newIcon.transform.localPosition = new Vector3(-newIcon.GetComponent<RectTransform>().rect.width * (data.ManaValue - addedIconsTotal - 1), 0, 0);
+                newIcon.transform.eulerAngles = currentEulerAngles;
+
+                addedIconsTotal++;
+            }
+        }
+
+        /*
+        int i = 0;
+        int costsAdded;
+        foreach (Mana.ManaType type in System.Enum.GetValues(typeof(Mana.ManaType)))
+        {
+            for (int e = 0; e < data.ManaCosts[i]; e++)
+            {
+                CostIcon newIcon = Instantiate(CostIconPrefab, CardCost.transform.position, Quaternion.identity);
+                newIcon.Type = type;
+                newIcon.transform.SetParent(CardCost.transform);
+                newIcon.transform.localPosition = new Vector3(-newIcon.GetComponent<RectTransform>().rect.width * i, 0, 0);
+                newIcon.transform.eulerAngles = currentEulerAngles;
+            }
+            i++;
+        }*/
     }
 
+    // we continuously call visual update every so often
+    int debugTimer = 0;
     void FixedUpdate()
     {
         if (doubleClickedTimer > 0)
             doubleClickedTimer--;
+
+        debugTimer -= 1;
+        if(debugTimer < 0)
+        {
+            debugTimer += 200;
+            visualUpdate();
+        }    
 
         RectTransform cardTransform = GetComponent<RectTransform>();
 

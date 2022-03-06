@@ -14,32 +14,22 @@ public class CardGenerator : EditorWindow
     /// Path which cards are automatically saved at
     /// </summary>
     private string cardPath = "Assets/ScriptableObjects/Cards/";
+    CardData cardData;
+
+    /// <summary>
+    /// Name of the folder to save and load the card from
+    /// </summary>
+    private string folderName;
 
     /// <summary>
     /// Card name used in filename of the card
     /// </summary>
     private string cardName;
-    /// <summary>
-    /// The in-game name of the card; different from card name which is for backend use
-    /// </summary>
-    private string cardTitle;
-    /// <summary>
-    /// The type of the card
-    /// </summary>
-    private Card.CardType cardType;
-    /// The subtypes of each of the card types
-    private Card.TowerSubtype towerSubtypes;
-    private Card.SpellSubtype spellSubtypes;
-    private Card.SkillSubtype skillSubtypes;
 
     /// <summary>
-    /// The tower prefab which is placed by a Tower card
+    /// Whether to show the warning to the user that they tried to save over an existing object
     /// </summary>
-    private GameObject towerPrefab;
-    /// <summary>
-    /// The list of effects for an Instant card; happens in order
-    /// </summary>
-    private List<CardEffect> cardEffects = new List<CardEffect>();
+    private bool showSaveOverWarning = false;
 
     GUIStyle boldStyle = new GUIStyle();
 
@@ -74,115 +64,36 @@ public class CardGenerator : EditorWindow
         GUI.contentColor = Color.white;
 
         EditorGUILayout.Space(3);
-        fileInfo();
-        EditorGUILayout.Space(7);
 
-        basicInfo();
-        EditorGUILayout.Space(7);
-
-        if (cardType == Card.CardType.Tower)
-            towerInfo();
-        else if (cardType == Card.CardType.Spell || cardType == Card.CardType.Skill)
-            instantInfo();
-
-    }
-
-    /// <summary>
-    /// Information about the costs,name,type,etc of a card
-    /// </summary>
-    void basicInfo()
-    {
-        GUI.backgroundColor = Color.clear;
-        EditorGUILayout.BeginFoldoutHeaderGroup(true, "Card Information");
-
-        GUI.backgroundColor = Color.grey;
-        cardTitle = EditorGUILayout.TextField("Card Name", cardTitle);
-        cardType = (Card.CardType)EditorGUILayout.EnumPopup("Card Type", cardType);
-
-        EditorGUI.indentLevel++;
-        switch (cardType)
-        {
-            case Card.CardType.Tower:
-                towerSubtypes = (Card.TowerSubtype)EditorGUILayout.EnumPopup("Subtype", towerSubtypes); break;
-            case Card.CardType.Spell:
-                spellSubtypes = (Card.SpellSubtype)EditorGUILayout.EnumPopup("Subtype", spellSubtypes); break;
-            case Card.CardType.Skill:
-                skillSubtypes = (Card.SkillSubtype)EditorGUILayout.EnumPopup("Subtype", skillSubtypes); break;
-        }
-        EditorGUI.indentLevel--;
-
-        //EditorGUILayout.LabelField(CardGetDescription(null));
-
-        EditorGUILayout.EndFoldoutHeaderGroup();
-    }
-
-    /// <summary>
-    /// Information for a Tower card, mostly just the what tower it spawns
-    /// </summary>
-    void towerInfo()
-    {
-        GUI.backgroundColor = Color.clear;
-        EditorGUILayout.BeginFoldoutHeaderGroup(true, "Tower Configuration");
-
-        GUI.backgroundColor = Color.grey;
-        towerPrefab = (GameObject)EditorGUILayout.ObjectField("Tower Prefab", towerPrefab, typeof(GameObject), false);
-
-        EditorGUILayout.EndFoldoutHeaderGroup();
-    }
-
-    /// <summary>
-    /// Information for a Spell/Skill card, mostly just the effects it has
-    /// </summary>
-    void instantInfo()
-    {
-        GUI.backgroundColor = Color.clear;
-
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.BeginFoldoutHeaderGroup(true, "Spell/Skill Configuration");
-        GUI.backgroundColor = Color.grey;
-        if (GUILayout.Button("Add Effect", EditorStyles.miniButtonLeft))
-            cardEffects.Add(new CardEffect());
-
-        if (cardEffects.Count == 0)
-            GUI.backgroundColor = Color.white;
-        else
-            GUI.backgroundColor = Color.grey;
-        if (GUILayout.Button("Remove Effect", EditorStyles.miniButtonRight) && cardEffects.Count > 0)
-            cardEffects.RemoveAt(cardEffects.Count - 1);
-        EditorGUILayout.EndHorizontal();
-
-        for(int i = 0; i < cardEffects.Count; i++)
-        {
-            EditorGUILayout.LabelField("Effect " + i, EditorStyles.boldLabel);
-            cardEffects[i].OnInputGUI();
-            EditorGUILayout.Space(5);
-        }
-
-        EditorGUILayout.EndFoldoutHeaderGroup();
-    }
-
-    /// <summary>
-    /// Information about the file representing this card
-    /// </summary>
-    void fileInfo()
-    {
         GUI.backgroundColor = Color.clear;
         EditorGUILayout.BeginFoldoutHeaderGroup(true, "File Information");
 
         GUI.backgroundColor = Color.grey;
+        folderName = EditorGUILayout.TextField("Folder:", folderName);
+
+        string lastCardName = cardName;
         cardName = EditorGUILayout.TextField("Filename:", cardName);
+        if (cardName != lastCardName)
+            cardData = Instantiate(cardData);
 
         EditorGUILayout.BeginHorizontal();
         GUI.backgroundColor = Color.grey;
         if (GUILayout.Button("Load Card", EditorStyles.miniButtonLeft))
             loadCard();
-        if (GUILayout.Button("Reset Card", EditorStyles.miniButtonMid))
-            resetCard();
+        if (GUILayout.Button("New Card", EditorStyles.miniButtonMid))
+            newCard();
         if (GUILayout.Button("Save Card", EditorStyles.miniButtonRight))
             saveCard();
         EditorGUILayout.EndHorizontal();
 
+        if(showSaveOverWarning)
+            EditorGUILayout.HelpBox("Card already exists with that filename.", MessageType.Error);
+
         EditorGUILayout.EndFoldoutHeaderGroup();
+
+        EditorGUILayout.Space(7);
+
+        cardData.OnInputGUI();
     }
 
     /// <summary>
@@ -190,71 +101,68 @@ public class CardGenerator : EditorWindow
     /// </summary>
     void loadCard()
     {
+        showSaveOverWarning = false;
+
         if (cardName == "")
-            return;
+            newCard();
 
         // list of assets that have the correct name
-        string[] result = AssetDatabase.FindAssets(cardName);
+        string[] result = AssetDatabase.FindAssets(cardName, new string[] { "Assets/ScriptableObjects/Cards/" + folderName });
 
-        if(result.Length == 1)
-        {
-            // just use the first result, shouldnt be multiple generally
-            string path = AssetDatabase.GUIDToAssetPath(result[0]);
-            CardData loadedData = Instantiate((CardData)AssetDatabase.LoadAssetAtPath(path, typeof(CardData)));
-
-            // use loadedData to get information about card file
-            cardTitle = loadedData.CardTitle;
-            cardType = loadedData.Type;
-            towerSubtypes = loadedData.TowerSubtypes;
-            skillSubtypes = loadedData.SkillSubtypes;
-            spellSubtypes = loadedData.SpellSubtypes;
-
-            cardEffects = loadedData.CardEffects;
-            towerPrefab = loadedData.TowerPrefab;
-        }
-    }
-
-    /// <summary>
-    /// Reset the values of the card
-    /// </summary>
-    void resetCard()
-    {
-        cardEffects = new List<CardEffect>();
-    }
-
-    void saveCard()
-    {
-        CardData cardData;
-
-        // list of assets that have the card name
-        string[] result = AssetDatabase.FindAssets(cardName);
-
-        // if one already exists with this name
         if (result.Length == 1)
         {
             // just use the first result, shouldnt be multiple generally
             string path = AssetDatabase.GUIDToAssetPath(result[0]);
             cardData = (CardData)AssetDatabase.LoadAssetAtPath(path, typeof(CardData));
         }
-        else // no files already have this card name so make a new asset
+        else
         {
-            cardData = CreateInstance<CardData>();
+            newCard();
         }
 
-        cardData.CardTitle = cardTitle;
-        cardData.Type = cardType;
-        cardData.TowerSubtypes = towerSubtypes;
-        cardData.SkillSubtypes = skillSubtypes;
-        cardData.SpellSubtypes = spellSubtypes;
-        
-        cardData.CardEffects = cardEffects;
-        cardData.TowerPrefab = towerPrefab;
+    }
 
-        // if we have to create this new asset from scratch rather than saving to existing
+    /// <summary>
+    /// Reset the values of the card
+    /// </summary>
+    void newCard()
+    {
+        cardData = (CardData)ScriptableObject.CreateInstance(typeof(CardData));
+        showSaveOverWarning = false;
+        cardName = "";
+    }
+
+    void saveCard()
+    {
+        string[] result = AssetDatabase.FindAssets(cardName, new string[] { "Assets/ScriptableObjects/Cards/" + folderName });
         if (result.Length == 0)
         {
-            string fileName = cardPath + cardName + ".asset";
+            // if we have to create this new asset from scratch rather than saving to existing
+            string fileName = cardPath + folderName + "/" + cardName + ".asset";
             AssetDatabase.CreateAsset(cardData, fileName);
+            showSaveOverWarning = false;
+        }
+        else if(result.Length == 1)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(result[0]);
+            CardData loadedCardData = (CardData)AssetDatabase.LoadAssetAtPath(path, typeof(CardData));
+            if(loadedCardData != cardData)
+            {
+                // theres already an object with this name whcih isnt this object so abort
+                showSaveOverWarning = true;
+                return;
+            }
+            else
+            {
+                // filename already exists.. because weve loaded from it
+                showSaveOverWarning = false;
+            }
+        }
+        else
+        {
+            // multiple files with this name so who knows
+            showSaveOverWarning = true;
+            return;
         }
 
         // have to set it as dirty so that Unity knows that it actually needs to save it

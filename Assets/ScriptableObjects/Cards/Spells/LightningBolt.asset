@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1eae0be279bdd5f4caf48bac1284a64f, type: 3}
+  m_Name: LightningBolt
+  m_EditorClassIdentifier: 
+  CardTitle: Lightning Bolt
+  ManaCosts: 0000000000000000000000000100000000000000
+  Type: 2
+  TowerSubtypes: 0
+  SpellSubtypes: 0
+  SkillSubtypes: 0
+  CardEffects:
+  - minTargets: 0
+    maxTargets: 1
+    conditionScript: {fileID: 11500000, guid: cce934b28a7d1d44896c4bed0a3228cc, type: 3}
+    condition:
+      id: 0
+    qualityScript: {fileID: 11500000, guid: beb89bb9abdf38542a6b2843691b79f3, type: 3}
+    targetQuality:
+      id: 1
+    predicateScript: {fileID: 11500000, guid: f2d90d342df9683448ff85889635ae63, type: 3}
+    predicate:
+      id: 2
+  TowerPrefab: {fileID: 0}
+  references:
+    version: 1
+    00000000:
+      type: {class: Condition_NoCondition, ns: , asm: Assembly-CSharp}
+    00000001:
+      type: {class: Quality_Enemies_NoQuality, ns: , asm: Assembly-CSharp}
+    00000002:
+      type: {class: Predicate_EnemyDamage, ns: , asm: Assembly-CSharp}
+      data:
+        damage: 3

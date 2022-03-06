@@ -129,6 +129,7 @@ public class TargetSelectionController : MonoBehaviour
                 if (tileHovered == null && !noSelection)
                     break;
                 targetType = Card.TargetType.None;
+                Destroy(previewTower);
                 previewTower = null;
                 if (cbSelectTile != null)
                     cbSelectTile(noSelection ? null : tileHovered, previewDirection);
@@ -167,7 +168,7 @@ public class TargetSelectionController : MonoBehaviour
 
             previewTower?.SetActive(true);
             if(previewTower != null)
-                previewTower.GetComponent<TowerController>().transform.position = tile.transform.position;
+                previewTower.GetComponent<TowerController>().transform.position = tile.transform.position + new Vector3(0, tile.Height,0);
         }
         else
         {
