@@ -11,7 +11,7 @@ public class StageGenerator : EditorWindow
     /// <summary>
     /// Path which stages are automatically saved at
     /// </summary>
-    private string stagePath = "Assets/Stages/";
+    private string stagePath = "Assets/ScriptableObjects/Stages/";
 
     /// <summary>
     /// Stage name used in filename of the stage

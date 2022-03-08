@@ -29,6 +29,10 @@ public class CameraController : MonoBehaviour
     /// The speed the camera zoom in and out at
     /// </summary>
     public float zoomModifier = .01f;
+    /// <summary>
+    /// How far off of 90 degrees each camera rotation should settle at
+    /// </summary>
+    public float cameraOffset = 0f;
 
     /// <summary>
     /// The zoom distance that the user wants to go to; uses smooth damp to transition to it smoothly
@@ -76,11 +80,11 @@ public class CameraController : MonoBehaviour
             while (transform.rotation.y < 0)
                 transform.Rotate(new Vector3(0, 1f, 0f), 360, Space.World);
 
-            if (transform.eulerAngles.y % 90 >= 45)
+            if ((transform.eulerAngles.y - cameraOffset) % 90 >= 45)
                 transform.Rotate(new Vector3(0, 1f, 0f), 10, Space.World);
-            else if (transform.eulerAngles.y % 90 < 45 && transform.eulerAngles.y % 90 > 10)
+            else if ((transform.eulerAngles.y - cameraOffset) % 90 < 45 && (transform.eulerAngles.y - cameraOffset) % 90 > 10)
                 transform.Rotate(new Vector3(0, 1f, 0f), -10, Space.World);
-            else if (transform.eulerAngles.y % 90 > 1)
+            else if ((transform.eulerAngles.y - cameraOffset) % 90 > 1)
                 transform.Rotate(new Vector3(0, 1f, 0f), -1, Space.World);
         }
 

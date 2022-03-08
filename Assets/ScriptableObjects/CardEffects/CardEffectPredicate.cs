@@ -31,6 +31,11 @@ public abstract class CardEffectPredicate
     public abstract Card.TargetType TargetType { get; }
 
     /// <summary>
+    /// Some predicates which target tiles can have an area of effect. If null, don't consider this.
+    /// </summary>
+    public AreaOfEffect AffectedArea;
+
+    /// <summary>
     /// Called to set up GUI for class-specific customization
     /// </summary>
     public abstract void InputGUI();

@@ -9,6 +9,7 @@ public class WorldController : MonoBehaviour
     public GameObject tilePrefab;
     public GameObject initialManaTowerPrefab;
     public StageData stageData;
+    public WorldInfo worldInfo;
 
     /// <summary>
     /// The game event this script will invoke at the beginning of a round
@@ -28,6 +29,11 @@ public class WorldController : MonoBehaviour
     List<TileController> entrances = new List<TileController>();
     List<TileController> exits = new List<TileController>();
 
+    void Awake()
+    {
+        worldInfo.worldController = this;
+    }
+
     void Start()
     {
         // fill in tile objects
@@ -42,7 +48,8 @@ public class WorldController : MonoBehaviour
                 Tiles[x, y] = tile;
 
                 // set personal variables
-                tile.Parity = (x + y) % 2 == 0;
+                tile.X = x;
+                tile.Y = y;
                 tile.name = "Tile_" + x + "_" + y;
                 Tiles[x, y].Type = stageData.TileTypes[x,y];
 
@@ -137,5 +144,36 @@ public class WorldController : MonoBehaviour
         towerController.RegisterHoveredCB(targetSelectionController.TowerHovered);
 
         towerController.Initiate();
+    }
+
+    public List<TileController>[] GetAreaAroundTile(TileController tile, AreaOfEffect area)
+    {
+        List<TileController>[] arr = new List<TileController>[area.Max + 1];
+
+        for (int i = 0; i <= area.Max; i++)
+            arr[i] = new List<TileController>();
+
+        int centerX = area.Width / 2;
+        int centerY = area.Height / 2;
+        int[,] areaValues = area.Values;
+
+        for (int x = 0; x < stageData.Width; x++)
+        {
+            for (int y = 0; y < stageData.Height; y++)
+            {
+                // converting the tile coordinate into the coordinate within the area
+                int adjustedX = (x - tile.X) + centerX;
+                int adjustedY = (y - tile.Y) + centerY;
+
+                if (adjustedX >= 0 && adjustedX < area.Width && adjustedY >= 0 && adjustedY < area.Height)
+                {
+                    int category = areaValues[adjustedX, adjustedY];
+                    if(category != -1)
+                        arr[category].Add(Tiles[x, y]);
+                }
+            }
+        }
+
+        return arr;
     }
 }

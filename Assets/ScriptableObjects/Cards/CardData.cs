@@ -19,7 +19,6 @@ public class CardData : ScriptableObject
     public List<CardEffect> CardEffects = new List<CardEffect>();
     public GameObject TowerPrefab;
 
-
     static public Color GetColorOfManaType(Mana.ManaType type)
     {
         switch (type)

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 /// <summary>
 /// The file of each extension method, which are methods that can be added to existing types to extend their functionality.
@@ -213,6 +214,13 @@ public static class ExtensionMethods
 
     public static string FirstCharToUpper(this string input)
     {
+        if (input.Length <= 0)
+            return "";
         return input[0].ToString().ToUpper() + input.Substring(1);
+    }
+
+    public static bool Contains<IEquatable>(this IEquatable[] arr, IEquatable input)
+    {
+        return Array.Exists(arr, val => val.Equals(input));
     }
 }

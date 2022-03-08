@@ -38,15 +38,16 @@ public class TileController : MonoBehaviour
     /// </summary>
     Color baseColor;
 
-    bool parity = false;
+    public int X { set; get; }
+    public int Y { set; get; }
     /// <summary>
     /// Whether the X + Y of the tile is even or odd. Used to create the checker pattern of tiles
     /// </summary>
     public bool Parity
     {
-        set
+        get
         {
-            parity = value;
+            return (X + Y) % 2 == 0;
         }
     }
 
@@ -160,7 +161,7 @@ public class TileController : MonoBehaviour
         DirectionsDisplay.transform.localPosition = new Vector3(0, Height + .001f, 0);
 
         // darken colour for every other tile to create checker pattern
-        if (parity)
+        if (Parity)
             baseColor *= new Color(.8f, .8f, .8f);
     }
 

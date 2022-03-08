@@ -151,37 +151,45 @@ public class CardEffect
 
         if(maxTargets > 0)
         {
+            /// if maxTargets is 0, card does not target at all, so dont even display qualities
+            
             // need plural for qualities, ie "enemy" vs "enemies"
             bool isPlural = true;
-
             if (maxTargets == InfiniteTarget)
             {
+                // no limited on how many elements the user can target
                 if (minTargets == InfiniteTarget)
                 {
+                    // if both are maxed out, we simply affect every single applicable element
                     returnString += "For each ";
                     isPlural = false;
                 }
                 else if (minTargets > 0)
                 {
+                    // user has to select at least one target but no other restrictions
                     returnString += "For " + minTargets.ToWord() + " or more target ";
                 }
                 else
                 {
+                    // essentially no restrictions on number of targets
                     returnString += "For any number of target ";
                 }
             }
             else
             {
-                /// if maxTargets is 0, card does not target at all, so dont even display qualities
+                // upper bound on number of targets user can choose
                 if (minTargets > 0)
                 {
+                    // lower bound as well
                     if(minTargets == 1 && maxTargets == 1)
                     {
+                        // user must select EXACTLY one
                         returnString += "For one target ";
                         isPlural = false;
                     }
                     else
                     {
+                        // 
                         returnString += "For each of ";
                         for (int i = minTargets; i <= maxTargets; i++)
                         {
@@ -196,6 +204,7 @@ public class CardEffect
                 }
                 else
                 {
+                    // user can choose to not select any targets, or up to max
                     returnString += "For each of up to " + maxTargets.ToWord() + " target ";
                     if (maxTargets == 1)
                         isPlural = false;
@@ -205,10 +214,11 @@ public class CardEffect
             returnString += targetQuality.GetDescription(worldInfo, isPlural);
         }
 
-        if (returnString == "")
-            returnString += predicate.GetDescription(worldInfo).FirstCharToUpper();
-        else
-            returnString += ", " + predicate.GetDescription(worldInfo);
+        if(predicate != null)
+            if (returnString == "")
+                returnString += predicate.GetDescription(worldInfo).FirstCharToUpper();
+            else
+                returnString += ", " + predicate.GetDescription(worldInfo);
 
         return returnString;
     }

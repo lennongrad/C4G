@@ -300,7 +300,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myText: {fileID: 338421935}
   playerResourceManager: {fileID: 11400000, guid: 8f692e2ce7bfc8b48b38c3c44f84f4d5, type: 2}
-  DiscardZone: {fileID: 11400000, guid: f4ecbbca8e1a37b41a7ba4a8fe990da4, type: 2}
+  DiscardZone: {fileID: 11400000, guid: 29a5b637ebded6e4fb210a7714446d64, type: 2}
   DeckZone: {fileID: 11400000, guid: 6e9813d50e647c14c82a3b4473cc5f2c, type: 2}
   HandZone: {fileID: 11400000, guid: 9c1329845d257c94ca47cee3c04615bd, type: 2}
   typeOfDebugText: 1
@@ -746,7 +746,8 @@ MonoBehaviour:
   worldController: {fileID: 1334423220}
   worldInfo: {fileID: 11400000, guid: 523d4ba8fa444e24bbddab59b8085233, type: 2}
   targetSelectionController: {fileID: 306759815}
-  DiscardZone: {fileID: 11400000, guid: f4ecbbca8e1a37b41a7ba4a8fe990da4, type: 2}
+  DiscardZone: {fileID: 11400000, guid: 29a5b637ebded6e4fb210a7714446d64, type: 2}
+  ResolutionZone: {fileID: 11400000, guid: f4ecbbca8e1a37b41a7ba4a8fe990da4, type: 2}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1573,7 +1574,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 46cf01ca1ff6b3a4aa7e387eb2fc794e, type: 2}
   DeckZone: {fileID: 11400000, guid: 6e9813d50e647c14c82a3b4473cc5f2c, type: 2}
   HandZone: {fileID: 11400000, guid: 9c1329845d257c94ca47cee3c04615bd, type: 2}
-  DiscardZone: {fileID: 11400000, guid: f4ecbbca8e1a37b41a7ba4a8fe990da4, type: 2}
+  DiscardZone: {fileID: 11400000, guid: 29a5b637ebded6e4fb210a7714446d64, type: 2}
 --- !u!1 &1132138404
 GameObject:
   m_ObjectHideFlags: 0
@@ -1683,6 +1684,7 @@ MonoBehaviour:
   tilePrefab: {fileID: 5995369394112928195, guid: 1913d6b5efbbcc2438c46ba357b0e5aa, type: 3}
   initialManaTowerPrefab: {fileID: 1820236534691553018, guid: d0040d1cbb8ac55448eccba5d8260d17, type: 3}
   stageData: {fileID: 11400000, guid: e8e88bc2930503f4f8a18245659aba92, type: 2}
+  worldInfo: {fileID: 11400000, guid: 523d4ba8fa444e24bbddab59b8085233, type: 2}
   roundBegin: {fileID: 11400000, guid: f1f7bc1744bc9c54e89f8472d5230993, type: 2}
   cameraController: {fileID: 1853594731}
   enemySpawnController: {fileID: 1719810934}
@@ -2189,6 +2191,7 @@ MonoBehaviour:
   keyPanModifier: 0.2
   rotateModifier: 0.75
   zoomModifier: 0.01
+  cameraOffset: 0
 --- !u!4 &1853594732
 Transform:
   m_ObjectHideFlags: 0
@@ -2196,7 +2199,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1853594730}
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 12, z: 2.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

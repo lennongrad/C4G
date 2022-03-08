@@ -104,7 +104,10 @@ public class CardGenerator : EditorWindow
         showSaveOverWarning = false;
 
         if (cardName == "")
+        {
             newCard();
+            return;
+        }
 
         // list of assets that have the correct name
         string[] result = AssetDatabase.FindAssets(cardName, new string[] { "Assets/ScriptableObjects/Cards/" + folderName });
