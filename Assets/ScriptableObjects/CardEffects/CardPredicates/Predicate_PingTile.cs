@@ -4,18 +4,21 @@ using UnityEngine;
 using UnityEditor;
 
 [System.Serializable]
-public class Predicate_Test : CardEffectPredicate
+public class Predicate_PingTile : CardEffectPredicate
 {
     public override Card.TargetType TargetType { get { return Card.TargetType.Tiles; } }
 
+    public int length = 60;
+
     public override void InputGUI()
     {
+        length = EditorGUILayout.IntField("Ping Time: ", length);
     }
 
     public override void PerformPredicate(TargetInfo targetInfo, WorldInfo worldInfo, ResolutionInfo resolutionInfo)
     {
         foreach (TileController tile in targetInfo.Tiles)
-            tile.Ping(60);
+            tile.Ping(length);
     }
 
     public override string GetDescription(WorldInfo worldInfo)

@@ -32,4 +32,41 @@ public class TargetInfo
         }
         return 0;
     }
+
+    public List<HashSet<TileController>> AOETiles { get; } = new List<HashSet<TileController>>();
+    public List<HashSet<TowerController>> AOETowers { get; } = new List<HashSet<TowerController>>();
+    public List<HashSet<EnemyController>> AOEEnemies { get; } = new List<HashSet<EnemyController>>();
+
+    /// <summary>
+    /// Applies the given area of effect to each of the targetted tiles
+    /// </summary>
+    public void AOETargetting(AreaOfEffect area, WorldInfo worldInfo)
+    {
+        for(int i = 0; i <= area.Max; i++)
+        {
+            AOETiles.Add(new HashSet<TileController>());
+            AOETowers.Add(new HashSet<TowerController>());
+            AOEEnemies.Add(new HashSet<EnemyController>());
+        }
+
+        foreach (TileController targetTile in Tiles)
+        {
+            List<TileController>[] affectedTiles = worldInfo.worldController.GetAreaAroundTile(targetTile, area);
+
+            for (int i = 0; i <= area.Max; i++)
+            {
+                foreach (TileController tile in affectedTiles[i])
+                {
+                    AOETiles[i].Add(tile);
+
+                    if (tile.PresentTower != null)
+                        AOETowers[i].Add(tile.PresentTower);
+
+                    List<EnemyController> tileEnemies = tile.GetPresentEnemies();
+                    foreach (EnemyController enemy in tileEnemies)
+                        AOEEnemies[i].Add(enemy);
+                }
+            }
+        }
+    }
 }

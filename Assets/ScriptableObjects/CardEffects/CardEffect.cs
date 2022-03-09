@@ -52,9 +52,12 @@ public class CardEffect
         EditorGUILayout.Space(4);
         targetQualityInfo();
         EditorGUILayout.Space(4);
-        predicateInfo();
 
-        if(predicate != null && targetQuality != null && predicate.TargetType != targetQuality.TargetType)
+        CardEffectPredicate.LoadPredicate(ref predicateScript, ref predicate);
+        if (predicate != null)
+            predicate.OnInputGUI();
+
+        if (predicate != null && targetQuality != null && predicate.TargetType != targetQuality.TargetType)
             EditorGUILayout.HelpBox("The target type of the quality does not match the predicate.", MessageType.Error);
 
         EditorGUI.indentLevel--;
@@ -109,32 +112,6 @@ public class CardEffect
 
         if (targetQuality != null)
             targetQuality.OnInputGUI();
-    }
-
-    /// <summary>
-    /// GUI configuration for the effect's predicate (effect)
-    /// </summary>
-    void predicateInfo()
-    {
-
-        MonoScript lastPredicateScript = predicateScript;
-        predicateScript = (MonoScript)EditorGUILayout.ObjectField("Predicate", predicateScript, typeof(MonoScript), false);
-        if (predicateScript == null)
-        {
-            string[] result = AssetDatabase.FindAssets("Predicate_NoPredicate");
-
-            if (result.Length == 1)
-            {
-                string path = AssetDatabase.GUIDToAssetPath(result[0]);
-                predicateScript = (MonoScript)AssetDatabase.LoadAssetAtPath(path, typeof(MonoScript));
-            }
-        }
-
-        if (predicateScript != lastPredicateScript)
-            predicate = (CardEffectPredicate)Activator.CreateInstance(predicateScript.GetClass());
-
-        if (predicate != null)
-            predicate.OnInputGUI();
     }
 
     /// <summary>

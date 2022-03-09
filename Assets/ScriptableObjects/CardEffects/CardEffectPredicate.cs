@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System;
 
 /// <summary>
 /// Class that card effect predicates inherit from.
@@ -52,5 +53,25 @@ public abstract class CardEffectPredicate
         EditorGUI.indentLevel += 1;
         InputGUI();
         EditorGUI.indentLevel -= 1;
+    }
+
+    static public void LoadPredicate(ref MonoScript predicateScript, ref CardEffectPredicate predicate, string label = "Predicate")
+    {
+
+        MonoScript lastPredicateScript = predicateScript;
+        predicateScript = (MonoScript)EditorGUILayout.ObjectField(label, predicateScript, typeof(MonoScript), false);
+        if (predicateScript == null)
+        {
+            string[] result = AssetDatabase.FindAssets("Predicate_NoPredicate");
+
+            if (result.Length == 1)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(result[0]);
+                predicateScript = (MonoScript)AssetDatabase.LoadAssetAtPath(path, typeof(MonoScript));
+            }
+        }
+
+        if (predicateScript != lastPredicateScript)
+            predicate = (CardEffectPredicate)Activator.CreateInstance(predicateScript.GetClass());    
     }
 }

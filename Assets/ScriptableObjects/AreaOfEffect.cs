@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 [System.Serializable]
-public class AreaOfEffect : ISerializationCallbackReceiver
+public class AreaOfEffect : ScriptableObject, ISerializationCallbackReceiver
 {
     int[,] unserializedValues = new int[25, 25];
     [SerializeField, HideInInspector] private List<Package<int>> serializable;
@@ -20,7 +20,7 @@ public class AreaOfEffect : ISerializationCallbackReceiver
         }
     }
 
-    string[] names = new string[] { "0", "1" };
+    string[] names = new string[] { "Category 0", "Category 1" };
     /// <summary>
     /// The names for each option. Setting 'max' will reset these names so do that first.
     /// </summary>
@@ -53,7 +53,7 @@ public class AreaOfEffect : ISerializationCallbackReceiver
                 for (int i = 0; i <= value; i++)
                 {
                     options[i] = i;
-                    names[i] = i.ToString();
+                    names[i] = "Category " + i.ToString();
                 }
             }
         }
@@ -64,14 +64,39 @@ public class AreaOfEffect : ISerializationCallbackReceiver
         }
     }
 
-    public Dictionary<int, Color> ButtonColor = new Dictionary<int, Color>()
+    Dictionary<int, Color> ButtonColor = new Dictionary<int, Color>()
     {
-        { -1, Color.blue },
         { 0, Color.grey },
         { 1, Color.green }
     };
 
     int currentBrush = 0;
+
+    [MenuItem("Assets/Create/ScriptableObjects/Area Of Effect 3x3")]
+    public static void CreateAreaOfEffect3x3()
+    {
+        AreaOfEffect area = ScriptableObject.CreateInstance<AreaOfEffect>();
+        area.Width = 3;
+        area.Height = 3;
+
+        AssetDatabase.CreateAsset(area, "Assets/ScriptableObjects/AreaOfEffect/3x3_.asset");
+        AssetDatabase.SaveAssets();
+        EditorUtility.FocusProjectWindow();
+        Selection.activeObject = area;
+    }
+
+    [MenuItem("Assets/Create/ScriptableObjects/Area Of Effect 5x5")]
+    public static void CreateAreaOfEffect5x5()
+    {
+        AreaOfEffect area = ScriptableObject.CreateInstance<AreaOfEffect>();
+        area.Width = 5;
+        area.Height = 5;
+
+        AssetDatabase.CreateAsset(area, "Assets/ScriptableObjects/AreaOfEffect/5x5_.asset");
+        AssetDatabase.SaveAssets();
+        EditorUtility.FocusProjectWindow();
+        Selection.activeObject = area;
+    }
 
     public void OnInputGUI()
     {
@@ -88,24 +113,25 @@ public class AreaOfEffect : ISerializationCallbackReceiver
         Height = (int)EditorGUILayout.IntField("Height: ", Height, GUILayout.Width(70));
         EditorGUILayout.Space();
 
-        if (ButtonColor.ContainsKey(currentBrush))
-            GUI.backgroundColor = ButtonColor[currentBrush];
-        else
-            GUI.backgroundColor = Color.grey;
-        currentBrush = (int)EditorGUILayout.IntPopup("Brush: ", currentBrush, names, options, GUILayout.Width(160));
-
-        EditorGUIUtility.labelWidth = defaultLabelWidth;
-        GUILayout.FlexibleSpace();
-        EditorGUILayout.EndHorizontal();
-        EditorGUILayout.Space();
-
+        Width = Mathf.Clamp(Width, 1, 25);
+        Height = Mathf.Clamp(Height, 1, 25);
         if (Width % 2 == 0)
             Width += 1;
         if (Height % 2 == 0)
             Height += 1;
 
+        if (ButtonColor.ContainsKey(currentBrush))
+            GUI.backgroundColor = ButtonColor[currentBrush];
+        else
+            GUI.backgroundColor = Color.grey;
+        currentBrush = (int)EditorGUILayout.IntPopup("Brush: ", currentBrush, names, options, GUILayout.Width(160));
         if (!options.Contains(currentBrush))
             currentBrush = 0;
+
+        EditorGUIUtility.labelWidth = defaultLabelWidth;
+        GUILayout.FlexibleSpace();
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.Space();
 
         GUILayoutOption buttonWidth = GUILayout.MaxWidth(30);
         GUILayoutOption buttonHeight = GUILayout.Height(Mathf.Min(30, Screen.width / Width));
@@ -120,24 +146,16 @@ public class AreaOfEffect : ISerializationCallbackReceiver
                 else
                     GUI.backgroundColor = Color.grey;
 
-                if (y == Height / 2 && x == Width / 2)
+                if (GUILayout.Button(unserializedValues[x, y].ToString(), buttonWidth, buttonHeight))
                 {
-                    unserializedValues[x, y] = -1;
-                    GUILayout.Button(unserializedValues[x, y].ToString(), buttonWidth, buttonHeight);
+                    if (unserializedValues[x, y] != currentBrush)
+                        unserializedValues[x, y] = currentBrush;
+                    else
+                        unserializedValues[x, y] = 0;
                 }
-                else
-                {
-                    if (GUILayout.Button(unserializedValues[x, y].ToString(), buttonWidth, buttonHeight))
-                    {
-                        if (unserializedValues[x, y] != currentBrush)
-                            unserializedValues[x, y] = currentBrush;
-                        else
-                            unserializedValues[x, y] = 0;
-                    }
 
-                    if (!options.Contains(unserializedValues[x,y]))
-                        unserializedValues[x,y] = 0;
-                }
+                if (!options.Contains(unserializedValues[x,y]))
+                    unserializedValues[x,y] = 0;
             }
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();

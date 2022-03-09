@@ -19,6 +19,6 @@ public class Quality_ : CardEffectQuality
 
     public override string GetDescription(WorldInfo worldInfo, bool isPlural)
     {
-        return "";
+        return isPlural ? "tiles" : "tile";
     }
 }

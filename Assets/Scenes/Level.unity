@@ -1567,11 +1567,11 @@ MonoBehaviour:
   worldInfo: {fileID: 11400000, guid: 523d4ba8fa444e24bbddab59b8085233, type: 2}
   cycleEnd: {fileID: 11400000, guid: 8f2969afe96018a488cb5c95ca53df53, type: 2}
   InitialDeck:
-  - {fileID: 11400000, guid: 5172ca59557857e4889ac61870391be0, type: 2}
-  - {fileID: 11400000, guid: 5172ca59557857e4889ac61870391be0, type: 2}
-  - {fileID: 11400000, guid: 5172ca59557857e4889ac61870391be0, type: 2}
-  - {fileID: 11400000, guid: 46cf01ca1ff6b3a4aa7e387eb2fc794e, type: 2}
-  - {fileID: 11400000, guid: 46cf01ca1ff6b3a4aa7e387eb2fc794e, type: 2}
+  - {fileID: 11400000, guid: 8a991eee5d121fe4699aa88bb37bf7ff, type: 2}
+  - {fileID: 11400000, guid: 8a991eee5d121fe4699aa88bb37bf7ff, type: 2}
+  - {fileID: 11400000, guid: 8a991eee5d121fe4699aa88bb37bf7ff, type: 2}
+  - {fileID: 11400000, guid: 8a991eee5d121fe4699aa88bb37bf7ff, type: 2}
+  - {fileID: 11400000, guid: 8a991eee5d121fe4699aa88bb37bf7ff, type: 2}
   DeckZone: {fileID: 11400000, guid: 6e9813d50e647c14c82a3b4473cc5f2c, type: 2}
   HandZone: {fileID: 11400000, guid: 9c1329845d257c94ca47cee3c04615bd, type: 2}
   DiscardZone: {fileID: 11400000, guid: 29a5b637ebded6e4fb210a7714446d64, type: 2}

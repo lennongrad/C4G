@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1eae0be279bdd5f4caf48bac1284a64f, type: 3}
-  m_Name: AOETestSpell
+  m_Name: FlameSweep
   m_EditorClassIdentifier: 
-  CardTitle: AOE Test
+  CardTitle: FlameSweep
   ManaCosts: 0000000000000000000000000000000000000000
   Type: 2
   TowerSubtypes: 0
   SpellSubtypes: 0
   SkillSubtypes: 0
   CardEffects:
-  - minTargets: 0
+  - minTargets: 1
     maxTargets: 1
     conditionScript: {fileID: 11500000, guid: cce934b28a7d1d44896c4bed0a3228cc, type: 3}
     condition:
@@ -122,7 +122,7 @@ MonoBehaviour:
             Element: 1
           - Index0: 1
             Index1: 1
-            Element: -1
+            Element: 1
           - Index0: 1
             Index1: 2
             Element: 1

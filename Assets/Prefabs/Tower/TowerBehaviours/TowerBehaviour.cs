@@ -11,7 +11,7 @@ abstract public class TowerBehaviour : MonoBehaviour
     /// <summary>
     /// Whether this behaviour should be active
     /// </summary>
-    public bool performBehaviour = false;
+    public bool performBehaviour = true;
 
     /// <summary>
     /// Called every FixedUpdate() if the tower is enabled

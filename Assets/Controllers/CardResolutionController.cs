@@ -93,7 +93,7 @@ public class CardResolutionController : MonoBehaviour
 
     bool checkedCondition;
     /// <summary>
-    /// Try to resolve as much as a card as possible, usuallly until having to choose targets
+    /// Try to resolve as much as a card as possible, usually until having to choose targets
     /// </summary>
     private void attemptResolution()
     {
@@ -142,7 +142,7 @@ public class CardResolutionController : MonoBehaviour
             // not enough targets selected
 
             bool canSubmit = targetCount >= activeEffect.minTargets;
-            targetSelectionController.StartTargetSelection(activeEffect.predicate.TargetType, activeEffect.targetQuality, resolutionInfo, canSubmit);
+            targetSelectionController.StartTargetSelection(activeEffect.predicate.TargetType, activeEffect.targetQuality, resolutionInfo, canSubmit, activeEffect.predicate.AffectedArea);
 
             if (cbTargetCountChanged != null)
                 cbTargetCountChanged(targetCount, activeEffect.maxTargets, canSubmit);

@@ -2,39 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System;
 
 [System.Serializable]
 public class Predicate_AOE : CardEffectPredicate
 {
     public override Card.TargetType TargetType { get { return Card.TargetType.Tiles; } }
-    public CardEffectPredicate effect;
+
+    float damage = 3f;
 
     public override void InputGUI()
     {
-        if(AffectedArea == null)
-            AffectedArea = new AreaOfEffect();
-
-        AffectedArea.Max = 1;
-        AffectedArea.Names = new string[] { "Unaffected", "Affected"};
-
-        AffectedArea.OnInputGUI();
+        damage = EditorGUILayout.FloatField("Damage", damage);
+        AffectedArea = EditorGUILayout.ObjectField("AOE:", AffectedArea, typeof(AreaOfEffect), true) as AreaOfEffect;
     }
 
     public override void PerformPredicate(TargetInfo targetInfo, WorldInfo worldInfo, ResolutionInfo resolutionInfo)
     {
-        foreach(TileController targetTile in targetInfo.Tiles)
-        {
-            List<TileController>[] affectedTiles = worldInfo.worldController.GetAreaAroundTile(targetTile, AffectedArea);
+        targetInfo.AOETargetting(AffectedArea, worldInfo);
 
-            foreach (TileController tile in affectedTiles[1])
-            {
-                tile.Ping(20);
-            }
-        }
+        foreach(EnemyController enemy in targetInfo.AOEEnemies[1])
+            enemy.DirectDamage(damage);
     }
 
     public override string GetDescription(WorldInfo worldInfo)
     {
-        return "";
+        return "deal " + damage + " damage to each enemy adjacent to that tile.";
     }
 }

@@ -10,6 +10,7 @@ using System;
 /// </summary>
 public class TargetSelectionController : MonoBehaviour
 {
+    public WorldController worldController;
     public GameObject handDisplayController;
     public WorldInfo worldInfo;
     public MonoScript towerPlacementQualityScript;
@@ -28,8 +29,19 @@ public class TargetSelectionController : MonoBehaviour
     /// The type of object that needs to be selected
     /// </summary>
     Card.TargetType targetType = Card.TargetType.None;
+    /// <summary>
+    /// The quality to match for the target that needs to be chosen
+    /// </summary>
     CardEffectQuality currentQuality;
     ResolutionInfo currentResolutionInfo;
+    /// <summary>
+    /// Current area to display, if any
+    /// </summary>
+    AreaOfEffect currentArea;
+
+    /// <summary>
+    /// Whether the player has selected enough targets, meaning they can click the Submit button and continue without selecting more
+    /// </summary>
     bool allowStop;
 
     /// <summary>
@@ -110,12 +122,13 @@ public class TargetSelectionController : MonoBehaviour
         StartTargetSelection(Card.TargetType.Tiles, towerPlacementQuality, resolutionInfo, false);
     }
 
-    public void StartTargetSelection(Card.TargetType type, CardEffectQuality quality, ResolutionInfo resolutionInfo, bool allowStop = false)
+    public void StartTargetSelection(Card.TargetType type, CardEffectQuality quality, ResolutionInfo resolutionInfo, bool shouldAllowStop = false, AreaOfEffect affectedArea = null)
     {
         targetType = type;
         currentQuality = quality;
         currentResolutionInfo = resolutionInfo;
-        this.allowStop = allowStop;
+        allowStop = shouldAllowStop;
+        currentArea = affectedArea;
     }
 
     /// <summary>
@@ -131,6 +144,7 @@ public class TargetSelectionController : MonoBehaviour
                 targetType = Card.TargetType.None;
                 Destroy(previewTower);
                 previewTower = null;
+                currentArea = null;
                 if (cbSelectTile != null)
                     cbSelectTile(noSelection ? null : tileHovered, previewDirection);
                 tileHovered = null;
@@ -139,6 +153,7 @@ public class TargetSelectionController : MonoBehaviour
                 if (towerHovered == null && !noSelection)
                     break;
                 targetType = Card.TargetType.None;
+                currentArea = null;
                 if (cbSelectTower != null)
                     cbSelectTower(noSelection ? null : towerHovered);
                 towerHovered = null;
@@ -147,6 +162,7 @@ public class TargetSelectionController : MonoBehaviour
                 if (enemyHovered == null && !noSelection)
                     break;
                 targetType = Card.TargetType.None;
+                currentArea = null;
                 if (cbSelectEnemy != null)
                     cbSelectEnemy(noSelection ? null : enemyHovered);
                 enemyHovered = null;
@@ -169,6 +185,13 @@ public class TargetSelectionController : MonoBehaviour
             previewTower?.SetActive(true);
             if(previewTower != null)
                 previewTower.GetComponent<TowerController>().transform.position = tile.transform.position + new Vector3(0, tile.Height,0);
+
+            if (currentArea != null)
+            {
+                List<TileController>[] tilesInArea = worldController.GetAreaAroundTile(tileHovered, currentArea);
+                foreach (TileController affectedTile in tilesInArea[1])
+                    affectedTile.Ping(1);
+            }
         }
         else
         {

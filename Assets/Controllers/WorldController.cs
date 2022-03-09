@@ -50,6 +50,7 @@ public class WorldController : MonoBehaviour
                 // set personal variables
                 tile.X = x;
                 tile.Y = y;
+                tile.worldController = this;
                 tile.name = "Tile_" + x + "_" + y;
                 Tiles[x, y].Type = stageData.TileTypes[x,y];
 

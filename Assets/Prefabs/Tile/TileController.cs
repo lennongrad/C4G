@@ -6,6 +6,7 @@ using System;
 public class TileController : MonoBehaviour
 {
     Material cubeMaterial;
+    public WorldController worldController;
 
     /// <summary>
     /// List of heights associated with each tile type
@@ -213,6 +214,30 @@ public class TileController : MonoBehaviour
         }
     }
 
+    public List<EnemyController> GetPresentEnemies()
+    {
+        LayerMask mask = LayerMask.GetMask("Enemy");
+        Collider[] hitColliders = Physics.OverlapBox(gameObject.transform.position, transform.localScale / 2, Quaternion.identity, mask);
+
+        List<EnemyController> enemiesCollided = new List<EnemyController>();
+        foreach(Collider collider in hitColliders)
+        {
+            EnemyController enemyCollided = collider.transform.parent.GetComponent<EnemyController>();
+            if (enemyCollided != null)
+                enemiesCollided.Add(enemyCollided);
+        }
+
+        return enemiesCollided;
+    }
+
+    /// <summary>
+    /// Get area around tower based on an area of effect
+    /// </summary>
+    public List<TileController>[] GetAreaAroundTile(AreaOfEffect area)
+    {
+        return worldController.GetAreaAroundTile(this, area);
+    }
+
     /// <summary>
     /// Used for debug mostly to temporarily colour in a tile
     /// </summary>
@@ -226,6 +251,7 @@ public class TileController : MonoBehaviour
     /// </summary>
     public void Hover()
     {
+        GetPresentEnemies();
         hovered = true;
         if(cbHovered != null)
             cbHovered(this);
