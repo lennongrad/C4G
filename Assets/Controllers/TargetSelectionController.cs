@@ -181,14 +181,22 @@ public class TargetSelectionController : MonoBehaviour
         if (currentQuality.CheckQuality(tile, worldInfo, currentResolutionInfo))
         {
             tileHovered = tile;
+            AreaOfEffect previewArea = currentArea;
 
             previewTower?.SetActive(true);
             if(previewTower != null)
-                previewTower.GetComponent<TowerController>().transform.position = tile.transform.position + new Vector3(0, tile.Height,0);
-
-            if (currentArea != null)
             {
-                List<TileController>[] tilesInArea = worldController.GetAreaAroundTile(tileHovered, currentArea);
+                previewTower.GetComponent<TowerController>().transform.position = tile.transform.position + new Vector3(0, tile.Height, 0);
+
+                if(previewTower.GetComponent<Behaviour_AreaOfEffect>() != null)
+                {
+                    previewArea = previewTower.GetComponent<Behaviour_AreaOfEffect>().areaOfEffect;
+                }
+            }
+
+            if (previewArea != null)
+            {
+                List<TileController>[] tilesInArea = worldController.GetAreaAroundTile(tileHovered, previewArea, previewDirection);
                 foreach (TileController affectedTile in tilesInArea[1])
                     affectedTile.Ping(1);
             }
@@ -222,13 +230,17 @@ public class TargetSelectionController : MonoBehaviour
     public void OnTowerRotateCW()
     {
         previewDirection = previewDirection.RotatedCW();
-        previewTower.GetComponent<TowerController>().FacingDirection = previewDirection;
+
+        if(previewTower != null)
+            previewTower.GetComponent<TowerController>().FacingDirection = previewDirection;
     }
 
     public void OnTowerRotateCCW()
     {
         previewDirection = previewDirection.RotatedCCW();
-        previewTower.GetComponent<TowerController>().FacingDirection = previewDirection;
+
+        if (previewTower != null)
+            previewTower.GetComponent<TowerController>().FacingDirection = previewDirection;
     }
 
     void OnSelect(InputValue value)

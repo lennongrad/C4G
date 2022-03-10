@@ -37,7 +37,7 @@ public class Behaviour_AreaOfEffect : TowerBehaviour
 
     protected override void Initiate()
     {
-        attackTimer = InitialWait + AnimationWait;
+        attackTimer = InitialWait + AnimationWait + 1;
     }
 
     protected override void Behave()
@@ -64,7 +64,7 @@ public class Behaviour_AreaOfEffect : TowerBehaviour
         if (areaOfEffect == null)
             return;
 
-        List<TileController> affectedTiles = MainController.ParentTile.GetAreaAroundTile(areaOfEffect)[1];
+        List<TileController> affectedTiles = MainController.ParentTile.GetAreaAroundTile(areaOfEffect, MainController.FacingDirection)[1];
 
         HashSet<EnemyController> affectedEnemies = new HashSet<EnemyController>();
         foreach(TileController tile in affectedTiles)

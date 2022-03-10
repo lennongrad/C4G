@@ -6,7 +6,7 @@ using UnityEditor;
 [System.Serializable]
 public class AreaOfEffect : ScriptableObject, ISerializationCallbackReceiver
 {
-    int[,] unserializedValues = new int[25, 25];
+    int[,] unserializedValues;
     [SerializeField, HideInInspector] private List<Package<int>> serializable;
 
     public int Width;
@@ -78,6 +78,7 @@ public class AreaOfEffect : ScriptableObject, ISerializationCallbackReceiver
         AreaOfEffect area = ScriptableObject.CreateInstance<AreaOfEffect>();
         area.Width = 3;
         area.Height = 3;
+        area.unserializedValues = new int[3,3];
 
         AssetDatabase.CreateAsset(area, "Assets/ScriptableObjects/AreaOfEffect/3x3_.asset");
         AssetDatabase.SaveAssets();
@@ -91,6 +92,7 @@ public class AreaOfEffect : ScriptableObject, ISerializationCallbackReceiver
         AreaOfEffect area = ScriptableObject.CreateInstance<AreaOfEffect>();
         area.Width = 5;
         area.Height = 5;
+        area.unserializedValues = new int[5, 5];
 
         AssetDatabase.CreateAsset(area, "Assets/ScriptableObjects/AreaOfEffect/5x5_.asset");
         AssetDatabase.SaveAssets();
@@ -108,7 +110,7 @@ public class AreaOfEffect : ScriptableObject, ISerializationCallbackReceiver
         EditorGUI.indentLevel = 0;
         GUILayout.FlexibleSpace();
 
-        Width = (int)EditorGUILayout.IntField("Width: ", Width, GUILayout.Width(70));
+        /*Width = (int)EditorGUILayout.IntField("Width: ", Width, GUILayout.Width(70));
         EditorGUILayout.Space(); 
         Height = (int)EditorGUILayout.IntField("Height: ", Height, GUILayout.Width(70));
         EditorGUILayout.Space();
@@ -118,7 +120,7 @@ public class AreaOfEffect : ScriptableObject, ISerializationCallbackReceiver
         if (Width % 2 == 0)
             Width += 1;
         if (Height % 2 == 0)
-            Height += 1;
+            Height += 1;*/
 
         if (ButtonColor.ContainsKey(currentBrush))
             GUI.backgroundColor = ButtonColor[currentBrush];
@@ -165,6 +167,18 @@ public class AreaOfEffect : ScriptableObject, ISerializationCallbackReceiver
         EditorGUI.indentLevel = originalIndentLevel;
     }
 
+    public int[,] GetRotated(Tile.TileDirection direction)
+    {
+        switch (direction)
+        {
+            case Tile.TileDirection.Left: return unserializedValues;
+            case Tile.TileDirection.Up: return unserializedValues.RotatedRight();
+            case Tile.TileDirection.Right: return unserializedValues.RotatedRight().RotatedRight();
+            case Tile.TileDirection.Down: return unserializedValues.RotatedLeft();
+        }
+        return unserializedValues;
+    }
+
     [System.Serializable]
     struct Package<TElement>
     {
@@ -194,7 +208,7 @@ public class AreaOfEffect : ScriptableObject, ISerializationCallbackReceiver
     public void OnAfterDeserialize()
     {
         // Convert the serializable list into our unserializable array
-        unserializedValues = new int[25, 25];
+        unserializedValues = new int[Height, Width];
         foreach (var package in serializable)
         {
             unserializedValues[package.Index0, package.Index1] = package.Element;

@@ -227,85 +227,61 @@ public static class ExtensionMethods
         return Array.Exists(arr, val => val.Equals(input));
     }
 
-    private static object GetValue_Imp(object source, string name)
+    /// <summary>
+    /// probably some in built way to do this but idk lol
+    /// </summary>
+    public static void ForEach<T>(this T[,] arr, Action<T> fnc, Action rowFnc = null)
     {
-        if (source == null)
-            return null;
-        var type = source.GetType();
-
-        while (type != null)
+        for (int y = 0; y < arr.GetLength(0); y++)
         {
-            var f = type.GetField(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-            if (f != null)
-                return f.GetValue(source);
+            if (rowFnc != null)
+                rowFnc();
 
-            var p = type.GetProperty(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-            if (p != null)
-                return p.GetValue(source, null);
-
-            type = type.BaseType;
+            for (int x = 0; x < arr.GetLength(1); x++)
+                fnc(arr[y, x]);
         }
-        return null;
     }
 
-    private static object GetValue_Imp(object source, string name, int index)
+    public static T[,] Transposed<T>(this T[,] arr)
     {
-        var enumerable = GetValue_Imp(source, name) as System.Collections.IEnumerable;
-        if (enumerable == null) return null;
-        var enm = enumerable.GetEnumerator();
-        //while (index-- >= 0)
-        //    enm.MoveNext();
-        //return enm.Current;
+        T[,] transposedArray = new T[arr.GetLength(1), arr.GetLength(0)];
 
-        for (int i = 0; i <= index; i++)
-        {
-            if (!enm.MoveNext()) return null;
-        }
-        return enm.Current;
+        for (int y = 0; y < arr.GetLength(0); y++)
+            for (int x = 0; x < arr.GetLength(1); x++)
+                transposedArray[x, y] = arr[y, x];
+
+        return transposedArray;
     }
 
-    public static object GetTargetObjectOfProperty(this SerializedProperty prop)
+    public static T[,] RowsReversed<T>(this T[,] arr)
     {
-        if (prop == null) return null;
+        T[,] reversedArray = new T[arr.GetLength(0), arr.GetLength(1)];
 
-        var path = prop.propertyPath.Replace(".Array.data[", "[");
-        object obj = prop.serializedObject.targetObject;
-        var elements = path.Split('.');
-        foreach (var element in elements)
-        {
-            if (element.Contains("["))
-            {
-                var elementName = element.Substring(0, element.IndexOf("["));
-                var index = System.Convert.ToInt32(element.Substring(element.IndexOf("[")).Replace("[", "").Replace("]", ""));
-                obj = GetValue_Imp(obj, elementName, index);
-            }
-            else
-            {
-                obj = GetValue_Imp(obj, element);
-            }
-        }
-        return obj;
+        for (int y = 0; y < arr.GetLength(0); y++)
+            for (int x = 0; x < arr.GetLength(1); x++)
+                reversedArray[y, x] = arr[y, arr.GetLength(1) - x - 1];
+
+        return reversedArray;
     }
 
-    public static object GetTargetObjectWithProperty(this SerializedProperty prop)
+    public static T[,] ColumnsReversed<T>(this T[,] arr)
     {
-        var path = prop.propertyPath.Replace(".Array.data[", "[");
-        object obj = prop.serializedObject.targetObject;
-        var elements = path.Split('.');
-        foreach (var element in elements.Take(elements.Length - 1))
-        {
-            if (element.Contains("["))
-            {
-                var elementName = element.Substring(0, element.IndexOf("["));
-                var index = System.Convert.ToInt32(element.Substring(element.IndexOf("[")).Replace("[", "").Replace("]", ""));
-                obj = GetValue_Imp(obj, elementName, index);
-            }
-            else
-            {
-                obj = GetValue_Imp(obj, element);
-            }
-        }
-        return obj;
+        T[,] reversedArray = new T[arr.GetLength(0), arr.GetLength(1)];
+
+        for (int y = 0; y < arr.GetLength(0); y++)
+            for (int x = 0; x < arr.GetLength(1); x++)
+                reversedArray[y, x] = arr[arr.GetLength(0) - y - 1, x];
+
+        return reversedArray;
     }
 
+    public static T[,] RotatedRight<T>(this T[,] arr)
+    {
+        return arr.Transposed().ColumnsReversed();
+    }
+
+    public static T[,] RotatedLeft<T>(this T[,] arr)
+    {
+        return arr.Transposed().RowsReversed();
+    }
 }

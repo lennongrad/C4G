@@ -233,9 +233,9 @@ public class TileController : MonoBehaviour
     /// <summary>
     /// Get area around tower based on an area of effect
     /// </summary>
-    public List<TileController>[] GetAreaAroundTile(AreaOfEffect area)
+    public List<TileController>[] GetAreaAroundTile(AreaOfEffect area, Tile.TileDirection direction = Tile.TileDirection.None)
     {
-        return worldController.GetAreaAroundTile(this, area);
+        return worldController.GetAreaAroundTile(this, area, direction);
     }
 
     /// <summary>

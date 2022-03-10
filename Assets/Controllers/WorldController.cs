@@ -147,7 +147,7 @@ public class WorldController : MonoBehaviour
         towerController.Initiate();
     }
 
-    public List<TileController>[] GetAreaAroundTile(TileController tile, AreaOfEffect area)
+    public List<TileController>[] GetAreaAroundTile(TileController tile, AreaOfEffect area, Tile.TileDirection direction = Tile.TileDirection.None)
     {
         List<TileController>[] arr = new List<TileController>[area.Max + 1];
 
@@ -156,7 +156,7 @@ public class WorldController : MonoBehaviour
 
         int centerX = area.Width / 2;
         int centerY = area.Height / 2;
-        int[,] areaValues = area.Values;
+        int[,] areaValues = area.GetRotated(direction);
 
         for (int x = 0; x < stageData.Width; x++)
         {

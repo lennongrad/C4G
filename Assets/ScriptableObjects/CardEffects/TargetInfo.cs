@@ -40,7 +40,7 @@ public class TargetInfo
     /// <summary>
     /// Applies the given area of effect to each of the targetted tiles
     /// </summary>
-    public void AOETargetting(AreaOfEffect area, WorldInfo worldInfo)
+    public void AOETargetting(AreaOfEffect area, WorldInfo worldInfo, Tile.TileDirection direction = Tile.TileDirection.None)
     {
         for(int i = 0; i <= area.Max; i++)
         {
@@ -51,7 +51,7 @@ public class TargetInfo
 
         foreach (TileController targetTile in Tiles)
         {
-            List<TileController>[] affectedTiles = worldInfo.worldController.GetAreaAroundTile(targetTile, area);
+            List<TileController>[] affectedTiles = worldInfo.worldController.GetAreaAroundTile(targetTile, area, direction);
 
             for (int i = 0; i <= area.Max; i++)
             {

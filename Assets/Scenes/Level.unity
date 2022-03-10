@@ -245,6 +245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9f4f3c6d607a2347bcd1e9129777341, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  worldController: {fileID: 1334423220}
   handDisplayController: {fileID: 2089858761}
   worldInfo: {fileID: 11400000, guid: 523d4ba8fa444e24bbddab59b8085233, type: 2}
   towerPlacementQualityScript: {fileID: 11500000, guid: fa255c6d27b5a10408aa096163e0cdba, type: 3}
@@ -1567,8 +1568,8 @@ MonoBehaviour:
   worldInfo: {fileID: 11400000, guid: 523d4ba8fa444e24bbddab59b8085233, type: 2}
   cycleEnd: {fileID: 11400000, guid: 8f2969afe96018a488cb5c95ca53df53, type: 2}
   InitialDeck:
-  - {fileID: 11400000, guid: 8a991eee5d121fe4699aa88bb37bf7ff, type: 2}
-  - {fileID: 11400000, guid: 8a991eee5d121fe4699aa88bb37bf7ff, type: 2}
+  - {fileID: 11400000, guid: 9765f3e7a72d5554e9815b34d116015a, type: 2}
+  - {fileID: 11400000, guid: 9765f3e7a72d5554e9815b34d116015a, type: 2}
   - {fileID: 11400000, guid: 8a991eee5d121fe4699aa88bb37bf7ff, type: 2}
   - {fileID: 11400000, guid: 8a991eee5d121fe4699aa88bb37bf7ff, type: 2}
   - {fileID: 11400000, guid: 8a991eee5d121fe4699aa88bb37bf7ff, type: 2}

@@ -19,7 +19,7 @@ public class Predicate_AOE : CardEffectPredicate
 
     public override void PerformPredicate(TargetInfo targetInfo, WorldInfo worldInfo, ResolutionInfo resolutionInfo)
     {
-        targetInfo.AOETargetting(AffectedArea, worldInfo);
+        targetInfo.AOETargetting(AffectedArea, worldInfo, targetInfo.Direction);
 
         foreach(EnemyController enemy in targetInfo.AOEEnemies[1])
             enemy.DirectDamage(damage);
