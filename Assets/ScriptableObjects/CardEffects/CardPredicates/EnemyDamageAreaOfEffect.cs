@@ -5,11 +5,11 @@ using UnityEditor;
 using System;
 
 [System.Serializable]
-public class Predicate_AOE : CardEffectPredicate
+public class EnemyDamageAreaOfEffect : CardEffectPredicate
 {
     public override Card.TargetType TargetType { get { return Card.TargetType.Tiles; } }
 
-    float damage = 3f;
+    public float damage = 3f;
 
     public override void InputGUI()
     {

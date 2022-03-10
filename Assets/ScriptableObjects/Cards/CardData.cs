@@ -86,6 +86,10 @@ public class CardData : ScriptableObject
     /// </summary>
     public void OnInputGUI()
     {
+        EditorGUILayout.Space(3);
+        EditorGUILayout.HelpBox(GetDescription(null), MessageType.None);
+        EditorGUILayout.Space(3);
+
         GUI.backgroundColor = Color.clear;
         EditorGUILayout.BeginFoldoutHeaderGroup(true, "Card Information");
 
@@ -123,10 +127,6 @@ public class CardData : ScriptableObject
         foreach (Mana.ManaType type in System.Enum.GetValues(typeof(Mana.ManaType)))
             EditorGUILayout.LabelField(GetUnicodeOfManaType(type), GUILayout.Width((Screen.width - 170) / System.Enum.GetValues(typeof(Mana.ManaType)).Length));
         EditorGUILayout.EndHorizontal();
-
-        EditorGUILayout.Space(3);
-        EditorGUILayout.HelpBox(GetDescription(null), MessageType.None);
-        EditorGUILayout.Space(3);
 
         EditorGUILayout.EndFoldoutHeaderGroup();
         EditorGUILayout.Space(7);

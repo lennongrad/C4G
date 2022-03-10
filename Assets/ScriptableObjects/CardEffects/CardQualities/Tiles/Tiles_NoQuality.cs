@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 [System.Serializable]
-public class Quality_Tile_TowerPlacementAllowed : CardEffectQuality
+public class Tiles_NoQuality : CardEffectQuality
 {
     public override Card.TargetType TargetType { get { return Card.TargetType.Tiles; } }
 
@@ -14,11 +14,11 @@ public class Quality_Tile_TowerPlacementAllowed : CardEffectQuality
 
     public override bool CheckQuality(TileController tileController, WorldInfo worldInfo, ResolutionInfo resolutionInfo)
     {
-        return tileController.PresentTower == null && (tileController.Type == Tile.TileType.Floor || tileController.Type == Tile.TileType.Raised);
+        return true;
     }
 
     public override string GetDescription(WorldInfo worldInfo, bool isPlural)
     {
-        return "";
+        return isPlural ? "tiles" : "tile";
     }
 }

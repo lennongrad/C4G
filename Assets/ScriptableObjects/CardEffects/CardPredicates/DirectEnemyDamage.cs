@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 [System.Serializable]
-public class Predicate_EnemyDamage : CardEffectPredicate
+public class DirectEnemyDamage : CardEffectPredicate
 {
     public override Card.TargetType TargetType { get { return Card.TargetType.Enemies; } }
 

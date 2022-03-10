@@ -48,17 +48,29 @@ public class CardEffect
         minTargets = (int)minTargetsFloat; maxTargets = (int)maxTargetsFloat;
         EditorGUILayout.EndHorizontal();
 
-        conditionInfo();
-        EditorGUILayout.Space(4);
-        targetQualityInfo();
+        CardEffectCondition.LoadCondition(ref conditionScript, ref condition);
+        if (condition != null)
+            condition.OnInputGUI();
         EditorGUILayout.Space(4);
 
         CardEffectPredicate.LoadPredicate(ref predicateScript, ref predicate);
         if (predicate != null)
             predicate.OnInputGUI();
+        EditorGUILayout.Space(4);
+
+        if (predicate != null && predicate.TargetType != Card.TargetType.None)
+        {
+            CardEffectQuality.LoadQuality(ref qualityScript, ref targetQuality, predicate.TargetType);
+            if (targetQuality != null)
+                targetQuality.OnInputGUI();
+        }
+        EditorGUILayout.Space(4);
 
         if (predicate != null && targetQuality != null && predicate.TargetType != targetQuality.TargetType)
-            EditorGUILayout.HelpBox("The target type of the quality does not match the predicate.", MessageType.Error);
+        {
+            qualityScript = null;
+            targetQuality = null;
+        }
 
         EditorGUI.indentLevel--;
     }

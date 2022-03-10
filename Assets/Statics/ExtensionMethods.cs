@@ -5,6 +5,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 using UnityEditor;
+using System.Text;
 
 /// <summary>
 /// The file of each extension method, which are methods that can be added to existing types to extend their functionality.
@@ -283,5 +284,23 @@ public static class ExtensionMethods
     public static T[,] RotatedLeft<T>(this T[,] arr)
     {
         return arr.Transposed().RowsReversed();
+    }
+
+    public static string AddSpacesToSentence(this string text, bool preserveAcronyms = true)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return string.Empty;
+        StringBuilder newText = new StringBuilder(text.Length * 2);
+        newText.Append(text[0]);
+        for (int i = 1; i < text.Length; i++)
+        {
+            if (char.IsUpper(text[i]))
+                if ((text[i - 1] != ' ' && !char.IsUpper(text[i - 1])) ||
+                    (preserveAcronyms && char.IsUpper(text[i - 1]) &&
+                     i < text.Length - 1 && !char.IsUpper(text[i + 1])))
+                    newText.Append(' ');
+            newText.Append(text[i]);
+        }
+        return newText.ToString();
     }
 }

@@ -4,13 +4,11 @@ using UnityEngine;
 using UnityEditor;
 
 [System.Serializable]
-public class Condition_HasTowers : CardEffectCondition
+public class NoCondition : CardEffectCondition
 {
-    int numberOfTowers;
 
     public override void InputGUI()
     {
-        numberOfTowers = (int)EditorGUILayout.IntField("Number of towers: ", numberOfTowers);
     }
 
     public override bool CheckCondition(WorldInfo worldInfo, ResolutionInfo resolutionInfo)

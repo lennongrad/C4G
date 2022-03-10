@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEditor;
 
 [System.Serializable]
-public class Quality_NoQuality : CardEffectQuality
+public class Towers_NoQuality : CardEffectQuality
 {
-    public override Card.TargetType TargetType { get { return Card.TargetType.None; } }
+    public override Card.TargetType TargetType { get { return Card.TargetType.Towers; } }
 
     public override void InputGUI()
     {

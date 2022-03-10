@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 [System.Serializable]
-public class Quality_Tiles_MatchesType : CardEffectQuality
+public class Tiles_MatchesType : CardEffectQuality
 {
     public override Card.TargetType TargetType { get { return Card.TargetType.Tiles; } }
 

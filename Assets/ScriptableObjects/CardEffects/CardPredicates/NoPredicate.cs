@@ -4,16 +4,16 @@ using UnityEngine;
 using UnityEditor;
 
 [System.Serializable]
-public class Condition_NoCondition : CardEffectCondition
+public class NoPredicate : CardEffectPredicate
 {
+    public override Card.TargetType TargetType { get { return Card.TargetType.None; } }
 
     public override void InputGUI()
-    {
+    { 
     }
 
-    public override bool CheckCondition(WorldInfo worldInfo, ResolutionInfo resolutionInfo)
+    public override void PerformPredicate(TargetInfo targetInfo, WorldInfo worldInfo, ResolutionInfo resolutionInfo)
     {
-        return true;
     }
 
     public override string GetDescription(WorldInfo worldInfo)

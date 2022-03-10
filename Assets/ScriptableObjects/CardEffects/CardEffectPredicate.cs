@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
+using System.Linq;
 
 /// <summary>
 /// Class that card effect predicates inherit from.
@@ -57,21 +58,37 @@ public abstract class CardEffectPredicate
 
     static public void LoadPredicate(ref MonoScript predicateScript, ref CardEffectPredicate predicate, string label = "Predicate")
     {
-
-        MonoScript lastPredicateScript = predicateScript;
-        predicateScript = (MonoScript)EditorGUILayout.ObjectField(label, predicateScript, typeof(MonoScript), false);
-        if (predicateScript == null)
+        string[] foundAssets = AssetDatabase.FindAssets("", new string[] { "Assets/ScriptableObjects/CardEffects/CardPredicates" });
+        Array.Sort(foundAssets, (string a, string b) =>
         {
-            string[] result = AssetDatabase.FindAssets("Predicate_NoPredicate");
+            return (AssetDatabase.GUIDToAssetPath(a).Split('/').Last() == "NoPredicate.cs") ? -1 : 1;
+        });
 
-            if (result.Length == 1)
-            {
-                string path = AssetDatabase.GUIDToAssetPath(result[0]);
-                predicateScript = (MonoScript)AssetDatabase.LoadAssetAtPath(path, typeof(MonoScript));
-            }
+        List<string> predicateScriptPaths = new List<string>();
+        List<string> predicateScriptNames = new List<string>();
+        List<int> predicateScriptOptions = new List<int>();
+        int lastPredicateScriptNumber = -1;
+
+        for (int i = 0; i < foundAssets.Length; i++)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(foundAssets[i]);
+            predicateScriptPaths.Add(path);
+            predicateScriptOptions.Add(i);
+
+            string name = path.Split('/').Last();
+            name = name.Substring(0, name.Length - 3).AddSpacesToSentence();
+            predicateScriptNames.Add(name);
+
+            if (AssetDatabase.GetAssetPath(predicateScript) == path)
+                lastPredicateScriptNumber = i;
         }
 
-        if (predicateScript != lastPredicateScript)
-            predicate = (CardEffectPredicate)Activator.CreateInstance(predicateScript.GetClass());    
+        int predicateScriptNumber = (int)EditorGUILayout.IntPopup(label, lastPredicateScriptNumber == -1 ? 0 : lastPredicateScriptNumber, predicateScriptNames.ToArray(), predicateScriptOptions.ToArray());
+
+        if (lastPredicateScriptNumber != predicateScriptNumber)
+        {
+            predicateScript = (MonoScript)AssetDatabase.LoadAssetAtPath(predicateScriptPaths[predicateScriptNumber], typeof(MonoScript));
+            predicate = (CardEffectPredicate)Activator.CreateInstance(predicateScript.GetClass());
+        } 
     }
 }

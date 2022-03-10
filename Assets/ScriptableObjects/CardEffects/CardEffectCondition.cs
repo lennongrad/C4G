@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System;
+using System.Linq;
 
 /// <summary>
 /// Class that card effect conditions inherit from.
@@ -49,5 +51,41 @@ public abstract class CardEffectCondition
         EditorGUI.indentLevel += 1;
         InputGUI();
         EditorGUI.indentLevel -= 1;
+    }
+
+    static public void LoadCondition(ref MonoScript conditionScript, ref CardEffectCondition condition, string label = "Condition")
+    {
+        string[] foundAssets = AssetDatabase.FindAssets("", new string[] { "Assets/ScriptableObjects/CardEffects/CardConditions" });
+        Array.Sort(foundAssets, (string a, string b) =>
+        {
+            return (AssetDatabase.GUIDToAssetPath(a).Split('/').Last() == "NoCondition.cs") ? -1 : 1;
+        });
+
+        List<string> conditionScriptPaths = new List<string>();
+        List<string> conditionScriptNames = new List<string>();
+        List<int> conditionScriptOptions = new List<int>();
+        int lastConditionScriptNumber = -1;
+
+        for (int i = 0; i < foundAssets.Length; i++)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(foundAssets[i]);
+            conditionScriptPaths.Add(path);
+            conditionScriptOptions.Add(i);
+
+            string name = path.Split('/').Last();
+            name = name.Substring(0, name.Length - 3).AddSpacesToSentence();
+            conditionScriptNames.Add(name);
+
+            if (AssetDatabase.GetAssetPath(conditionScript) == path)
+                lastConditionScriptNumber = i;
+        }
+
+        int conditionScriptNumber = (int)EditorGUILayout.IntPopup(label, lastConditionScriptNumber == -1 ? 0 : lastConditionScriptNumber, conditionScriptNames.ToArray(), conditionScriptOptions.ToArray());
+
+        if (lastConditionScriptNumber != conditionScriptNumber)
+        {
+            conditionScript = (MonoScript)AssetDatabase.LoadAssetAtPath(conditionScriptPaths[conditionScriptNumber], typeof(MonoScript));
+            condition = (CardEffectCondition)Activator.CreateInstance(conditionScript.GetClass());
+        }
     }
 }

@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEditor;
 
 [System.Serializable]
-public class Quality_Towers_NoQuality : CardEffectQuality
+public class Enemies_NoQuality : CardEffectQuality
 {
-    public override Card.TargetType TargetType { get { return Card.TargetType.Towers; } }
+    public override Card.TargetType TargetType { get { return Card.TargetType.Enemies; } }
 
     public override void InputGUI()
     {
@@ -19,6 +19,6 @@ public class Quality_Towers_NoQuality : CardEffectQuality
 
     public override string GetDescription(WorldInfo worldInfo, bool isPlural)
     {
-        return "";
+        return isPlural ? "enemies" : "enemy";
     }
 }
