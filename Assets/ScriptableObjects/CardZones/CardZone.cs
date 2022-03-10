@@ -66,6 +66,16 @@ public class CardZone : ScriptableObject
     }
 
     /// <summary>
+    /// For each card in the zone, call a function.
+    /// Function inputs are [Card, card index, number of cards]
+    /// </summary>
+    public void ForEach(Action<CardController, int, int> action)
+    {
+        for (int i = 0; i < cards.Count; i++)
+            action(cards[i], i, cards.Count);
+    }
+
+    /// <summary>
     /// Move all the cards from one zone into this one
     /// </summary>
     public void AddAll(CardZone otherZone)

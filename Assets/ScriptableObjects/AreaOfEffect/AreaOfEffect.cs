@@ -72,7 +72,7 @@ public class AreaOfEffect : ScriptableObject, ISerializationCallbackReceiver
 
     int currentBrush = 0;
 
-    [MenuItem("Assets/Create/ScriptableObjects/Area Of Effect 3x3")]
+    [MenuItem("Assets/Create/ScriptableObjects/Area Of Effect 3x3", false, 10)]
     public static void CreateAreaOfEffect3x3()
     {
         AreaOfEffect area = ScriptableObject.CreateInstance<AreaOfEffect>();
@@ -86,7 +86,7 @@ public class AreaOfEffect : ScriptableObject, ISerializationCallbackReceiver
         Selection.activeObject = area;
     }
 
-    [MenuItem("Assets/Create/ScriptableObjects/Area Of Effect 5x5")]
+    [MenuItem("Assets/Create/ScriptableObjects/Area Of Effect 5x5", false, 10)]
     public static void CreateAreaOfEffect5x5()
     {
         AreaOfEffect area = ScriptableObject.CreateInstance<AreaOfEffect>();

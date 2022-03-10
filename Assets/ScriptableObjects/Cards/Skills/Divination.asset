@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Divination
   m_EditorClassIdentifier: 
   CardTitle: Divination
-  ManaCosts: 0200000000000000000000000000000000000000
+  ManaCosts: 0100000000000000000000000100000000000000
   Type: 3
   TowerSubtypes: 0
   SpellSubtypes: 0
@@ -40,4 +40,5 @@ MonoBehaviour:
     00000002:
       type: {class: Predicate_DrawCards, ns: , asm: Assembly-CSharp}
       data:
+        AffectedArea: {fileID: 0}
         cardAmount: 2

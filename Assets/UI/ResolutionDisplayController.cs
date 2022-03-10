@@ -12,29 +12,35 @@ public class ResolutionDisplayController : MonoBehaviour
     public Text TargetCountText;
     public Button SubmitButton;
 
-    CardController currentCard;
+    public CardZone ResolutionZone;
 
     void Awake()
     {
-        cardResolutionController.RegisterCardAdded(onCardAdded);
-        cardResolutionController.RegisterCardRemoved(onCardRemoved);
+        ResolutionZone.RegisterCardsAdded(onCardsAdded);
+        ResolutionZone.RegisterCardsRemoved(onCardsRemoved);
         cardResolutionController.RegisterTargetCountChanged(onTargetCountChanged);
     }
 
-    void onCardAdded(CardController cardController)
+    void onCardsAdded(List<CardController> addedCards)
     {
-        currentCard = cardController;
+        foreach(CardController card in addedCards)
+        {
+            card.gameObject.SetActive(true);
+            card.transform.SetParent(this.transform);
 
-        currentCard.transform.SetParent(this.transform);
-        currentCard.horizontalEdge = RectTransform.Edge.Right;
-        currentCard.TargetX = 15;
-        currentCard.TargetY = 35;
-        currentCard.TargetRotation = 0;
+            card.horizontalEdge = RectTransform.Edge.Right;
+            card.TargetX = 15;
+            card.TargetY = 35;
+            card.TargetRotation = 0;
+        }
     }
 
-    void onCardRemoved()
+    void onCardsRemoved(List<CardController> removedCards)
     {
-        currentCard = null;
+        foreach (CardController card in removedCards)
+        {
+            card.gameObject.SetActive(false);
+        }
     }
 
     void onTargetCountChanged(int currentTargets, int targetsMax, bool allowSubmit)

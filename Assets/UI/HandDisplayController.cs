@@ -26,11 +26,6 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
     /// </summary>
     public CardZone HandZone;
 
-    /// <summary>reg
-    /// List of the actual card objects the player sees
-    /// </summary>
-    List<CardController> cards = new List<CardController>();
-
     /// <summary>
     /// The last card in hand to be hovered over by the user. Null if they haven't hovered
     /// </summary>
@@ -43,6 +38,7 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
     {
         cardHolder = transform.GetChild(0).gameObject;
         HandZone.RegisterCardsAdded(OnCardsAdded);
+        HandZone.RegisterCardsRemoved(OnCardsRemoved);
     }
 
     int debugTimer = 0;
@@ -53,7 +49,6 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
         {
             debugTimer = 0;
             CardVisualUpdate();
-
         }
     }
 
@@ -67,88 +62,90 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
         // this is a wee mess
         List<float> yPositions = new List<float>() { 0 };
         List<float> yPositionsBase = new List<float>() { 0 };
-        for(int i = 1; i < 4; i++)
+        for (int i = 1; i < 4; i++)
         {
             yPositions.Add((float)Math.Sin(RotationCardDisplacement * Math.PI / 180f * i) / 2f + yPositionsBase[i - 1]);
             yPositionsBase.Add((float)Math.Sin(RotationCardDisplacement * Math.PI / 180f * i) + yPositionsBase[i - 1]);
         };
 
-        for (int i = 0; i < cards.Count; i++)
+        HandZone.ForEach((CardController card, int index, int count) => IndividualCardUpdate(card, index, count, yPositions, ref pastHovered));
+    }
+
+    void IndividualCardUpdate(CardController card, int index, int count, List<float> yPositions, ref bool pastHovered)
+    {
+        RectTransform cardTransform = card.GetComponent<RectTransform>();
+
+        card.horizontalEdge = RectTransform.Edge.Left;
+
+        // set the scales back to normal to start off
+        card.TargetScaleX = 1;
+        card.TargetScaleY = 1;
+
+        // set target x position
+        card.TargetX = (card.Width - HorizontalCardDisplacement) * ((float)index - (float)count / 2f - .5f) + cardHolder.GetComponent<RectTransform>().rect.width / 2f;
+
+        // set target y position, with cards in the middle being higher
+        card.TargetY = VerticalCardDisplacement * cardTransform.rect.width * yPositions[(int)Math.Abs((float)index - ((float)count - 1f) / 2f)];
+
+        // set target rotation angle
+        card.TargetRotation = RotationCardDisplacement * -((float)index - (float)(count - 1) / 2f);
+
+        // if a card is hovered we have a move others over
+        if (lastHovered != null)
         {
-            RectTransform cardTransform = cards[i].GetComponent<RectTransform>();
-            CardController controller = cards[i].GetComponent<CardController>();
-
-            controller.horizontalEdge = RectTransform.Edge.Left;
-
-            // set the scales back to normal to start off
-            controller.TargetScaleX = 1;
-            controller.TargetScaleY = 1;
-
-            // set target x position
-            controller.TargetX = (controller.Width - HorizontalCardDisplacement) * ((float)i - (float)cards.Count / 2f - .5f) + cardHolder.GetComponent<RectTransform>().rect.width / 2f;
-
-            // set target y position, with cards in the middle being higher
-            controller.TargetY = VerticalCardDisplacement * cardTransform.rect.width * yPositions[(int)Math.Abs((float)i - ((float)cards.Count - 1f) / 2f)];
-
-            // set target rotation angle
-            controller.TargetRotation = RotationCardDisplacement * -((float)i - (float)(cards.Count - 1) / 2f);
-
-            // if a card is hovered we have a move others over
-            if (lastHovered != null)
+            if (card == lastHovered)
             {
-                if (cards[i] == lastHovered)
-                {
-                    pastHovered = true;
-                    // make it bigger
-                    controller.TargetScaleX = HoveredCardHorizontalScale;
-                    controller.TargetScaleY = HoveredCardVerticalScale;
-                    // shift since itll be bigger
-                    if(i < cards.Count / 2)
-                        controller.TargetX += HoveredCardHorizontalDisplacement * Math.Sign(controller.TargetX);
-                    else if(i > cards.Count / 2 || (i == cards.Count / 2 && cards.Count % 2 == 0))
-                        controller.TargetX -= HoveredCardHorizontalDisplacement * Math.Sign(controller.TargetX);
-                    controller.TargetY = HoveredCardVerticalDisplacement;
-                    // unrotate it for clarity
-                    controller.TargetRotation *= .25f;
-                }
-                else if (pastHovered)
-                {
-                    // already updated the hovered card so shift right
-                    controller.TargetX += NonHoveredCardHorizontalDisplacement;
-                }
-                else
-                {
-                    // havent updated the hovered card yet so shift left
-                    controller.TargetX -= NonHoveredCardHorizontalDisplacement;
-                }
+                pastHovered = true;
+                // make it bigger
+                card.TargetScaleX = HoveredCardHorizontalScale;
+                card.TargetScaleY = HoveredCardVerticalScale;
+                // shift since itll be bigger
+                if (index < count / 2)
+                    card.TargetX += HoveredCardHorizontalDisplacement * Math.Sign(card.TargetX);
+                else if (index > count / 2 || (index == count / 2 && count % 2 == 0))
+                    card.TargetX -= HoveredCardHorizontalDisplacement * Math.Sign(card.TargetX);
+                card.TargetY = HoveredCardVerticalDisplacement;
+                // unrotate it for clarity
+                card.TargetRotation *= .25f;
+            }
+            else if (pastHovered)
+            {
+                // already updated the hovered card so shift right
+                card.TargetX += NonHoveredCardHorizontalDisplacement;
+            }
+            else
+            {
+                // havent updated the hovered card yet so shift left
+                card.TargetX -= NonHoveredCardHorizontalDisplacement;
             }
         }
     }
 
     void onCardHover(CardController cardController)
     {
-        if(cards.Contains(cardController))
-        {
-            lastHovered = cardController;
-            CardVisualUpdate();
-        }
+        lastHovered = cardController;
+        CardVisualUpdate();
     }
 
     void onCardUnhover(CardController cardController)
     {
-        if(lastHovered == cardController)
-        {
-            lastHovered = null;
-            CardVisualUpdate();
-        }
+        lastHovered = null;
+        CardVisualUpdate();
     }
 
     void onCardPlayed(CardController cardController)
     {
-        if(cardGameController.AttemptPlay(cardController))
-        {
-            cards.Remove(cardController);
+        if (cardGameController.AttemptPlay(cardController))
             CardVisualUpdate();
+    }
+
+    void OnCardsRemoved(List<CardController> removedCards)
+    {
+        foreach (CardController card in removedCards)
+        {
+            card.UnregisterHovered(onCardHover);
+            card.UnregisterUnhovered(onCardUnhover);
+            card.UnregisterPlayed(onCardPlayed);
         }
     }
 
@@ -156,7 +153,7 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
     {
         foreach(CardController card in addedCards)
         {
-            cards.Add(card);
+            card.gameObject.SetActive(true);
             card.transform.SetParent(cardHolder.transform);
 
             card.RegisterHovered(onCardHover);

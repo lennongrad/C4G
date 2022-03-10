@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(AreaOfEffect), true)]
-public class TowerControllerEditor : Editor
+public class AreaOfEffectEditor : Editor
 {
     public override void OnInspectorGUI()
     {

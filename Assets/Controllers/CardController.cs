@@ -95,18 +95,21 @@ public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     /// Register a function to be called when the user hovers over this card
     /// </summary>
     public void RegisterHovered(Action<CardController> cb) { cbHovered -= cb; cbHovered += cb; }
+    public void UnregisterHovered(Action<CardController> cb) { cbHovered -= cb; }
 
     Action<CardController> cbUnhovered;
     /// <summary>
     /// Register a function to be called when the useer stops hovering over this card
     /// </summary>
     public void RegisterUnhovered(Action<CardController> cb) { cbUnhovered -= cb; cbUnhovered += cb; }
+    public void UnregisterUnhovered(Action<CardController> cb) { cbUnhovered -= cb; }
 
     Action<CardController> cbPlayed;
     /// <summary>
     /// Register a function to be called when the user attempts to play this card
     /// </summary>
     public void RegisterPlayed(Action<CardController> cb) { cbPlayed -= cb; cbPlayed += cb; }
+    public void UnregisterPlayed(Action<CardController> cb) { cbPlayed -= cb; }
 
     /// <summary>
     /// Updates the card to match the model's data
@@ -121,6 +124,9 @@ public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         int addedIconsTotal = 0;
         foreach (KeyValuePair<Mana.ManaType, int> entry in data.ManaCostDictionary)
         {
+            if(entry.Value >= 1)
+                GetComponent<Image>().color = CardData.GetColorOfManaType(entry.Key).AdjustedBrightness(.8f);
+
             for (int i = 0; i < entry.Value; i++)
             {
                 CostIcon newIcon = Instantiate(CostIconPrefab, CardCost.transform.position, Quaternion.identity);
@@ -189,12 +195,14 @@ public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        cbHovered(this);
+        if(cbHovered != null)
+            cbHovered(this);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        cbUnhovered(this);
+        if(cbUnhovered != null)
+            cbUnhovered(this);
     }
 
     public void OnPointerClick(PointerEventData eventData)

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1eae0be279bdd5f4caf48bac1284a64f, type: 3}
   m_Name: AOETower
   m_EditorClassIdentifier: 
-  CardTitle: AOE Tower
-  ManaCosts: 0000000000000000000000000000000000000000
+  CardTitle: Thumper
+  ManaCosts: 0100000000000000000000000000000001000000
   Type: 1
   TowerSubtypes: 2
   SpellSubtypes: 0

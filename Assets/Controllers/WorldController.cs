@@ -52,7 +52,7 @@ public class WorldController : MonoBehaviour
                 tile.Y = y;
                 tile.worldController = this;
                 tile.name = "Tile_" + x + "_" + y;
-                Tiles[x, y].Type = stageData.TileTypes[x,y];
+                Tiles[x, y].Type = stageData.Values[x,y];
 
                 // position in space
                 tile.transform.position = new Vector3(-x + stageData.Width / 2 - (float)(1 - stageData.Width % 2) / 2, 0, y - stageData.Height / 2 + (float)(1 - stageData.Height % 2) / 2);
