@@ -2435,14 +2435,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardGameController: {fileID: 1104222496}
+  cardResolutionController: {fileID: 607832950}
   playerResourceManager: {fileID: 11400000, guid: 8f692e2ce7bfc8b48b38c3c44f84f4d5, type: 2}
   HorizontalCardDisplacement: 22
   VerticalCardDisplacement: -1
   RotationCardDisplacement: 4
+  ResolvingVerticalDisplacement: -100
   HoveredCardHorizontalDisplacement: -10
   NonHoveredCardHorizontalDisplacement: 25
   HoveredCardVerticalDisplacement: 0
   HoveredCardHorizontalScale: 1.1
   HoveredCardVerticalScale: 1.1
+  UnplayableCardColor: {r: 0, g: 0, b: 0, a: 0}
+  PlayableCardColor: {r: 0.020999968, g: 0.2627451, b: 1, a: 1}
   cardHolder: {fileID: 1688739967}
   HandZone: {fileID: 11400000, guid: 9c1329845d257c94ca47cee3c04615bd, type: 2}

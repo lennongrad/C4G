@@ -131,7 +131,7 @@ public class CardEffect
     /// </summary>
     public string GetDescription(WorldInfo worldInfo) {
         // no targets so just ignore targetting, or no predicate to get type from
-        if (condition == null || targetQuality == null || predicate == null)
+        if (condition == null || predicate == null)
         {
             return "";
         }

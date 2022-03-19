@@ -58,6 +58,30 @@ public class CardData : ScriptableObject
         return "-";
     }
 
+    static public string GetTypeName(Card.CardType type)
+    {
+        switch (type)
+        {
+            case Card.CardType.None: return "";
+            case Card.CardType.Tower: return "Tower";
+            case Card.CardType.Spell: return "Spell";
+            case Card.CardType.Skill: return "Skill";
+        }
+        return "";
+    }
+
+    static public string GetTowerSubtypeName(Card.TowerSubtype type)
+    {
+        string returnString = "";
+
+        if (type.HasFlag(Card.TowerSubtype.Mana))
+            returnString += " Mana";
+        if (type.HasFlag(Card.TowerSubtype.Damage))
+            returnString += " Damage";
+
+        return returnString;
+    }
+
     public Dictionary<Mana.ManaType, int> ManaCostDictionary
     {
         get
@@ -190,5 +214,16 @@ public class CardData : ScriptableObject
             resultString += effect.GetDescription(worldInfo) + "\n";
         }
         return resultString;
+    }
+
+    public string GetTypeLine()
+    {
+        string returnString = CardData.GetTypeName(Type);
+        if (TowerSubtypes != 0 || SkillSubtypes != 0 || SpellSubtypes != 0)
+            returnString += " -";
+
+        returnString += CardData.GetTowerSubtypeName(TowerSubtypes);
+
+        return returnString;
     }
 }

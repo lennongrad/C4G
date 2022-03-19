@@ -13,8 +13,16 @@ public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public CostIcon CostIconPrefab;
 
     public Text CardName;
+    public Text TypeLine;
     public Text CardDescription;
+
     public GameObject CardCost;
+
+    public Image cardBack;
+    public Image cardGlow;
+    public Image cardGlowInner;
+    public Image cardBorder;
+
     public WorldInfo worldInfo;
 
     CardData data;
@@ -72,6 +80,23 @@ public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     float targetScaleYSpeed = 0;
 
     /// <summary>
+    /// The alpha for the glowing border around the card
+    /// </summary>
+    public float TargetGlowAlpha = 0f;
+    float targetGlowAlphaSpeed = 0;
+    float glowAlpha = 0f;
+
+    /// <summary>
+    /// The colour of the card;s border
+    /// </summary>
+    public Color TargetBorderColor = new Color(0, 0, 0);
+    float targetBorderColorSpeed = 0;
+
+    // used to make the glow of the card change over time for a nice visual effect
+    float glowTimer = 0;
+    float glowTimerInner = 0;
+
+    /// <summary>
     /// The width (before scaling) of the card
     /// </summary>
     public float Width = 112f;
@@ -118,6 +143,7 @@ public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     {
         CardName.text = data.CardTitle;
         CardDescription.text = data.GetDescription(worldInfo);
+        TypeLine.text = data.GetTypeLine();
 
         CardCost.transform.Clear();
 
@@ -125,7 +151,7 @@ public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         foreach (KeyValuePair<Mana.ManaType, int> entry in data.ManaCostDictionary)
         {
             if(entry.Value >= 1)
-                GetComponent<Image>().color = CardData.GetColorOfManaType(entry.Key).AdjustedBrightness(.8f);
+                cardBack.color = CardData.GetColorOfManaType(entry.Key).AdjustedBrightness(.8f);
 
             for (int i = 0; i < entry.Value; i++)
             {
@@ -138,22 +164,6 @@ public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 addedIconsTotal++;
             }
         }
-
-        /*
-        int i = 0;
-        int costsAdded;
-        foreach (Mana.ManaType type in System.Enum.GetValues(typeof(Mana.ManaType)))
-        {
-            for (int e = 0; e < data.ManaCosts[i]; e++)
-            {
-                CostIcon newIcon = Instantiate(CostIconPrefab, CardCost.transform.position, Quaternion.identity);
-                newIcon.Type = type;
-                newIcon.transform.SetParent(CardCost.transform);
-                newIcon.transform.localPosition = new Vector3(-newIcon.GetComponent<RectTransform>().rect.width * i, 0, 0);
-                newIcon.transform.eulerAngles = currentEulerAngles;
-            }
-            i++;
-        }*/
     }
 
     // we continuously call visual update every so often
@@ -168,7 +178,7 @@ public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         {
             debugTimer += 200;
             visualUpdate();
-        }    
+        }
 
         RectTransform cardTransform = GetComponent<RectTransform>();
 
@@ -191,6 +201,24 @@ public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         // set scales with damping
         if(TargetScaleX != 0 && TargetScaleY != 0)
             cardTransform.localScale = new Vector3(Mathf.SmoothDamp(cardTransform.localScale.x, TargetScaleX, ref targetScaleXSpeed, .15f), Mathf.SmoothDamp(cardTransform.localScale.y, TargetScaleY, ref targetScaleYSpeed, .15f), 1);
+
+        // just set the alpha to a float and use it afterwards
+        glowAlpha = Mathf.SmoothDamp(glowAlpha, TargetGlowAlpha, ref targetGlowAlphaSpeed, .15f);
+
+        // set the alpha of the outer glow (the blue)
+        glowTimer += 1f + UnityEngine.Random.Range(0f, 1f);
+        if (glowTimer > 200f)
+            glowTimer = 0;
+        cardGlow.color = cardGlow.color.WithAlpha((Math.Abs(glowTimer - 100f) / 100 * .25f + .75f) * glowAlpha);
+
+        // set the alpha of the inner glow (the white)
+        glowTimerInner += 1f + UnityEngine.Random.Range(0f, 1f);
+        if (glowTimerInner > 200f)
+            glowTimerInner = 0;
+        cardGlowInner.color = cardGlowInner.color.WithAlpha((Math.Abs(glowTimerInner - 100f) / 100 * .25f + .75f) * glowAlpha);
+
+        // set the color of the border of the card
+        cardBorder.color = cardBorder.color.SmoothDamp(TargetBorderColor, ref targetBorderColorSpeed, .01f);
     }
 
     public void OnPointerEnter(PointerEventData eventData)

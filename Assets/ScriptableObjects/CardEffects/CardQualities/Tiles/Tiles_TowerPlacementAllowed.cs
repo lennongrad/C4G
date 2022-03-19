@@ -19,6 +19,6 @@ public class Tiles_TowerPlacementAllowed : CardEffectQuality
 
     public override string GetDescription(WorldInfo worldInfo, bool isPlural)
     {
-        return "";
+        return "tile";
     }
 }
