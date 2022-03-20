@@ -127,6 +127,10 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
                 card.TargetX -= NonHoveredCardHorizontalDisplacement;
             }
         }
+        else
+        {
+            card.transform.SetSiblingIndex(index);
+        }
 
         if (playerResourceManager.CanAfford(card.Data.ManaCostDictionary))
         {
@@ -143,6 +147,7 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
     void onCardHover(CardController cardController)
     {
         lastHovered = cardController;
+        cardController.transform.SetAsLastSibling();
         CardVisualUpdate();
     }
 

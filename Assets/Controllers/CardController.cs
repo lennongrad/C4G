@@ -2,13 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using System;
 
 /// <summary>
 /// The UI element representing a card in the user's hand or otherwise viewable by the user
 /// </summary>
-public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class CardController : MonoBehaviour
 {
     public CostIcon CostIconPrefab;
 
@@ -17,6 +16,7 @@ public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public Text CardDescription;
 
     public GameObject CardCost;
+    public UICollider uiCollider;
 
     public Image cardBack;
     public Image cardGlow;
@@ -136,6 +136,13 @@ public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public void RegisterPlayed(Action<CardController> cb) { cbPlayed -= cb; cbPlayed += cb; }
     public void UnregisterPlayed(Action<CardController> cb) { cbPlayed -= cb; }
 
+    void Awake()
+    {
+        uiCollider.RegisterPointerEntered(OnHover);
+        uiCollider.RegisterPointerExited(OnUnhover);
+        uiCollider.RegisterClicked(OnClick);
+    }
+
     /// <summary>
     /// Updates the card to match the model's data
     /// </summary>
@@ -221,19 +228,19 @@ public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         cardBorder.color = cardBorder.color.SmoothDamp(TargetBorderColor, ref targetBorderColorSpeed, .01f);
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
+    public void OnHover()
     {
         if(cbHovered != null)
             cbHovered(this);
     }
 
-    public void OnPointerExit(PointerEventData eventData)
+    public void OnUnhover()
     {
         if(cbUnhovered != null)
             cbUnhovered(this);
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+    public void OnClick()
     {
         if(doubleClickedTimer > 0)
         {
