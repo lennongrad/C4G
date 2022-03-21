@@ -163,16 +163,6 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
             CardVisualUpdate();
     }
 
-    void onCardsRemoved(List<CardController> removedCards)
-    {
-        foreach (CardController card in removedCards)
-        {
-            card.UnregisterHovered(onCardHover);
-            card.UnregisterUnhovered(onCardUnhover);
-            card.UnregisterPlayed(onCardPlayed);
-        }
-    }
-
     void onCardsAdded(List<CardController> addedCards)
     {
         foreach(CardController card in addedCards)
@@ -186,6 +176,16 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
         }
 
         CardVisualUpdate();
+    }
+
+    void onCardsRemoved(List<CardController> removedCards)
+    {
+        foreach (CardController card in removedCards)
+        {
+            card.UnregisterHovered(onCardHover);
+            card.UnregisterUnhovered(onCardUnhover);
+            card.UnregisterPlayed(onCardPlayed);
+        }
     }
 
     void onResolutionFinished(CardController resolvedCard)

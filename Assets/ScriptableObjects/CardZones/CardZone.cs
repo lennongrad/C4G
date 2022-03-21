@@ -93,9 +93,10 @@ public class CardZone : ScriptableObject
         if (cards.Contains(card))
             return;
 
+        cards.Add(card);
+
         if (cbCardsAdded != null)
             cbCardsAdded(card.IndividualList());
-        cards.Add(card);
     }
 
     public bool Remove(CardController card)

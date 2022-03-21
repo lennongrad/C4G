@@ -37,10 +37,12 @@ public class ResolutionDisplayController : MonoBehaviour
 
     void onCardsRemoved(List<CardController> removedCards)
     {
+        /*
         foreach (CardController card in removedCards)
         {
             card.gameObject.SetActive(false);
         }
+        */
     }
 
     void onTargetCountChanged(int currentTargets, int targetsMax, bool allowSubmit)

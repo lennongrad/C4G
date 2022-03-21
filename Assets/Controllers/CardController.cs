@@ -173,19 +173,10 @@ public class CardController : MonoBehaviour
         }
     }
 
-    // we continuously call visual update every so often
-    int debugTimer = 0;
     void FixedUpdate()
     {
         if (doubleClickedTimer > 0)
             doubleClickedTimer--;
-
-        debugTimer -= 1;
-        if(debugTimer < 0)
-        {
-            debugTimer += 200;
-            visualUpdate();
-        }
 
         RectTransform cardTransform = GetComponent<RectTransform>();
 
@@ -207,7 +198,7 @@ public class CardController : MonoBehaviour
 
         // set scales with damping
         if(TargetScaleX != 0 && TargetScaleY != 0)
-            cardTransform.localScale = new Vector3(Mathf.SmoothDamp(cardTransform.localScale.x, TargetScaleX, ref targetScaleXSpeed, .15f), Mathf.SmoothDamp(cardTransform.localScale.y, TargetScaleY, ref targetScaleYSpeed, .15f), 1);
+            cardTransform.SetGlobalScale(new Vector3(Mathf.SmoothDamp(cardTransform.lossyScale.x, TargetScaleX, ref targetScaleXSpeed, .15f), Mathf.SmoothDamp(cardTransform.lossyScale.y, TargetScaleY, ref targetScaleYSpeed, .15f), 1));
 
         // just set the alpha to a float and use it afterwards
         glowAlpha = Mathf.SmoothDamp(glowAlpha, TargetGlowAlpha, ref targetGlowAlphaSpeed, .15f);

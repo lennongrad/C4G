@@ -5,6 +5,13 @@ using UnityEngine;
 public class PlayerResourceManager : ScriptableObject
 {
     Dictionary<Mana.ManaType, int> manaTotal;
+    public Dictionary<Mana.ManaType, int> ManaTotal
+    {
+        get
+        {
+            return manaTotal;
+        }
+    }
 
     int lifeTotal;
     public int LifeTotal { get { return lifeTotal; } set { lifeTotal = value; } }
