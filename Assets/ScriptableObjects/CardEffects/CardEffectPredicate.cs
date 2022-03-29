@@ -13,6 +13,22 @@ using System.Linq;
 [System.Serializable]
 public abstract class CardEffectPredicate
 {
+    public abstract Card.TargetType TargetType { get; }
+
+    /// <summary>
+    /// Some predicates which target tiles can have an area of effect. If null, don't consider this.
+    /// </summary>
+    public AreaOfEffect AffectedArea;
+
+    public abstract void PerformPredicate(TargetInfo targetInfo, WorldInfo worldInfo, ResolutionInfo resolutionInfo);
+    public abstract string GetDescription(WorldInfo worldInfo);
+
+#if UNITY_EDITOR
+    /// <summary>
+    /// Called to set up GUI for class-specific customization
+    /// </summary>
+    public abstract void InputGUI();
+    
     /// <summary>
     /// Used to easily duplicate a base class script for a new condition
     /// </summary>
@@ -30,20 +46,7 @@ public abstract class CardEffectPredicate
         }
     }
 
-    public abstract Card.TargetType TargetType { get; }
 
-    /// <summary>
-    /// Some predicates which target tiles can have an area of effect. If null, don't consider this.
-    /// </summary>
-    public AreaOfEffect AffectedArea;
-
-    /// <summary>
-    /// Called to set up GUI for class-specific customization
-    /// </summary>
-    public abstract void InputGUI();
-    public abstract void PerformPredicate(TargetInfo targetInfo, WorldInfo worldInfo, ResolutionInfo resolutionInfo);
-
-    public abstract string GetDescription(WorldInfo worldInfo);
 
     /// <summary>
     /// Method called in CardGenerator window to display the information the
@@ -91,4 +94,5 @@ public abstract class CardEffectPredicate
             predicate = (CardEffectPredicate)Activator.CreateInstance(predicateScript.GetClass());
         } 
     }
+#endif
 }

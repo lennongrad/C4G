@@ -22,12 +22,12 @@ MonoBehaviour:
   - minTargets: 1
     maxTargets: 1
     conditionScript: {fileID: 11500000, guid: cce934b28a7d1d44896c4bed0a3228cc, type: 3}
+    qualityScript: {fileID: 11500000, guid: fa255c6d27b5a10408aa096163e0cdba, type: 3}
+    predicateScript: {fileID: 11500000, guid: dfa206a760f3afe4c9a58159510a81c0, type: 3}
     condition:
       id: 0
-    qualityScript: {fileID: 11500000, guid: fa255c6d27b5a10408aa096163e0cdba, type: 3}
     targetQuality:
       id: 1
-    predicateScript: {fileID: 11500000, guid: dfa206a760f3afe4c9a58159510a81c0, type: 3}
     predicate:
       id: 2
   TowerPrefab: {fileID: 0}

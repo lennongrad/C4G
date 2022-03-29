@@ -13,12 +13,6 @@ public class TargetSelectionController : MonoBehaviour
     public WorldController worldController;
     public GameObject handDisplayController;
     public WorldInfo worldInfo;
-    public MonoScript towerPlacementQualityScript;
-
-    /// <summary>
-    /// The default quality to determine if a tile is fit for holding a new tower
-    /// </summary>
-    CardEffectQuality towerPlacementQuality;
 
     /// <summary>
     /// A TowerController that is placed at the tile selected by the user as a preview
@@ -96,8 +90,6 @@ public class TargetSelectionController : MonoBehaviour
     {
         // set up function to receive info on whether the hand display is active (if so, disable user input on stage)
         handDisplayController.GetComponent<HandDisplayController>().RegisterHoveredChanged(OnHandDisplayHoveredChanged);
-        // set up the default tower placement quality
-        towerPlacementQuality = (CardEffectQuality)Activator.CreateInstance(towerPlacementQualityScript.GetClass());
     }
 
     void FixedUpdate()
@@ -119,7 +111,7 @@ public class TargetSelectionController : MonoBehaviour
         previewTower.GetComponent<TowerController>().PerformBehaviours = false;
         previewTower.GetComponent<TowerController>().FacingDirection = previewDirection;
 
-        StartTargetSelection(Card.TargetType.Tiles, towerPlacementQuality, resolutionInfo, false);
+        StartTargetSelection(Card.TargetType.Tiles, null, resolutionInfo, false);
     }
 
     public void StartTargetSelection(Card.TargetType type, CardEffectQuality quality, ResolutionInfo resolutionInfo, bool shouldAllowStop = false, AreaOfEffect affectedArea = null)
@@ -178,7 +170,7 @@ public class TargetSelectionController : MonoBehaviour
         if (targetType != Card.TargetType.Tiles)
             return;
 
-        if (currentQuality.CheckQuality(tile, worldInfo, currentResolutionInfo))
+        if (currentQuality == null || currentQuality.CheckQuality(tile, worldInfo, currentResolutionInfo))
         {
             tileHovered = tile;
             AreaOfEffect previewArea = currentArea;

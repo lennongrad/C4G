@@ -17,23 +17,54 @@ public class UICollider : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     Action cbClicked;
     public void RegisterClicked(Action cb) { cbClicked -= cb; cbClicked += cb; }
-    public void UnregisterClicked(Action  cb) { cbClicked -= cb; }
+    public void UnregisterClicked(Action cb) { cbClicked -= cb; }
+
+    Action cbRightClicked;
+    public void RegisterRightClicked(Action cb) { cbRightClicked -= cb; cbRightClicked += cb; }
+    public void UnregisterRightClicked(Action cb) { cbRightClicked -= cb; }
+
+    Action cbMiddleClicked;
+    public void RegisterMiddleClicked(Action cb) { cbMiddleClicked -= cb; cbMiddleClicked += cb; }
+    public void UnregisterMiddleClicked(Action cb) { cbMiddleClicked -= cb; }
+
+    bool mousePresent = false;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (cbPointerEntered != null)
             cbPointerEntered();
+
+        mousePresent = true;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         if (cbPointerExited != null)
             cbPointerExited();
+
+        mousePresent = false;
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (cbClicked != null)
-            cbClicked();
+        switch (eventData.button)
+        {
+            case PointerEventData.InputButton.Left:
+                if (cbClicked != null)
+                    cbClicked();
+                break;
+            case PointerEventData.InputButton.Right:
+                if (cbRightClicked != null)
+                    cbRightClicked();
+                break;
+            case PointerEventData.InputButton.Middle:
+                if (cbMiddleClicked != null)
+                    cbMiddleClicked();
+                break;
+        }
+    }
+
+    public void Update()
+    {
     }
 }

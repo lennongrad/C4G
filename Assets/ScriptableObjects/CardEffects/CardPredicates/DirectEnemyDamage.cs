@@ -10,10 +10,12 @@ public class DirectEnemyDamage : CardEffectPredicate
 
     public float damage = 1f;
 
+#if UNITY_EDITOR
     public override void InputGUI()
     {
         damage = EditorGUILayout.FloatField("Damage: ", damage);
     }
+#endif
 
     public override void PerformPredicate(TargetInfo targetInfo, WorldInfo worldInfo, ResolutionInfo resolutionInfo)
     {

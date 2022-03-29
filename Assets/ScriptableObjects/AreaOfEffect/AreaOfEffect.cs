@@ -72,6 +72,7 @@ public class AreaOfEffect : ScriptableObject, ISerializationCallbackReceiver
 
     int currentBrush = 0;
 
+#if UNITY_EDITOR
     [MenuItem("Assets/Create/ScriptableObjects/Area Of Effect 3x3", false, 10)]
     public static void CreateAreaOfEffect3x3()
     {
@@ -166,6 +167,7 @@ public class AreaOfEffect : ScriptableObject, ISerializationCallbackReceiver
         EditorGUIUtility.labelWidth = defaultLabelWidth;
         EditorGUI.indentLevel = originalIndentLevel;
     }
+#endif
 
     public int[,] GetRotated(Tile.TileDirection direction)
     {

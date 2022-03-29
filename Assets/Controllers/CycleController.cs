@@ -38,6 +38,7 @@ public class CycleController : MonoBehaviour
 
     void Awake()
     {
+        Debug.Log(roundBegin);
         roundBegin.RegisterListener(OnRoundBegin);
         roundEnd.RegisterListener(OnRoundEnd);
     }

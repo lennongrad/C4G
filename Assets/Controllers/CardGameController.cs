@@ -47,7 +47,10 @@ public class CardGameController : MonoBehaviour
 
     void Start()
     {
-        DeckZone.ConjureList(InitialDeck);
+        if (PlayerChoices.DeckList != null)
+            DeckZone.ConjureList(PlayerChoices.DeckList.Cards);
+        else
+            DeckZone.ConjureList(InitialDeck);
         DeckZone.Shuffle();
 
         cycleEnd.RegisterListener(OnCycleEnd);

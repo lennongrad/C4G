@@ -14,6 +14,20 @@ using System.Linq;
 public abstract class CardEffectCondition
 {
     /// <summary>
+    /// Method called during runtime to actually check if the condition
+    /// is true (and whether to run the effect preedicate)
+    /// </summary>
+    public abstract bool CheckCondition(WorldInfo worldInfo, ResolutionInfo resolutionInfo);
+
+    public abstract string GetDescription(WorldInfo worldInfo);
+
+#if UNITY_EDITOR
+    /// <summary>
+    /// Called to set up GUI for class-specific customization
+    /// </summary>
+    public abstract void InputGUI();
+
+    /// <summary>
     /// Used to easily duplicate a base class script for a new condition
     /// </summary>
     [MenuItem("Utilities/Card Effects/Make Empty Condition")]
@@ -29,18 +43,6 @@ public abstract class CardEffectCondition
                 Debug.LogWarning($"Failed to copy {path}");
         }
     }
-
-    /// <summary>
-    /// Called to set up GUI for class-specific customization
-    /// </summary>
-    public abstract void InputGUI();
-    /// <summary>
-    /// Method called during runtime to actually check if the condition
-    /// is true (and whether to run the effect preedicate)
-    /// </summary>
-    public abstract bool CheckCondition(WorldInfo worldInfo, ResolutionInfo resolutionInfo);
-
-    public abstract string GetDescription(WorldInfo worldInfo);
 
     /// <summary>
     /// Method called in CardGenerator window to display the information the
@@ -88,4 +90,5 @@ public abstract class CardEffectCondition
             condition = (CardEffectCondition)Activator.CreateInstance(conditionScript.GetClass());
         }
     }
+#endif
 }

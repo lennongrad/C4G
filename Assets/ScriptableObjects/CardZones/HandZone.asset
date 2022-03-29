@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 014a9735586aa6441b6bc0f07d870b86, type: 3}
   m_Name: HandZone
   m_EditorClassIdentifier: 
+  cardPrefab: {fileID: 8371356554606759921, guid: 3ebaf9c972d13aa4e9635979cab50f87, type: 3}
   isOrdered: 0

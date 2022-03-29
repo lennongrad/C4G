@@ -8,9 +8,11 @@ public class Predicate_ : CardEffectPredicate
 {
     public override Card.TargetType TargetType { get { return Card.TargetType.Tiles; } }
 
+#if UNITY_EDITOR
     public override void InputGUI()
     { 
     }
+#endif
 
     public override void PerformPredicate(TargetInfo targetInfo, WorldInfo worldInfo, ResolutionInfo resolutionInfo)
     {

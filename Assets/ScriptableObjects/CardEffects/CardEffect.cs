@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using System;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 [System.Serializable]
 public class CardEffect
@@ -11,14 +14,10 @@ public class CardEffect
     public int minTargets = 0;
     public int maxTargets = 0;
 
+#if UNITY_EDITOR
     public MonoScript conditionScript;
-    [SerializeReference] public CardEffectCondition condition;
-
     public MonoScript qualityScript;
-    [SerializeReference] public CardEffectQuality targetQuality;
-
     public MonoScript predicateScript;
-    [SerializeReference] public CardEffectPredicate predicate;
 
     public void OnInputGUI()
     {
@@ -125,6 +124,11 @@ public class CardEffect
         if (targetQuality != null)
             targetQuality.OnInputGUI();
     }
+#endif
+
+    [SerializeReference] public CardEffectCondition condition;
+    [SerializeReference] public CardEffectQuality targetQuality;
+    [SerializeReference] public CardEffectPredicate predicate;
 
     /// <summary>
     /// Textual description of the effect

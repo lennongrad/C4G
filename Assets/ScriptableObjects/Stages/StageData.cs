@@ -51,6 +51,7 @@ public class StageData : ScriptableObject, ISerializationCallbackReceiver
     /// </summary>
     private Tile.TileType paintingType = Tile.TileType.Floor;
 
+#if UNITY_EDITOR
     public void OnInputGUI()
     {
         EditorGUILayout.BeginHorizontal();
@@ -114,6 +115,7 @@ public class StageData : ScriptableObject, ISerializationCallbackReceiver
         EditorGUILayout.Space(5);
     
     }
+#endif
 
     [System.Serializable]
     struct Package<TElement>

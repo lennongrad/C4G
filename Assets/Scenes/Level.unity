@@ -434,7 +434,6 @@ MonoBehaviour:
   worldController: {fileID: 1334423220}
   handDisplayController: {fileID: 2089858761}
   worldInfo: {fileID: 11400000, guid: 523d4ba8fa444e24bbddab59b8085233, type: 2}
-  towerPlacementQualityScript: {fileID: 11500000, guid: fa255c6d27b5a10408aa096163e0cdba, type: 3}
 --- !u!1 &310539519
 GameObject:
   m_ObjectHideFlags: 0
@@ -2463,8 +2462,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 200, y: 5}
-  m_SizeDelta: {x: -400, y: 10}
+  m_AnchoredPosition: {x: 186.83618, y: -5}
+  m_SizeDelta: {x: -437.4131, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1693298758
 GameObject:
@@ -2643,7 +2642,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetSelectionController: {fileID: 306759815}
-  enemyPrefab: {fileID: 2976261093610815630, guid: e6890087b6ffbd5409a767f186086141, type: 3}
+  CurrentRound: {fileID: 11400000, guid: f2f4090aec37d35419e61cf9aa807705, type: 2}
   activeEntrances: []
 --- !u!1001 &1800446840
 PrefabInstance:
@@ -3107,7 +3106,7 @@ MonoBehaviour:
   cardGameController: {fileID: 1104222496}
   cardResolutionController: {fileID: 607832950}
   playerResourceManager: {fileID: 11400000, guid: 8f692e2ce7bfc8b48b38c3c44f84f4d5, type: 2}
-  HorizontalCardDisplacement: 40
+  HorizontalCardDisplacement: 25
   VerticalCardDisplacement: -1
   RotationCardDisplacement: 3.5
   ResolvingVerticalDisplacement: -100

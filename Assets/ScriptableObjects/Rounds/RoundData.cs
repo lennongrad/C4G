@@ -8,6 +8,7 @@ public class RoundData : ScriptableObject
 {
     public List<WaveData> EnemyWaves = new List<WaveData>();
 
+#if UNITY_EDITOR
     [MenuItem("Assets/Create/ScriptableObjects/Round Data", false, 20)]
     public static void CreateRoundData()
     {
@@ -40,11 +41,11 @@ public class RoundData : ScriptableObject
 
         for (int i = 0; i < EnemyWaves.Count; i++)
         {
-            EditorGUILayout.LabelField("Wave " + i, EditorStyles.boldLabel);
-            EnemyWaves[i].OnInputGUI();
+            EnemyWaves[i].OnInputGUI(i);
             EditorGUILayout.Space(5);
         }
 
         EditorGUILayout.EndFoldoutHeaderGroup();
     }
+#endif
 }

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2297306253071692150}
   - component: {fileID: 2576419168674973268}
-  - component: {fileID: 1001905252617789386}
+  - component: {fileID: 5811034427250578261}
   m_Layer: 5
   m_Name: VisualCard
   m_TagString: Untagged
@@ -43,9 +43,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 140, y: 203}
-  m_Pivot: {x: 0.49999958, y: 0}
+  m_AnchoredPosition: {x: 0, y: 103.252594}
+  m_SizeDelta: {x: 140, y: 206.5052}
+  m_Pivot: {x: 0.49999958, y: 0.5}
 --- !u!222 &2576419168674973268
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -54,7 +54,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 249478343349996322}
   m_CullTransparentMesh: 1
---- !u!114 &1001905252617789386
+--- !u!114 &5811034427250578261
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -63,7 +63,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 249478343349996322}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 060e9543dee72974582c9838c3ba2c69, type: 3}
+  m_Script: {fileID: 11500000, guid: d49b067d924bc144db9f03c2834672d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   CostIconPrefab: {fileID: 3207065867627517261, guid: f17717dcee28df444864d7a1190f7140, type: 3}
@@ -77,17 +77,9 @@ MonoBehaviour:
   cardGlowInner: {fileID: 9186123918199066472}
   cardBorder: {fileID: 649425907694543030}
   worldInfo: {fileID: 11400000, guid: 523d4ba8fa444e24bbddab59b8085233, type: 2}
-  horizontalEdge: 0
-  verticalEdge: 3
-  TargetX: 0
-  TargetY: 0
-  TargetRotation: 0
-  TargetScaleX: 1
-  TargetScaleY: 1
+  Width: 112
   TargetGlowAlpha: 0
   TargetBorderColor: {r: 0, g: 0, b: 0, a: 1}
-  Width: 140
-  doubleClickedTimer: 0
 --- !u!1 &1194064430281420546
 GameObject:
   m_ObjectHideFlags: 0
@@ -393,7 +385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.12908198, g: 0.289256, b: 0.466, a: 0.5254902}
+  m_Color: {r: 0.12908198, g: 0.289256, b: 0.466, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -693,7 +685,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.56700003, g: 0.56700003, b: 0.56700003, a: 1}
+  m_Color: {r: 0.56700003, g: 0.56700003, b: 0.56700003, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

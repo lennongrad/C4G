@@ -11,11 +11,13 @@ public class EnemyDamageAreaOfEffect : CardEffectPredicate
 
     public float damage = 3f;
 
+#if UNITY_EDITOR
     public override void InputGUI()
     {
         damage = EditorGUILayout.FloatField("Damage", damage);
         AffectedArea = EditorGUILayout.ObjectField("AOE:", AffectedArea, typeof(AreaOfEffect), true) as AreaOfEffect;
     }
+#endif
 
     public override void PerformPredicate(TargetInfo targetInfo, WorldInfo worldInfo, ResolutionInfo resolutionInfo)
     {

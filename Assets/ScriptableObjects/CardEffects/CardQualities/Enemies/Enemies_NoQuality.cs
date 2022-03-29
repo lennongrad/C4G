@@ -8,9 +8,11 @@ public class Enemies_NoQuality : CardEffectQuality
 {
     public override Card.TargetType TargetType { get { return Card.TargetType.Enemies; } }
 
+#if UNITY_EDITOR
     public override void InputGUI()
     {
     }
+#endif
 
     public override bool CheckQuality(TileController tileController, WorldInfo worldInfo, ResolutionInfo resolutionInfo)
     {

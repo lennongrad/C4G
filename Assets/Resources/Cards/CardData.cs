@@ -105,6 +105,28 @@ public class CardData : ScriptableObject
         }
     }
 
+    public string GetDescription(WorldInfo worldInfo)
+    {
+        string resultString = "";
+        foreach (CardEffect effect in CardEffects)
+        {
+            resultString += effect.GetDescription(worldInfo) + "\n";
+        }
+        return resultString;
+    }
+
+    public string GetTypeLine()
+    {
+        string returnString = CardData.GetTypeName(Type);
+        if (TowerSubtypes != 0 || SkillSubtypes != 0 || SpellSubtypes != 0)
+            returnString += " -";
+
+        returnString += CardData.GetTowerSubtypeName(TowerSubtypes);
+
+        return returnString;
+    }
+
+#if UNITY_EDITOR
     /// <summary>
     /// Called in Card Generator to generate the editor GUI for editing this data
     /// </summary>
@@ -205,25 +227,5 @@ public class CardData : ScriptableObject
 
         EditorGUILayout.EndFoldoutHeaderGroup();
     }
-
-    public string GetDescription(WorldInfo worldInfo)
-    {
-        string resultString = "";
-        foreach(CardEffect effect in CardEffects)
-        {
-            resultString += effect.GetDescription(worldInfo) + "\n";
-        }
-        return resultString;
-    }
-
-    public string GetTypeLine()
-    {
-        string returnString = CardData.GetTypeName(Type);
-        if (TowerSubtypes != 0 || SkillSubtypes != 0 || SpellSubtypes != 0)
-            returnString += " -";
-
-        returnString += CardData.GetTowerSubtypeName(TowerSubtypes);
-
-        return returnString;
-    }
+#endif
 }
