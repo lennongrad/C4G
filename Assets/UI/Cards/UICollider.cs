@@ -27,14 +27,14 @@ public class UICollider : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void RegisterMiddleClicked(Action cb) { cbMiddleClicked -= cb; cbMiddleClicked += cb; }
     public void UnregisterMiddleClicked(Action cb) { cbMiddleClicked -= cb; }
 
-    bool mousePresent = false;
+    //bool mousePresent = false;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (cbPointerEntered != null)
             cbPointerEntered();
 
-        mousePresent = true;
+        //mousePresent = true;
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -42,7 +42,7 @@ public class UICollider : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (cbPointerExited != null)
             cbPointerExited();
 
-        mousePresent = false;
+        //mousePresent = false;
     }
 
     public void OnPointerClick(PointerEventData eventData)

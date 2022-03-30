@@ -134,6 +134,8 @@ public class VisualCardController : MonoBehaviour
                 addedIconsTotal++;
             }
         }
+
+        GetComponent<RectTransform>().sizeDelta = new Vector2(Width, Height);
     }
 
     public void FixedUpdate()

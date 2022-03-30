@@ -46,10 +46,13 @@ public class CollectionCardController : MonoBehaviour
     public void RegisterCountChanged(Action<CollectionCardController> cb) { cbCountChanged -= cb; cbCountChanged += cb; }
     public void UnregisterCountChanged(Action<CollectionCardController> cb) { cbCountChanged -= cb; }
 
-    public void Start()
+    public void Awake()
     {
         Count = 0;
+    }
 
+    public void Start()
+    {
         VisualCard.RegisterClicked(IncrementCount);
         VisualCard.RegisterRightClicked(DecrementCount);
     }

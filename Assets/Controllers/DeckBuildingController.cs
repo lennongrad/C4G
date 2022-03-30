@@ -12,19 +12,42 @@ public class DeckBuildingController : MonoBehaviour
 {
 	public GameObject collectionPrefab;
 	public GameObject collectionGrid;
+	public Dropdown deckListDropdown;
+	public InputField deckListName;
 	public Text deckListText;
 	
 	DeckListData data = new DeckListData();
 	CardData[] allCards;
+	List<string> savedDeckNames;
+	bool editingName = false;
 
-	string filename = "Decklist";
+	string deckTitle = "Decklist";
+
+	string GetFileDirectory()
+	{
+		return Application.persistentDataPath + "/SavedDecks";
+	}
+
+	string GetFilename(string title)
+	{
+		return GetFileDirectory() + "/" + title + ".json";
+	}
+
+	void updateDeckNameList() {
+		savedDeckNames = Directory.GetFiles(GetFileDirectory(), "*.json").Select(i => i.Split('\\').Last().Split('.').First()).ToList();
+	}
 
 	void Start()
-    {
+	{
 		allCards = Resources.LoadAll("Cards", typeof(CardData)).Cast<CardData>().ToArray();
+		Directory.CreateDirectory(GetFileDirectory());
+		updateDeckNameList();
+
+		if (savedDeckNames.Count > 0)
+			deckTitle = savedDeckNames[0];
 
 		populateDeckCollection();
-		updateDeckList();
+		loadDeck();
 	}
 
 	void populateDeckCollection()
@@ -41,7 +64,22 @@ public class DeckBuildingController : MonoBehaviour
 	}
 
 	void updateDeckList()
-    {
+	{
+		// update list of decks
+		updateDeckNameList();
+		List<string> deckListDropdownOptions = new List<string>(savedDeckNames);
+		deckListDropdownOptions.Add("Create new...");
+
+		deckListDropdown.ClearOptions();
+		deckListDropdown.AddOptions(deckListDropdownOptions);
+
+		int selectedDeckIndex = savedDeckNames.IndexOf(deckTitle);
+		if (selectedDeckIndex != -1 && selectedDeckIndex < savedDeckNames.Count)
+		{
+			deckListDropdown.value = selectedDeckIndex;
+		}
+
+		// update current deck
 		deckListText.text = "";
 		List<CardData> cardsList = new List<CardData>();
 
@@ -62,35 +100,19 @@ public class DeckBuildingController : MonoBehaviour
         }
 
 		data.Cards = cardsList;
-    }
-
-	string GetFilename()
-    {
-		return Application.persistentDataPath + "/" + filename + ".json";
 	}
 
-	public void OnFilenameChange(string newFilename)
-    {
-		filename = newFilename;
-    }
-
-	public void OnGameStart()
-    {
-		PlayerChoices.DeckList = data;
-		SceneManager.LoadSceneAsync("Level");
-    }
-
-    public void OnDeckSave()
+	void saveDeck()
 	{
 		string dataString = JsonUtility.ToJson(data);
-		System.IO.File.WriteAllText(GetFilename(), dataString);
+		File.WriteAllText(GetFilename(deckTitle), dataString);
 	}
 
-	public void OnDeckLoad()
-    {
-		if (File.Exists(GetFilename()))
+	void loadDeck()
+	{
+		if (File.Exists(GetFilename(deckTitle)))
 		{
-			string jsonFile = System.IO.File.ReadAllText(GetFilename());
+			string jsonFile = File.ReadAllText(GetFilename(deckTitle));
 			data = JsonUtility.FromJson<DeckListData>(jsonFile);
 
 			foreach (Transform child in collectionGrid.transform)
@@ -103,8 +125,111 @@ public class DeckBuildingController : MonoBehaviour
 					else
 						collectionCardController.Count = 0;
 			}
-		}
+        }
+        else
+        {
+			saveDeck();
+        }
 
 		updateDeckList();
 	}
+
+	void deleteDeck()
+	{
+		File.Delete(GetFilename(deckTitle));
+	}
+
+	void submitDeckName(string newName)
+	{
+		deleteDeck();
+		deckTitle = newName;
+		saveDeck();
+		updateDeckList();
+	}
+
+	void newDeck()
+	{
+		deckTitle = "New Deck";
+
+		int newDeckCount = 1;
+		if(savedDeckNames.Contains("New Deck"))
+        {
+			while (savedDeckNames.Contains("New Deck " + newDeckCount))
+				newDeckCount += 1;
+			deckTitle = "New Deck " + newDeckCount;	
+        }
+
+		data = new DeckListData();
+		saveDeck();
+		loadDeck();
+		updateDeckList();
+    }
+
+	public void FixedUpdate()
+    {
+		float cardWidth = 112f;
+		float gridWidth = collectionGrid.transform.parent.GetComponent<RectTransform>().rect.width;
+		if (collectionGrid.transform.childCount > 0)
+			cardWidth = collectionGrid.transform.GetChild(0).GetComponent<RectTransform>().rect.width;
+
+		collectionGrid.GetComponent<GridLayoutGroup>().constraintCount = (int)Mathf.Floor((gridWidth - 20f) / (cardWidth + 20f));
+	}
+
+	public void OnDeckSelected(int _)
+    {
+		if(deckListDropdown.value == savedDeckNames.Count)
+        {
+			newDeck();
+			return;
+        }
+
+		if (deckListDropdown.value > savedDeckNames.Count || deckTitle == savedDeckNames[deckListDropdown.value])
+			return;
+
+		deckTitle = savedDeckNames[deckListDropdown.value];
+		loadDeck();
+    }
+
+	public void OnToggleRename()
+    {
+		editingName = !editingName;
+        if (editingName)
+		{
+			// activate the text input field and bring it to the front
+			deckListName.Select();
+			deckListName.ActivateInputField();
+			deckListName.transform.SetAsLastSibling();
+			deckListName.text = deckTitle;
+		}
+        else
+        {
+			// rename the current deck and move deck selector back to the front
+			submitDeckName(deckListName.text);
+			deckListDropdown.transform.SetAsLastSibling();
+        }
+    }
+
+	public void OnGameStart()
+    {
+		PlayerChoices.DeckList = data;
+		SceneManager.LoadSceneAsync("Level");
+    }
+
+    public void OnDeckSave()
+	{
+		saveDeck();
+	}
+
+	public void OnDeckDelete()
+    {
+		if(savedDeckNames.Count > 1)
+		{
+			deleteDeck();
+			if (savedDeckNames[0] == deckTitle)
+				deckTitle = savedDeckNames[1];
+			else
+				deckTitle = savedDeckNames[0];
+			loadDeck();
+		}
+    }
 }
