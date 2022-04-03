@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Divination
   m_EditorClassIdentifier: 
   CardTitle: Divination
-  ManaCosts: 0000000000000000000000000200000000000000
+  ManaCosts: 0000000000000000020000000000000000000000
+  canBuildWith: 1
   Type: 3
   TowerSubtypes: 0
   SpellSubtypes: 0
@@ -22,12 +23,12 @@ MonoBehaviour:
   - minTargets: 0
     maxTargets: 0
     conditionScript: {fileID: 11500000, guid: cce934b28a7d1d44896c4bed0a3228cc, type: 3}
+    qualityScript: {fileID: 0}
+    predicateScript: {fileID: 11500000, guid: 2273637f20fc6c948a1b5302b9df75e8, type: 3}
     condition:
       id: 0
-    qualityScript: {fileID: 0}
     targetQuality:
       id: 1
-    predicateScript: {fileID: 11500000, guid: 2273637f20fc6c948a1b5302b9df75e8, type: 3}
     predicate:
       id: 2
   TowerPrefab: {fileID: 0}

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CardTitle: Nothing
   ManaCosts: 0000000000000000000000000000000000000000
+  canBuildWith: 0
   Type: 3
   TowerSubtypes: 0
   SpellSubtypes: 0

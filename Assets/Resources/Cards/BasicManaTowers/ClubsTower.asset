@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CardTitle: Clubs Tower
   ManaCosts: 0200000000000000000000000000000000000000
+  canBuildWith: 1
   Type: 1
   TowerSubtypes: 1
   SpellSubtypes: 0

@@ -10,6 +10,7 @@ public class CardData : ScriptableObject
     public string CardTitle = "";
     //public List<Mana.ManaType> ManaCost = new List<Mana.ManaType>();
     public int[] ManaCosts = { 0, 0, 0, 0, 0 };
+    public bool canBuildWith = true;
 
     public Card.CardType Type;
     public Card.TowerSubtype TowerSubtypes;
@@ -112,6 +113,20 @@ public class CardData : ScriptableObject
         {
             resultString += effect.GetDescription(worldInfo) + "\n";
         }
+
+        if (TowerPrefab != null)
+        {
+            Component[] towerBehaviourComponents = TowerPrefab.GetComponents(typeof(TowerBehaviour));
+            TowerBehaviour[] towerBehaviours = new TowerBehaviour[towerBehaviourComponents.Length];
+            System.Array.Copy(towerBehaviourComponents, towerBehaviours, towerBehaviourComponents.Length);
+
+            foreach (TowerBehaviour behaviour in towerBehaviours)
+            {
+                resultString += behaviour.GetDescription();
+            }
+        }
+
+
         return resultString;
     }
 
@@ -173,6 +188,8 @@ public class CardData : ScriptableObject
         foreach (Mana.ManaType type in System.Enum.GetValues(typeof(Mana.ManaType)))
             EditorGUILayout.LabelField(GetUnicodeOfManaType(type), GUILayout.Width((Screen.width - 170) / System.Enum.GetValues(typeof(Mana.ManaType)).Length));
         EditorGUILayout.EndHorizontal();
+
+        canBuildWith = EditorGUILayout.Toggle("Can start in deck:", canBuildWith);
 
         EditorGUILayout.EndFoldoutHeaderGroup();
         EditorGUILayout.Space(7);

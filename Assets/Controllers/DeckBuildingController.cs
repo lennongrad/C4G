@@ -39,7 +39,7 @@ public class DeckBuildingController : MonoBehaviour
 
 	void Start()
 	{
-		allCards = Resources.LoadAll("Cards", typeof(CardData)).Cast<CardData>().ToArray();
+		allCards = Resources.LoadAll("Cards", typeof(CardData)).Cast<CardData>().Where(n => n.canBuildWith).ToArray();
 		Directory.CreateDirectory(GetFileDirectory());
 		updateDeckNameList();
 
