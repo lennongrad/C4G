@@ -209,6 +209,11 @@ public class DeckBuildingController : MonoBehaviour
         }
     }
 
+	public void OnMainMenu()
+	{
+		SceneManager.LoadSceneAsync("MainMenu");
+	}
+
 	public void OnGameStart()
     {
 		PlayerChoices.DeckList = data;
