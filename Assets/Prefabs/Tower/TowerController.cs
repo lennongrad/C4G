@@ -5,12 +5,12 @@ using System;
 
 public class TowerController : MonoBehaviour
 {
-    public GameObject Cube;
+    //public GameObject Cube;
 
     /// <summary>
     /// The material of the tower's model by default. Must be stored in case it is changed to become transparent or otherwise
     /// </summary>
-    Material defaultMaterial;
+    //Material defaultMaterial;
 
     /// <summary>
     /// The tile that the tower is sitting on
@@ -49,6 +49,7 @@ public class TowerController : MonoBehaviour
         {
             performBehaviours = value;
 
+            /*
             // change towers transparency based on whether its enabled or not
             if (performBehaviours)
                 Cube.GetComponent<MeshRenderer>().material = defaultMaterial;
@@ -69,6 +70,7 @@ public class TowerController : MonoBehaviour
 
                 Cube.GetComponent<MeshRenderer>().material = material;
             }
+            */
         }
     }
 
@@ -85,7 +87,7 @@ public class TowerController : MonoBehaviour
 
     void OnEnable()
     {
-        defaultMaterial = Cube.GetComponent<MeshRenderer>().material;
+        //defaultMaterial = Cube.GetComponent<MeshRenderer>().material;
         behaviours = GetComponents<TowerBehaviour>();
     }
 

@@ -6,10 +6,17 @@ using UnityEngine.InputSystem;
 
 public class WorldController : MonoBehaviour
 {
-    public GameObject tilePrefab;
+    public GameObject floorPrefab;
+    public GameObject raisedPrefab;
+    public GameObject barrierPrefab;
+    public GameObject wallPrefab;
+    public GameObject entrancePrefab;
+    public GameObject exitPrefab;
+
+    public GameObject centralColumn;
     public GameObject initialManaTowerPrefab;
-    public StageData stageData;
     public WorldInfo worldInfo;
+    public StageData defaultStageData;
 
     /// <summary>
     /// The game event this script will invoke at the beginning of a round
@@ -29,6 +36,8 @@ public class WorldController : MonoBehaviour
     List<TileController> entrances = new List<TileController>();
     List<TileController> exits = new List<TileController>();
 
+    private StageData stageData;
+
     void Awake()
     {
         worldInfo.worldController = this;
@@ -36,12 +45,34 @@ public class WorldController : MonoBehaviour
 
     void Start()
     {
+        stageData = defaultStageData;
+        if (PlayerChoices.SelectedStage != null)
+            stageData = PlayerChoices.SelectedStage;
+
+        // change central column size
+        float columnHeight = 1500;
+        centralColumn.transform.localScale = new Vector3(stageData.Width, columnHeight, stageData.Height);
+        centralColumn.GetComponent<Renderer>().material.mainTextureScale = centralColumn.GetComponent<Renderer>().material.mainTextureScale * new Vector2(stageData.Width, columnHeight);
+        centralColumn.transform.position = new Vector3(0, -columnHeight / 2, 0);
+
         // fill in tile objects
         Tiles = new TileController[stageData.Width, stageData.Height];
         for (int y = 0; y < stageData.Height; y++)
         {
             for (int x = 0; x < stageData.Width; x++)
             {
+                GameObject tilePrefab;
+                switch (stageData.Values[x, y])
+                {
+                    case Tile.TileType.Floor: tilePrefab = floorPrefab; break;
+                    case Tile.TileType.Raised: tilePrefab = raisedPrefab; break;
+                    case Tile.TileType.Barrier: tilePrefab = barrierPrefab; break;
+                    case Tile.TileType.Wall: tilePrefab = wallPrefab; break;
+                    case Tile.TileType.Entrance: tilePrefab = entrancePrefab; break;
+                    case Tile.TileType.Exit: tilePrefab = exitPrefab; break;
+                    default: tilePrefab = floorPrefab;  break;
+                }
+
                 // instantiate tile object
                 GameObject tileObject = (GameObject)Instantiate(tilePrefab, Vector3.zero, Quaternion.identity);
                 TileController tile = tileObject.GetComponent<TileController>();

@@ -5,6 +5,8 @@ using System;
 
 public class EnemyController : MonoBehaviour
 {
+    public GameObject enemyModel;
+
     /// <summary>
     /// The speed the enemy will move at across the stage if they have a variance of 0
     /// </summary>
@@ -77,6 +79,9 @@ public class EnemyController : MonoBehaviour
         distance = 0f;
         cbDespawned = null;
         randomSpeed = UnityEngine.Random.Range(0, SpeedVariance) + BaseSpeed;
+
+        if(enemyModel != null)
+            enemyModel.GetComponent<Animator>().Play("infantry_03_run");
     }
 
     void FixedUpdate()
@@ -92,6 +97,8 @@ public class EnemyController : MonoBehaviour
                 
             Vector2 flatPosition = Vector2.Lerp(fromTile.FlatPosition(), toTile.FlatPosition(), distance);
             transform.position = new Vector3(flatPosition.x, 0, flatPosition.y);
+
+            this.RotateToFace(fromTile.Directions.to);
         }
 
 

@@ -13,15 +13,18 @@ public class DeckBuildingController : MonoBehaviour
 	public GameObject collectionPrefab;
 	public GameObject collectionGrid;
 	public Dropdown deckListDropdown;
+	public Dropdown stageListDropdown;
 	public InputField deckListName;
 	public Text deckListText;
 	
 	DeckListData data = new DeckListData();
 	CardData[] allCards;
+	StageData[] allStages;
 	List<string> savedDeckNames;
 	bool editingName = false;
 
 	string deckTitle = "Decklist";
+	StageData selectedStage;
 
 	string GetFileDirectory()
 	{
@@ -39,7 +42,19 @@ public class DeckBuildingController : MonoBehaviour
 
 	void Start()
 	{
+		// initialize card list
 		allCards = Resources.LoadAll("Cards", typeof(CardData)).Cast<CardData>().Where(n => n.canBuildWith).ToArray();
+
+		// initialize stage dropdown
+		allStages = Resources.LoadAll("Stages", typeof(StageData)).Cast<StageData>().ToArray();
+		List<string> stageListDropdownOptions = new List<string>();
+		foreach (StageData stage in allStages)
+			stageListDropdownOptions.Add(stage.StageTitle);
+		selectedStage = allStages[0];
+		stageListDropdown.ClearOptions();
+		stageListDropdown.AddOptions(stageListDropdownOptions);
+
+		// create decklist directory
 		Directory.CreateDirectory(GetFileDirectory());
 		updateDeckNameList();
 
@@ -175,6 +190,11 @@ public class DeckBuildingController : MonoBehaviour
 		collectionGrid.GetComponent<GridLayoutGroup>().constraintCount = (int)Mathf.Floor((gridWidth - 20f) / (cardWidth + 20f));
 	}
 
+	public void OnStageSelected(int _)
+	{
+		selectedStage = allStages[stageListDropdown.value];
+    }
+
 	public void OnDeckSelected(int _)
     {
 		if(deckListDropdown.value == savedDeckNames.Count)
@@ -217,6 +237,7 @@ public class DeckBuildingController : MonoBehaviour
 	public void OnGameStart()
     {
 		PlayerChoices.DeckList = data;
+		PlayerChoices.SelectedStage = selectedStage;
 		SceneManager.LoadSceneAsync("Level");
     }
 
