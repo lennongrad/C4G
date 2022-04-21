@@ -33,6 +33,11 @@ public class ShootProjectile : TowerBehaviour
     public int AnimationWait = 5;
 
     /// <summary>
+    /// Base amount of damage for projectiles to do on hit
+    /// </summary>
+    public float baseDamage = 5f;
+
+    /// <summary>
     /// Y position to spawn the projectile at
     /// </summary>
     public float ProjectileY = .5f;
@@ -86,6 +91,7 @@ public class ShootProjectile : TowerBehaviour
         GameObject projectileObject = SimplePool.Spawn(ProjectilePrefab, projectilePosition, Quaternion.identity);
         ProjectileController projectileController = projectileObject.GetComponent<ProjectileController>();
         projectileController.SetRotation(transform.localEulerAngles.y + rotation);
+        projectileController.baseDamage = baseDamage;
     }
 
     public override string GetDescription()

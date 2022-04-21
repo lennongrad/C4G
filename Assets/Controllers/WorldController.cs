@@ -28,6 +28,7 @@ public class WorldController : MonoBehaviour
     public TargetSelectionController targetSelectionController;
     public CardGameController cardGameController;
     public MinimapController minimapCameraController;
+    public GameObject water;
 
     public GameObject tilesContainer;
     public GameObject towersContainer;
@@ -41,6 +42,7 @@ public class WorldController : MonoBehaviour
     void Awake()
     {
         worldInfo.worldController = this;
+        water.SetActive(true);
     }
 
     void Start()
@@ -174,8 +176,14 @@ public class WorldController : MonoBehaviour
         towerObject.transform.SetParent(towersContainer.transform);
 
         towerController.RegisterHoveredCB(targetSelectionController.TowerHovered);
+        towerController.RegisterDespawnedCB(OnTowerDespawn);
 
         towerController.Initiate();
+    }
+
+    void OnTowerDespawn(TowerController tower)
+    {
+        SimplePool.Despawn(tower.gameObject);
     }
 
     public List<TileController>[] GetAreaAroundTile(TileController tile, AreaOfEffect area, Tile.TileDirection direction = Tile.TileDirection.None)

@@ -6,6 +6,16 @@ using System;
 public class EnemyController : MonoBehaviour
 {
     public GameObject enemyModel;
+    public HPBarController hpBar;
+
+    /// <summary>
+    /// The HP the enemy starts at
+    /// </summary>
+    public float baseHP;
+    /// <summary>
+    /// The enemy's health points. When they reach 0, FixedUpdate() will despawn the enemy
+    /// </summary>
+    float hp = 1;
 
     /// <summary>
     /// The speed the enemy will move at across the stage if they have a variance of 0
@@ -48,10 +58,6 @@ public class EnemyController : MonoBehaviour
     /// </summary>
     float distance = 0f;
     /// <summary>
-    /// The enemy's health points. When they reach 0, FixedUpdate() will despawn the enemy
-    /// </summary>
-    float hp = 1;
-    /// <summary>
     /// When enemy is created, give it random additioanl speed so that enemies don''t all move the same exactly
     /// </summary>
     float randomSpeed;
@@ -67,6 +73,8 @@ public class EnemyController : MonoBehaviour
     /// </summary>
     bool hovered = false;
 
+    public TowerController currentTowerColliding;
+
     Action<EnemyController> cbHovered;
     /// <summary>
     /// Register a method to be called when the enemy is hovered over by the user's mouse cursor
@@ -75,30 +83,41 @@ public class EnemyController : MonoBehaviour
 
     void OnEnable()
     {
-        hp = 1;
+        hp = baseHP;
         distance = 0f;
         cbDespawned = null;
-        randomSpeed = UnityEngine.Random.Range(0, SpeedVariance) + BaseSpeed;
+        randomSpeed = (UnityEngine.Random.Range(0, SpeedVariance) + BaseSpeed) * .01f;
+        hpBar.Maximum = baseHP;
 
-        if(enemyModel != null)
+        if (enemyModel != null)
             enemyModel.GetComponent<Animator>().Play("infantry_03_run");
     }
 
     void FixedUpdate()
     {
-        if (Vector2.Distance(toTile.FlatPosition(), this.FlatPosition()) < .02f)
+        if (currentTowerColliding == null)
         {
-            FromTile = toTile;
-            distance = 0f;
+            // move
+            if (Vector2.Distance(toTile.FlatPosition(), this.FlatPosition()) < .02f)
+            {
+                FromTile = toTile;
+                distance = 0f;
+            }
+            else
+            {
+                distance += randomSpeed;
+
+                Vector2 flatPosition = Vector2.Lerp(fromTile.FlatPosition(), toTile.FlatPosition(), distance);
+                transform.position = new Vector3(flatPosition.x, 0, flatPosition.y);
+
+                this.RotateToFace(fromTile.Directions.to);
+                hpBar.transform.localPosition = (new Vector3(-.25f, 0, .25f)).Rotated(fromTile.Directions.to);
+            }
         }
         else
         {
-            distance += randomSpeed;
-                
-            Vector2 flatPosition = Vector2.Lerp(fromTile.FlatPosition(), toTile.FlatPosition(), distance);
-            transform.position = new Vector3(flatPosition.x, 0, flatPosition.y);
-
-            this.RotateToFace(fromTile.Directions.to);
+            // attack tower
+            currentTowerColliding.DirectDamage(1f * Time.deltaTime);
         }
 
 
@@ -112,9 +131,14 @@ public class EnemyController : MonoBehaviour
         }
         hovered = false;
 
-        if (hp < 0f)
+        if (hp <= 0f)
         {
             cbDespawned(this);
+        }
+        else
+        {
+            hpBar.Amount = hp;
+            hpBar.gameObject.SetActive(hp < baseHP);
         }
     }
 
@@ -141,13 +165,46 @@ public class EnemyController : MonoBehaviour
     /// </summary>
     void projectileDamage(ProjectileController projectile)
     {
-        hp -= 2f;
+        hp -= projectile.GetDamage(this);
         projectile.HitEnemy();
+    }
+
+    void towerStartAttacking(TowerController tower)
+    {
+        currentTowerColliding = tower;
+        currentTowerColliding.RegisterDespawnedCB(towerStopAttacking);
+        if (enemyModel != null)
+            enemyModel.GetComponent<Animator>().Play("infantry_04_attack_A");
+    }
+
+    void towerStopAttacking(TowerController tower)
+    {
+        if(tower == currentTowerColliding)
+        {
+            if(currentTowerColliding != null)
+            {
+                currentTowerColliding.UnregisterDespawnedCB(towerStopAttacking);
+                currentTowerColliding = null;
+            }
+            if (enemyModel != null)
+                enemyModel.GetComponent<Animator>().Play("infantry_03_run");
+        }
     }
 
     public void OnTriggerEnter(Collider trigger)
     {
-        ProjectileController projectileHitBy = trigger.transform.parent.GetComponent<ProjectileController>();
-        projectileDamage(projectileHitBy);
+        ProjectileController projectileColliding = trigger.transform.parent.GetComponent<ProjectileController>();
+        if(projectileColliding != null)
+            projectileDamage(projectileColliding);
+
+        TowerController towerColliding = trigger.GetComponent<TowerController>();
+        if (towerColliding != null)
+            towerStartAttacking(towerColliding);
+    }
+
+    public void OnTriggerExit(Collider trigger)
+    {
+        TowerController towerColliding = trigger.GetComponent<TowerController>();
+        towerStopAttacking(towerColliding);
     }
 }

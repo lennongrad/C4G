@@ -5,12 +5,11 @@ using System;
 
 public class TowerController : MonoBehaviour
 {
-    //public GameObject Cube;
+    public HPBarController hpBar;
 
-    /// <summary>
-    /// The material of the tower's model by default. Must be stored in case it is changed to become transparent or otherwise
-    /// </summary>
-    //Material defaultMaterial;
+    /// The amount of HP that the tower begins with by default
+    public float baseHP = 10;
+    float hp;
 
     /// <summary>
     /// The tile that the tower is sitting on
@@ -48,29 +47,7 @@ public class TowerController : MonoBehaviour
         set
         {
             performBehaviours = value;
-
-            /*
-            // change towers transparency based on whether its enabled or not
-            if (performBehaviours)
-                Cube.GetComponent<MeshRenderer>().material = defaultMaterial;
-            else
-            {
-                // disabled so make transparenty
-                Material material = Cube.GetComponent<MeshRenderer>().material;
-
-                material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
-                material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                material.SetInt("_ZWrite", 0);
-                material.DisableKeyword("_ALPHATEST_ON");
-                material.DisableKeyword("_ALPHABLEND_ON");
-                material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
-                material.renderQueue = 3000;
-
-                material.color = new Color(material.color.r, material.color.g, material.color.b, 0.1f);
-
-                Cube.GetComponent<MeshRenderer>().material = material;
-            }
-            */
+            GetComponent<Collider>().enabled = performBehaviours;
         }
     }
 
@@ -83,12 +60,23 @@ public class TowerController : MonoBehaviour
     /// <summary>
     /// Register a method to be called when the tower is hovered over by the user's mouse cursor
     /// </summary>
-    public void RegisterHoveredCB(Action<TowerController> cb) { cbHovered += cb; }
+    public void RegisterHoveredCB(Action<TowerController> cb) { cbHovered -= cb;  cbHovered += cb; }
+
+    Action<TowerController> cbDespawned;
+    /// <summary>
+    /// Register a function to be called when this tower is set to despawn from being destroyed
+    /// </summary>
+    public void RegisterDespawnedCB(Action<TowerController> cb) { cbDespawned -= cb; cbDespawned += cb; }
+    /// <summary>
+    /// Unregister a function to be called when this tower is set to despawn from being destroyed
+    /// </summary>
+    public void UnregisterDespawnedCB(Action<TowerController> cb) { cbDespawned -= cb; }
 
     void OnEnable()
     {
-        //defaultMaterial = Cube.GetComponent<MeshRenderer>().material;
         behaviours = GetComponents<TowerBehaviour>();
+        hp = baseHP;
+        hpBar.Maximum = baseHP;
     }
 
     public void Initiate()
@@ -101,6 +89,12 @@ public class TowerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        hpBar.transform.localPosition = (new Vector3(-.25f, 0, .25f)).Rotated(facingDirection);
+        //switch (FacingDirection)
+        //{
+        //    case Tile.TileDirection.Up: hpBar.localPosition = new Vector3(); break;
+        //}
+
         if(ParentTile != null)
         {
             transform.position = ParentTile.transform.position + new Vector3(0, ParentTile.Height, 0);
@@ -111,6 +105,17 @@ public class TowerController : MonoBehaviour
                 transform.localScale = new Vector3(1, 1, 1);
         }
         hovered = false;
+
+        if (hp <= 0f)
+        {
+            transform.position = new Vector3(10000, 10000, 10000);
+            cbDespawned(this);
+        }
+        else
+        {
+            hpBar.Amount = hp;
+            hpBar.gameObject.SetActive(hp < baseHP);
+        }
     }
 
     /// <summary>
@@ -121,5 +126,10 @@ public class TowerController : MonoBehaviour
         hovered = true;
         if(cbHovered != null)
             cbHovered(this);
+    }
+
+    public void DirectDamage(float damage)
+    {
+        hp -= damage;
     }
 }

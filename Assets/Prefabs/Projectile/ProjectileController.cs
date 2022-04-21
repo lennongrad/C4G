@@ -19,6 +19,11 @@ public class ProjectileController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// How much damage to deal upon collision with enemy
+    /// </summary>
+    public float baseDamage;
+
     void OnEnable()
     {
         GetComponent<Rigidbody>().velocity = Vector3.zero;
@@ -55,6 +60,11 @@ public class ProjectileController : MonoBehaviour
 
         tile = null;
         return false;
+    }
+
+    public float GetDamage(EnemyController enemy)
+    {
+        return baseDamage;
     }
 
     /// <summary>

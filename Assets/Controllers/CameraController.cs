@@ -149,7 +149,7 @@ public class CameraController : MonoBehaviour
         mask = LayerMask.GetMask("Tower");
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
         {
-            TowerController towerHovered = hit.transform.parent.GetComponent<TowerController>(); 
+            TowerController towerHovered = hit.transform.GetComponent<TowerController>(); 
             towerHovered?.Hover();
         }
 
