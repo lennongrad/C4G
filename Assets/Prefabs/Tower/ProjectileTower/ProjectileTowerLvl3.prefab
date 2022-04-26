@@ -50,6 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hpBar: {fileID: 6385804553288679142}
+  Name: ProjectileTowerLvl3
   baseHP: 20
   ParentTile: {fileID: 0}
 --- !u!114 &4666927718613392911
@@ -70,7 +71,7 @@ MonoBehaviour:
   ProjectileInterval: 150
   InitialWait: 20
   AnimationWait: 15
-  baseDamage: 14
+  baseDamage: 3
   ProjectileY: 0.5
   rotation: 0
   displacement: {x: 0, y: 0.5}

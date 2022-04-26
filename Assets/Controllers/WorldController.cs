@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using System;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+using System.Linq;
 
 public class WorldController : MonoBehaviour
 {
@@ -18,10 +22,8 @@ public class WorldController : MonoBehaviour
     public WorldInfo worldInfo;
     public StageData defaultStageData;
 
-    /// <summary>
-    /// The game event this script will invoke at the beginning of a round
-    /// </summary>
     public GameEvent roundBegin;
+    public GameEvent roundEnd;
 
     public CameraController cameraController;
     public EnemySpawnController enemySpawnController;
@@ -43,6 +45,8 @@ public class WorldController : MonoBehaviour
     {
         worldInfo.worldController = this;
         water.SetActive(true);
+
+        roundEnd.RegisterListener(SaveLevelData);
     }
 
     void Start()
@@ -125,11 +129,17 @@ public class WorldController : MonoBehaviour
         // generate enemy paths
         RandomizePaths();
 
-        // randomly generate some number of mana towers for the player to start with
-        RandomizeInitialTowers();
-
-        // begin the round
-        roundBegin.Raise();
+        // check if save data is present
+        if (File.Exists(GetFilename()))
+        {
+            // load the existing save data
+            LoadLevelData();
+        }
+        else
+        {
+            // randomly generate some number of mana towers for the player to start with
+            //RandomizeInitialTowers();
+        }
     }
 
     /// <summary>
@@ -163,13 +173,14 @@ public class WorldController : MonoBehaviour
     /// <summary>
     /// Creates a new tower object with the parameters as settings and places it in the world
     /// </summary>
-    public void SpawnTower(GameObject towerPrefab, TileController parentTile, Tile.TileDirection facingDirection)
+    public void SpawnTower(GameObject towerPrefab, TileController parentTile, Tile.TileDirection facingDirection, CardData cardData = null)
     {
         Vector3 towerPosition = parentTile.transform.position;
-        GameObject towerObject = SimplePool.Spawn(towerPrefab, towerPosition, Quaternion.identity);
+        GameObject towerObject = Instantiate(towerPrefab, towerPosition, Quaternion.identity);
         TowerController towerController = towerObject.GetComponent<TowerController>();
 
         parentTile.PresentTower = towerController;
+        towerController.CardParent = cardData;
         towerController.ParentTile = parentTile;
         towerController.FacingDirection = facingDirection;
         towerController.PerformBehaviours = true;
@@ -183,7 +194,7 @@ public class WorldController : MonoBehaviour
 
     void OnTowerDespawn(TowerController tower)
     {
-        SimplePool.Despawn(tower.gameObject);
+        Destroy(tower.gameObject);
     }
 
     public List<TileController>[] GetAreaAroundTile(TileController tile, AreaOfEffect area, Tile.TileDirection direction = Tile.TileDirection.None)
@@ -215,5 +226,53 @@ public class WorldController : MonoBehaviour
         }
 
         return arr;
+    }
+    
+    string GetFileDirectory() { 
+        return Application.persistentDataPath + "/SavedGames"; 
+    }
+
+    string GetFilename()
+    {
+        return GetFileDirectory() + "/" + "mainSave" + ".json";
+    }
+
+    public void SaveLevelData()
+    {
+        LevelSaveData levelSaveData = new LevelSaveData(enemySpawnController.roundIndex);
+
+        for (int x = 0; x < stageData.Width; x++)
+        {
+            for (int y = 0; y < stageData.Height; y++)
+            {
+                if(Tiles[x,y].PresentTower != null)
+                {
+                    levelSaveData.AddData(Tiles[x, y].PresentTower, x, y);
+                }
+            }
+        }
+
+        Directory.CreateDirectory(GetFileDirectory());
+        string dataString = JsonUtility.ToJson(levelSaveData);
+        File.WriteAllText(GetFilename(), dataString);
+    }
+
+    public void LoadLevelData()
+    {
+        if (File.Exists(GetFilename()))
+        {
+            string jsonFile = File.ReadAllText(GetFilename());
+            LevelSaveData data = JsonUtility.FromJson<LevelSaveData>(jsonFile);
+
+            enemySpawnController.roundIndex = data.currentRoundIndex;
+            foreach(TowerPositionData towerData in data.TowerData)
+            {
+                TileController towerTile = Tiles[towerData.xPosition, towerData.yPosition];
+                if (towerTile.PresentTower == null)
+                {
+                    SpawnTower(towerData.cardData.TowerPrefab, towerTile, towerData.directionFacing, towerData.cardData);
+                }
+            }
+        }
     }
 }

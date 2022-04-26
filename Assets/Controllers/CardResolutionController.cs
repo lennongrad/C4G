@@ -137,7 +137,11 @@ public class CardResolutionController : MonoBehaviour
         }
 
         int targetCount = currentTargetInfo.GetTargetCount(activeEffect.predicate.TargetType);
-        if (targetCount < activeEffect.maxTargets && !currentTargetInfo.StoppedBeforeMax)
+        if(activeEffect.minTargets == 4)
+        {
+            currentTargetInfo.TargetAll(activeEffect.predicate.TargetType, worldInfo);
+        } 
+        else if ((targetCount < activeEffect.maxTargets || activeEffect.maxTargets == 4) && !currentTargetInfo.StoppedBeforeMax)
         {
             // not enough targets selected
 
@@ -168,7 +172,7 @@ public class CardResolutionController : MonoBehaviour
             return;
         }
 
-        worldController.SpawnTower(activeCard.Data.TowerPrefab, currentTargetInfo.Tiles[0], currentTargetInfo.Direction);
+        worldController.SpawnTower(activeCard.Data.TowerPrefab, currentTargetInfo.Tiles[0], currentTargetInfo.Direction, activeCard.Data);
         removeActiveCard();
     }
 

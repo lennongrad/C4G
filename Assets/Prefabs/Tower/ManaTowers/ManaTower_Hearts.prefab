@@ -49,6 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hpBar: {fileID: 1226434615244231747}
+  Name: ManaTower_Hearts
   baseHP: 10
   ParentTile: {fileID: 0}
 --- !u!114 &4471785687963668593

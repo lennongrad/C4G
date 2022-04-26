@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1eae0be279bdd5f4caf48bac1284a64f, type: 3}
-  m_Name: FlameSweep
+  m_Name: OmegaSweep
   m_EditorClassIdentifier: 
   CardTitle: Flame Sweep
   ManaCosts: 0000000000000000000000000000000000000000
@@ -20,11 +20,11 @@ MonoBehaviour:
   SpellSubtypes: 0
   SkillSubtypes: 0
   CardEffects:
-  - minTargets: 1
-    maxTargets: 1
+  - minTargets: 4
+    maxTargets: 4
     conditionScript: {fileID: 11500000, guid: cce934b28a7d1d44896c4bed0a3228cc, type: 3}
-    qualityScript: {fileID: 11500000, guid: fa255c6d27b5a10408aa096163e0cdba, type: 3}
-    predicateScript: {fileID: 11500000, guid: dfa206a760f3afe4c9a58159510a81c0, type: 3}
+    qualityScript: {fileID: 11500000, guid: beb89bb9abdf38542a6b2843691b79f3, type: 3}
+    predicateScript: {fileID: 11500000, guid: f2d90d342df9683448ff85889635ae63, type: 3}
     condition:
       id: 0
     targetQuality:
@@ -37,9 +37,9 @@ MonoBehaviour:
     00000000:
       type: {class: NoCondition, ns: , asm: Assembly-CSharp}
     00000001:
-      type: {class: Tiles_TowerPlacementAllowed, ns: , asm: Assembly-CSharp}
+      type: {class: Enemies_NoQuality, ns: , asm: Assembly-CSharp}
     00000002:
-      type: {class: EnemyDamageAreaOfEffect, ns: , asm: Assembly-CSharp}
+      type: {class: DirectEnemyDamage, ns: , asm: Assembly-CSharp}
       data:
-        AffectedArea: {fileID: 11400000, guid: eeee1b1c04049d44eafe28188ebb7135, type: 2}
-        damage: 3
+        AffectedArea: {fileID: 0}
+        damage: 1000

@@ -220,7 +220,7 @@ public class TileController : MonoBehaviour
         List<EnemyController> enemiesCollided = new List<EnemyController>();
         foreach(Collider collider in hitColliders)
         {
-            EnemyController enemyCollided = collider.transform.parent.GetComponent<EnemyController>();
+            EnemyController enemyCollided = collider.GetComponent<EnemyController>();
             if (enemyCollided != null)
                 enemiesCollided.Add(enemyCollided);
         }

@@ -6,6 +6,6 @@ using UnityEngine;
 // probably should use a better pattern later but this is good for now
 public static class PlayerChoices
 {
-    public static DeckListData DeckList { get; set; }
-    public static StageData SelectedStage { get; set; }
+    public static DeckListData DeckList;
+    public static StageData SelectedStage;
 }

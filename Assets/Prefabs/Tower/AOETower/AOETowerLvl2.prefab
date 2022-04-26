@@ -50,6 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hpBar: {fileID: 5300435639376637165}
+  Name: AOETowerLvl2
   baseHP: 20
   ParentTile: {fileID: 0}
 --- !u!114 &4355534915500309140

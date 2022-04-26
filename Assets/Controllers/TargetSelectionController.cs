@@ -244,6 +244,7 @@ public class TargetSelectionController : MonoBehaviour
 
     public void OnSubmitTargets()
     {
+        Debug.Log(allowStop);
         if(allowStop)
             confirmSelection(true);
     }

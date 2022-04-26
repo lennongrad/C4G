@@ -14,6 +14,6 @@ public class WorldInfo : ScriptableObject
     public CardZone DeckZone;
     public CardZone ResolutionZone;
 
-    public CardGameController cardGameController { set; get; }
-    public WorldController worldController { set; get; }
+    public CardGameController cardGameController;
+    public WorldController worldController;
 }

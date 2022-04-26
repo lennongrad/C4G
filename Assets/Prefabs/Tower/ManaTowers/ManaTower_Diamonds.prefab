@@ -49,6 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hpBar: {fileID: 6992763723645059812}
+  Name: ManaTower_Diamonds
   baseHP: 10
   ParentTile: {fileID: 0}
 --- !u!114 &4471785687963668593
