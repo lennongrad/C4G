@@ -68,6 +68,7 @@ MonoBehaviour:
   baseHP: 10
   BaseSpeed: 0.8
   SpeedVariance: 0.1
+  enemyType: Walker
   currentTowerColliding: {fileID: 0}
 --- !u!65 &6097358317535826663
 BoxCollider:

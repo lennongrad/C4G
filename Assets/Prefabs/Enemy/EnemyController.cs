@@ -6,6 +6,9 @@ using System;
 public class EnemyController : MonoBehaviour
 {
     public GameObject enemyModel;
+    private GameObject[] towers;
+    //[SerializeField]
+    //private TowerBehaviour towerBehavior;
     public HPBarController hpBar;
 
     /// <summary>
@@ -27,6 +30,18 @@ public class EnemyController : MonoBehaviour
     public float SpeedVariance = 1f;
 
     /// <summary>
+    /// Specifier of the enemy type. used to call the correct animation for each enemy.
+    /// </summary>
+    public string enemyType;
+    /// <summary>
+    /// Enemy range if they use projectile attacks
+    /// </summary>
+    public float range;
+
+
+    public int enemyProjectileTimer;                 //Temporary. will be replaced
+
+    /// <summary>
     /// The tile the enemy started wallking from
     /// </summary>
     TileController fromTile = null;
@@ -38,6 +53,8 @@ public class EnemyController : MonoBehaviour
     /// The last tile that the enemy stopped at, and which it is travelling from. 
     /// Setting this publically automatically changes its destination tile if valid
     /// </summary>
+
+    
     public TileController FromTile
     {
         set
@@ -89,8 +106,13 @@ public class EnemyController : MonoBehaviour
         randomSpeed = (UnityEngine.Random.Range(0, SpeedVariance) + BaseSpeed) * .01f;
         hpBar.Maximum = baseHP;
 
-        if (enemyModel != null)
+        //Walker running animation
+        if (this.enemyType == "Walker")
             enemyModel.GetComponent<Animator>().Play("infantry_03_run");
+        
+        //Wizard running animation
+        if (this.enemyType == "Wizard")
+        enemyModel.GetComponent<Animator>().Play("BattleRunForward");
     }
 
     void FixedUpdate()
@@ -103,6 +125,27 @@ public class EnemyController : MonoBehaviour
                 FromTile = toTile;
                 distance = 0f;
             }
+            // Ranged enemy detection range
+            if((this.enemyType == "Wizard" | this.enemyType == "Paladin") & isProjectileUser())
+            {
+                //If projectile user's range attack cooldown is done. check for enemies in range
+                if(enemyModel.GetComponent<ShootProjectile>().projectileTimer < 0) 
+                {
+                    DetectionRange();
+                }
+                //Else move
+                else
+                {
+                distance += randomSpeed;
+
+                Vector2 flatPosition = Vector2.Lerp(fromTile.FlatPosition(), toTile.FlatPosition(), distance);
+                transform.position = new Vector3(flatPosition.x, 0, flatPosition.y);
+
+                this.RotateToFace(fromTile.Directions.to);
+                hpBar.transform.localPosition = (new Vector3(-.25f, 0, .25f)).Rotated(fromTile.Directions.to);
+                }
+            }
+
             else
             {
                 distance += randomSpeed;
@@ -173,8 +216,15 @@ public class EnemyController : MonoBehaviour
     {
         currentTowerColliding = tower;
         currentTowerColliding.RegisterDespawnedCB(towerStopAttacking);
-        if (enemyModel != null)
+        
+        //Walker attack animation
+        if (this.enemyType == "Walker")
             enemyModel.GetComponent<Animator>().Play("infantry_04_attack_A");
+
+
+        //Wizard attack animation
+        if (this.enemyType == "Wizard")
+        enemyModel.GetComponent<Animator>().Play("Attack01");
     }
 
     void towerStopAttacking(TowerController tower)
@@ -186,10 +236,50 @@ public class EnemyController : MonoBehaviour
                 currentTowerColliding.UnregisterDespawnedCB(towerStopAttacking);
                 currentTowerColliding = null;
             }
-            if (enemyModel != null)
+            
+            //Walker running animation
+            if (this.enemyType == "Walker")
                 enemyModel.GetComponent<Animator>().Play("infantry_03_run");
+
+            //Wizard running animation
+            if (this.enemyType == "Wizard")
+            enemyModel.GetComponent<Animator>().Play("BattleRunForward");
+
         }
     }
+
+    /// <summary>
+    /// Used by ranged enemies to detect if towers are in range
+    /// </summary>
+    void DetectionRange() 
+    {
+        towers = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject tower in towers)
+        {
+            if(Vector3.Distance(tower.transform.position, this.transform.position) <= range)
+            {
+                print("tower detected in enemy range");         //DEBUG
+                this.GetComponent<ShootProjectile>().SpawnProjectile();
+
+            }
+        }
+
+    }
+
+    /// <summary>
+    ///Check if unit is able to fire projectiles
+    /// <summary>
+    private bool isProjectileUser(){
+        if(enemyModel.GetComponent<ShootProjectile>() != null) 
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
 
     public void OnTriggerEnter(Collider trigger)
     {

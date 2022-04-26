@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6554999240240130182}
   m_Layer: 8
   m_Name: ProjectileTower
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -70,6 +70,7 @@ MonoBehaviour:
   ProjectileInterval: 150
   InitialWait: 20
   AnimationWait: 15
+  baseDamage: 5
   ProjectileY: 0.5
   rotation: 0
   displacement: {x: 0, y: 0.5}
