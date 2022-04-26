@@ -76,7 +76,9 @@ public class Behaviour_AreaOfEffect : TowerBehaviour
         {
             List<EnemyController> tileEnemies = tile.GetPresentEnemies();
             foreach (EnemyController enemy in tileEnemies)
+            {
                 affectedEnemies.Add(enemy);
+            }
 
             tile.Ping(4);
         }

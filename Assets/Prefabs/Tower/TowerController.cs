@@ -70,7 +70,7 @@ public class TowerController : MonoBehaviour
     /// <summary>
     /// Register a method to be called when the tower is hovered over by the user's mouse cursor
     /// </summary>
-    public void RegisterHoveredCB(Action<TowerController> cb) { cbHovered -= cb;  cbHovered += cb; }
+    public void RegisterHoveredCB(Action<TowerController> cb) { cbHovered -= cb; cbHovered += cb; }
 
     Action<TowerController> cbDespawned;
     /// <summary>
@@ -91,7 +91,7 @@ public class TowerController : MonoBehaviour
 
     public void Initiate()
     {
-        foreach(TowerBehaviour behaviour in behaviours)
+        foreach (TowerBehaviour behaviour in behaviours)
         {
             behaviour.OnInitiate();
         }
@@ -105,7 +105,7 @@ public class TowerController : MonoBehaviour
         //    case Tile.TileDirection.Up: hpBar.localPosition = new Vector3(); break;
         //}
 
-        if(ParentTile != null)
+        if (ParentTile != null)
         {
             transform.position = ParentTile.transform.position + new Vector3(0, ParentTile.Height, 0);
 
@@ -134,12 +134,32 @@ public class TowerController : MonoBehaviour
     public void Hover()
     {
         hovered = true;
-        if(cbHovered != null)
+        if (cbHovered != null)
             cbHovered(this);
     }
 
+    /// <summary>
+    /// Called when tower takes damage from usually a projectile
+    /// </summary>
+    /// <param name="damage"></param>
     public void DirectDamage(float damage)
     {
         hp -= damage;
+    }
+
+    /// <summary>
+    /// Call when the tower collides with a projectile.
+    /// </summary>
+    void projectileDamage(ProjectileController projectile)
+    {
+        DirectDamage(projectile.GetDamage(this));
+        projectile.Hit();
+    }
+
+    public void OnTriggerEnter(Collider trigger)
+    {
+        ProjectileController projectileColliding = trigger.transform.parent.GetComponent<ProjectileController>();
+        if (projectileColliding != null && projectileColliding.isEvil)
+            projectileDamage(projectileColliding);
     }
 }

@@ -222,7 +222,15 @@ public class TileController : MonoBehaviour
         {
             EnemyController enemyCollided = collider.GetComponent<EnemyController>();
             if (enemyCollided != null)
+            {
                 enemiesCollided.Add(enemyCollided);
+            }
+            else
+            {
+                EnemyController enemyCollidedParent = collider.transform.parent.GetComponent<EnemyController>();
+                if (enemyCollidedParent != null)
+                    enemiesCollided.Add(enemyCollidedParent);
+            }
         }
 
         return enemiesCollided;

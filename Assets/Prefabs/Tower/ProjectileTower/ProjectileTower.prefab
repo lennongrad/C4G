@@ -51,6 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hpBar: {fileID: 6385804553288679142}
   Name: ProjectileTower
+  CardParent: {fileID: 0}
   baseHP: 20
   ParentTile: {fileID: 0}
 --- !u!114 &4666927718613392911
@@ -73,6 +74,7 @@ MonoBehaviour:
   AnimationWait: 15
   baseDamage: 1
   ProjectileY: 0.5
+  projectileTimer: 0
   rotation: 0
   displacement: {x: 0, y: 0.5}
 --- !u!65 &6554999240240130182

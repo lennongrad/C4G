@@ -6,11 +6,27 @@ using System;
 public class EnemyController : MonoBehaviour
 {
     public GameObject enemyModel;
-    private GameObject[] towers;
-    //[SerializeField]
-    //private TowerBehaviour towerBehavior;
     public HPBarController hpBar;
-    
+
+    /// <summary>
+    /// The behaviours for the enemy to carry out, such as spawning materials, generating mana, etc.
+    /// </summary>
+    EnemyBehaviour[] behaviours;
+
+    bool performBehaviours = true;
+    /// <summary>
+    /// Whether or not the enemy should have its behaviours active. 
+    /// </summary>
+    public bool PerformBehaviours
+    {
+        get { return performBehaviours; }
+        set
+        {
+            performBehaviours = value;
+            GetComponent<Collider>().enabled = performBehaviours;
+        }
+    }
+
     /// <summary>
     /// The HP the enemy starts at
     /// </summary>
@@ -33,13 +49,8 @@ public class EnemyController : MonoBehaviour
     /// Specifier of the enemy type. used to call the correct animation for each enemy.
     /// </summary>
     public string enemyType;
-    /// <summary>
-    /// Enemy range if they use projectile attacks
-    /// </summary>
-    public float range;
 
 
-    public int enemyProjectileTimer;                 //Temporary. will be replaced
 
     /// <summary>
     /// The tile the enemy started wallking from
@@ -54,7 +65,6 @@ public class EnemyController : MonoBehaviour
     /// Setting this publically automatically changes its destination tile if valid
     /// </summary>
 
-    
     public TileController FromTile
     {
         set
@@ -83,13 +93,16 @@ public class EnemyController : MonoBehaviour
     /// <summary>
     /// Register a function to be called when this enemy is set to despawn from being destroyed
     /// </summary>
-    public void RegisterDespawnedCB(Action<EnemyController> cb){ cbDespawned += cb; }
+    public void RegisterDespawnedCB(Action<EnemyController> cb) { cbDespawned += cb; }
 
     /// <summary>
     /// Set to true when the enemy is hovered over which is then monitored in the next FixedUpdate()
     /// </summary>
     bool hovered = false;
 
+    /// <summary>
+    /// The current tower that the enemy is blocked from moving forward by and which it will attack.
+    /// </summary>
     public TowerController currentTowerColliding;
 
     Action<EnemyController> cbHovered;
@@ -109,15 +122,25 @@ public class EnemyController : MonoBehaviour
         //Walker running animation
         if (this.enemyType == "Walker")
             enemyModel.GetComponent<Animator>().Play("infantry_03_run");
-        
+
         //Wizard running animation
         if (this.enemyType == "Wizard")
-        enemyModel.GetComponent<Animator>().Play("BattleRunForward");
+            enemyModel.GetComponent<Animator>().Play("BattleWalkForward");
+
+        behaviours = GetComponents<EnemyBehaviour>();
+    }
+
+    void Initiate()
+    {
+        foreach (EnemyBehaviour behaviour in behaviours)
+        {
+            behaviour.OnInitiate();
+        }
     }
 
     void FixedUpdate()
     {
-        if(toTile == null || fromTile == null)
+        if (toTile == null || fromTile == null)
         {
             cbDespawned(this);
         }
@@ -130,37 +153,21 @@ public class EnemyController : MonoBehaviour
                 FromTile = toTile;
                 distance = 0f;
             }
+
+            /*
             // Ranged enemy detection range
-            if((this.enemyType == "Wizard" | this.enemyType == "Paladin") & isProjectileUser())
+            // Moved this to the shoot projectile behaviour
+            if ((this.enemyType == "Wizard" | this.enemyType == "Paladin") && isProjectileUser() && enemyModel.GetComponent<ShootProjectile>().projectileTimer < 0)
             {
-                //If projectile user's range attack cooldown is done. check for enemies in range
-                if(enemyModel.GetComponent<ShootProjectile>().projectileTimer < 0) 
-                {
-                    DetectionRange();
-                }
-                //Else move
-                else
-                {
-                distance += randomSpeed;
+                DetectionRange();
+            }*/
+            distance += randomSpeed;
 
-                Vector2 flatPosition = Vector2.Lerp(fromTile.FlatPosition(), toTile.FlatPosition(), distance);
-                transform.position = new Vector3(flatPosition.x, 0, flatPosition.y);
+            Vector2 flatPosition = Vector2.Lerp(fromTile.FlatPosition(), toTile.FlatPosition(), distance);
+            transform.position = new Vector3(flatPosition.x, 0, flatPosition.y);
 
-                this.RotateToFace(fromTile.Directions.to);
-                hpBar.transform.localPosition = (new Vector3(-.25f, 0, .25f)).Rotated(fromTile.Directions.to);
-                }
-            }
-
-            else
-            {
-                distance += randomSpeed;
-
-                Vector2 flatPosition = Vector2.Lerp(fromTile.FlatPosition(), toTile.FlatPosition(), distance);
-                transform.position = new Vector3(flatPosition.x, 0, flatPosition.y);
-
-                this.RotateToFace(fromTile.Directions.to);
-                hpBar.transform.localPosition = (new Vector3(-.25f, 0, .25f)).Rotated(fromTile.Directions.to);
-            }
+            this.RotateToFace(fromTile.Directions.to);
+            hpBar.transform.localPosition = (new Vector3(-.25f, 0, .25f)).Rotated(fromTile.Directions.to);
         }
         else
         {
@@ -196,7 +203,7 @@ public class EnemyController : MonoBehaviour
     public void Hover()
     {
         hovered = true;
-        if(cbHovered != null)
+        if (cbHovered != null)
             cbHovered(this);
     }
 
@@ -214,68 +221,49 @@ public class EnemyController : MonoBehaviour
     void projectileDamage(ProjectileController projectile)
     {
         hp -= projectile.GetDamage(this);
-        projectile.HitEnemy();
+        projectile.Hit();
     }
 
     void towerStartAttacking(TowerController tower)
     {
         currentTowerColliding = tower;
         currentTowerColliding.RegisterDespawnedCB(towerStopAttacking);
-        
+
         //Walker attack animation
         if (this.enemyType == "Walker")
             enemyModel.GetComponent<Animator>().Play("infantry_04_attack_A");
 
-
         //Wizard attack animation
         if (this.enemyType == "Wizard")
-        enemyModel.GetComponent<Animator>().Play("Attack01");
+            enemyModel.GetComponent<Animator>().SetBool("Attacking", true);
     }
 
     void towerStopAttacking(TowerController tower)
     {
-        if(tower == currentTowerColliding)
+        if (tower == currentTowerColliding)
         {
-            if(currentTowerColliding != null)
+            if (currentTowerColliding != null)
             {
                 currentTowerColliding.UnregisterDespawnedCB(towerStopAttacking);
                 currentTowerColliding = null;
             }
-            
+
             //Walker running animation
             if (this.enemyType == "Walker")
                 enemyModel.GetComponent<Animator>().Play("infantry_03_run");
 
             //Wizard running animation
             if (this.enemyType == "Wizard")
-            enemyModel.GetComponent<Animator>().Play("BattleRunForward");
-
+                enemyModel.GetComponent<Animator>().SetBool("Attacking", false);
         }
-    }
-
-    /// <summary>
-    /// Used by ranged enemies to detect if towers are in range
-    /// </summary>
-    void DetectionRange() 
-    {
-        towers = GameObject.FindGameObjectsWithTag("Player");
-        foreach (GameObject tower in towers)
-        {
-            if(Vector3.Distance(tower.transform.position, this.transform.position) <= range)
-            {
-                print("tower detected in enemy range");         //DEBUG
-                this.GetComponent<ShootProjectile>().SpawnProjectile();
-
-            }
-        }
-
     }
 
     /// <summary>
     ///Check if unit is able to fire projectiles
     /// <summary>
-    private bool isProjectileUser(){
-        if(enemyModel.GetComponent<ShootProjectile>() != null) 
+    private bool isProjectileUser()
+    {
+        if (enemyModel.GetComponent<ShootProjectile>() != null)
         {
             return true;
         }
@@ -289,7 +277,7 @@ public class EnemyController : MonoBehaviour
     public void OnTriggerEnter(Collider trigger)
     {
         ProjectileController projectileColliding = trigger.transform.parent.GetComponent<ProjectileController>();
-        if(projectileColliding != null)
+        if (projectileColliding != null && !projectileColliding.isEvil)
             projectileDamage(projectileColliding);
 
         TowerController towerColliding = trigger.GetComponent<TowerController>();

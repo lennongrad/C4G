@@ -1845,7 +1845,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1943
+    m_Bits: 3991
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -3638,9 +3638,11 @@ MonoBehaviour:
   targetSelectionController: {fileID: 306759815}
   cycleController: {fileID: 916140922}
   startRoundButton: {fileID: 1123612789}
-  CurrentRound: {fileID: 11400000, guid: f2f4090aec37d35419e61cf9aa807705, type: 2}
+  beginRange: 0
+  CurrentRound: {fileID: 11400000, guid: a782bdcefe9ecc74a91dd694fe4ea44a, type: 2}
   roundBegin: {fileID: 11400000, guid: f1f7bc1744bc9c54e89f8472d5230993, type: 2}
   roundEnd: {fileID: 11400000, guid: d21c8e630ebfc824daa0f65c7858e825, type: 2}
+  roundIndex: -1
   spawnedAllEnemies: 1
   activeEntrances: []
 --- !u!1 &1771262593

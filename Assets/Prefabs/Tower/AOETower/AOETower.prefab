@@ -51,6 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hpBar: {fileID: 5300435639376637165}
   Name: AOETower
+  CardParent: {fileID: 0}
   baseHP: 20
   ParentTile: {fileID: 0}
 --- !u!114 &4355534915500309140
@@ -256,7 +257,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6600753668476555265}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}

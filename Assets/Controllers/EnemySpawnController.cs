@@ -14,6 +14,7 @@ public class EnemySpawnController : MonoBehaviour
     public GameObject startRoundButton;
 
     int enemySpawnTimer = 0;
+    public float beginRange = 60f;
 
     public RoundData CurrentRound;
 
@@ -60,7 +61,7 @@ public class EnemySpawnController : MonoBehaviour
         if (!spawnedAllEnemies)
         {
             timeSinceRoundBegin += Time.deltaTime * .5f;
-            if (UnityEngine.Random.Range(0f, 60f) < timeSinceRoundBegin)
+            if (UnityEngine.Random.Range(0f, beginRange) < timeSinceRoundBegin)
                 enemySpawnTimer += 1;
 
             if (enemySpawnTimer > (20 + enemiesCount * 10))
