@@ -45,7 +45,7 @@ public class ShootProjectile : TowerBehaviour
     /// <summary>
     /// Amount of time units left until the tower fires a new projectile
     /// </summary>
-    int projectileTimer;
+    public int projectileTimer;
 
     /// <summary>
     /// The rotation clockwise away from the tower's facing angle to shoot the projectile from.
@@ -82,7 +82,7 @@ public class ShootProjectile : TowerBehaviour
     /// <summary>
     /// Creates a projectile object and shoots it
     /// </summary>
-    void SpawnProjectile()
+    public void SpawnProjectile()
     {
         Vector3 projectilePosition = new Vector3(transform.position.x + displacement.x, ProjectileY, transform.position.z + displacement.y);
         GameObject projectileObject = Instantiate(ProjectilePrefab, projectilePosition, Quaternion.identity);
