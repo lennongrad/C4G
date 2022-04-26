@@ -7,6 +7,16 @@ public class TowerController : MonoBehaviour
 {
     public HPBarController hpBar;
 
+    /// <summary>
+    /// The name of the prefab asset for this tower
+    /// </summary>
+    public string Name;
+
+    /// <summary>
+    /// The card data of the card that created this tower.
+    /// </summary>
+    public CardData CardParent;
+
     /// The amount of HP that the tower begins with by default
     public float baseHP = 10;
     float hp;

@@ -238,6 +238,8 @@ public class DeckBuildingController : MonoBehaviour
     {
 		PlayerChoices.DeckList = data;
 		PlayerChoices.SelectedStage = selectedStage;
+
+		File.Delete(Application.persistentDataPath + "/SavedGames" + "/" + "mainSave" + ".json");
 		SceneManager.LoadSceneAsync("Level");
     }
 

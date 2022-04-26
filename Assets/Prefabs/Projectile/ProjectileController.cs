@@ -72,7 +72,7 @@ public class ProjectileController : MonoBehaviour
     /// </summary>
     void Despawn()
     {
-        SimplePool.Despawn(gameObject);
+        Destroy(gameObject);
     }
 
     /// <summary>

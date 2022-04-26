@@ -61,9 +61,6 @@ public class ShootProjectile : TowerBehaviour
     {
         projectileTimer = InitialWait + AnimationWait;
         displacement = displacement.Rotated(-transform.localEulerAngles.y);
-
-        // Preload a few objects for the projectiles shot by the tower
-        SimplePool.Preload(ProjectilePrefab, 3);
     }
 
     protected override void Behave()
@@ -88,7 +85,7 @@ public class ShootProjectile : TowerBehaviour
     public void SpawnProjectile()
     {
         Vector3 projectilePosition = new Vector3(transform.position.x + displacement.x, ProjectileY, transform.position.z + displacement.y);
-        GameObject projectileObject = SimplePool.Spawn(ProjectilePrefab, projectilePosition, Quaternion.identity);
+        GameObject projectileObject = Instantiate(ProjectilePrefab, projectilePosition, Quaternion.identity);
         ProjectileController projectileController = projectileObject.GetComponent<ProjectileController>();
         projectileController.SetRotation(transform.localEulerAngles.y + rotation);
         projectileController.baseDamage = baseDamage;

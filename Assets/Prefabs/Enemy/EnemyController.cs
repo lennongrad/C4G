@@ -10,7 +10,7 @@ public class EnemyController : MonoBehaviour
     //[SerializeField]
     //private TowerBehaviour towerBehavior;
     public HPBarController hpBar;
-
+    
     /// <summary>
     /// The HP the enemy starts at
     /// </summary>
@@ -44,11 +44,11 @@ public class EnemyController : MonoBehaviour
     /// <summary>
     /// The tile the enemy started wallking from
     /// </summary>
-    TileController fromTile = null;
+    public TileController fromTile = null;
     /// <summary>
     /// The tile the enemy is walking to currently
     /// </summary>
-    TileController toTile = null;
+    public TileController toTile = null;
     /// <summary>
     /// The last tile that the enemy stopped at, and which it is travelling from. 
     /// Setting this publically automatically changes its destination tile if valid
@@ -117,6 +117,11 @@ public class EnemyController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if(toTile == null || fromTile == null)
+        {
+            cbDespawned(this);
+        }
+
         if (currentTowerColliding == null)
         {
             // move

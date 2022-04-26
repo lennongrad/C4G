@@ -30,10 +30,15 @@ public class DeckListData
                 cardsCount = new Dictionary<CardData, int>();
 
                 foreach(CardData card in cards)
-                    if (!cardsCount.ContainsKey(card))
-                        cardsCount[card] = 1;
-                    else
-                        cardsCount[card] += 1;
+                {
+                    if(card != null)
+                    {
+                        if (!cardsCount.ContainsKey(card))
+                            cardsCount[card] = 1;
+                        else
+                            cardsCount[card] += 1;
+                    }
+                }
             }
 
             return cardsCount;
