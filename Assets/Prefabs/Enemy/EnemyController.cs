@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public class EnemyController : MonoBehaviour
 {
@@ -50,7 +51,10 @@ public class EnemyController : MonoBehaviour
     /// </summary>
     public string enemyType;
 
-
+    /// <summary>
+    /// Association of each status effect with its current duration
+    /// </summary>
+    Dictionary<Card.Status, float> statusDuration = new Dictionary<Card.Status, float>();
 
     /// <summary>
     /// The tile the enemy started wallking from
@@ -175,6 +179,15 @@ public class EnemyController : MonoBehaviour
             currentTowerColliding.DirectDamage(1f * Time.deltaTime);
         }
 
+        Card.Status[] activeStatuses = statusDuration.Keys.ToArray();
+        foreach(Card.Status status in activeStatuses)
+        {
+            Debug.Log(status);
+
+            statusDuration[status] -= Time.deltaTime;
+            if (statusDuration[status] < 0f)
+                statusDuration.Remove(status);
+        }
 
         if (hovered)
         {
@@ -259,20 +272,14 @@ public class EnemyController : MonoBehaviour
     }
 
     /// <summary>
-    ///Check if unit is able to fire projectiles
-    /// <summary>
-    private bool isProjectileUser()
+    /// Add a new status to the list or continue its duration if its already present
+    /// </summary>
+    public void AddStatus(Card.Status status, float duration)
     {
-        if (enemyModel.GetComponent<ShootProjectile>() != null)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        // if doesnt already have status or existing status has shorter duration
+        if (!statusDuration.ContainsKey(status) || statusDuration[status] < duration)
+            statusDuration[status] = duration;
     }
-
 
     public void OnTriggerEnter(Collider trigger)
     {

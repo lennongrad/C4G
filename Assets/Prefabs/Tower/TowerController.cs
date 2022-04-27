@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public class TowerController : MonoBehaviour
 {
@@ -20,6 +21,11 @@ public class TowerController : MonoBehaviour
     /// The amount of HP that the tower begins with by default
     public float baseHP = 10;
     float hp;
+
+    /// <summary>
+    /// Association of each status effect with its current duration
+    /// </summary>
+    Dictionary<Card.Status, float> statusDuration = new Dictionary<Card.Status, float>();
 
     /// <summary>
     /// The tile that the tower is sitting on
@@ -116,6 +122,16 @@ public class TowerController : MonoBehaviour
         }
         hovered = false;
 
+        Card.Status[] activeStatuses = statusDuration.Keys.ToArray();
+        foreach (Card.Status status in activeStatuses)
+        {
+            Debug.Log(status);
+
+            statusDuration[status] -= Time.deltaTime;
+            if (statusDuration[status] < 0f)
+                statusDuration.Remove(status);
+        }
+
         if (hp <= 0f)
         {
             transform.position = new Vector3(10000, 10000, 10000);
@@ -154,6 +170,16 @@ public class TowerController : MonoBehaviour
     {
         DirectDamage(projectile.GetDamage(this));
         projectile.Hit();
+    }
+
+    /// <summary>
+    /// Add a new status to the list or continue its duration if its already present
+    /// </summary>
+    public void AddStatus(Card.Status status, float duration)
+    {
+        // if doesnt already have status or existing status has shorter duration
+        if (!statusDuration.ContainsKey(status) || statusDuration[status] < duration)
+            statusDuration[status] = duration;
     }
 
     public void OnTriggerEnter(Collider trigger)

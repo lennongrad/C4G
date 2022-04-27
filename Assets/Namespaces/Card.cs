@@ -52,4 +52,11 @@ namespace Card
         Hand,
         Discard
     }
+
+    public enum Status
+    {
+        Burn,
+        Frozen,
+        Poisoned
+    }
 }
