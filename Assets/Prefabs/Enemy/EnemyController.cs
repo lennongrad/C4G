@@ -2,9 +2,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public class EnemyController : MonoBehaviour
 {
+    public GameObject enemyModel;
+    public HPBarController hpBar;
+
+    /// <summary>
+    /// The behaviours for the enemy to carry out, such as spawning materials, generating mana, etc.
+    /// </summary>
+    EnemyBehaviour[] behaviours;
+
+    bool performBehaviours = true;
+    /// <summary>
+    /// Whether or not the enemy should have its behaviours active. 
+    /// </summary>
+    public bool PerformBehaviours
+    {
+        get { return performBehaviours; }
+        set
+        {
+            performBehaviours = value;
+            GetComponent<Collider>().enabled = performBehaviours;
+        }
+    }
+
+    /// <summary>
+    /// The HP the enemy starts at
+    /// </summary>
+    public float baseHP;
+    /// <summary>
+    /// The enemy's health points. When they reach 0, FixedUpdate() will despawn the enemy
+    /// </summary>
+    float hp = 1;
+
     /// <summary>
     /// The speed the enemy will move at across the stage if they have a variance of 0
     /// </summary>
@@ -15,17 +47,28 @@ public class EnemyController : MonoBehaviour
     public float SpeedVariance = 1f;
 
     /// <summary>
+    /// Specifier of the enemy type. used to call the correct animation for each enemy.
+    /// </summary>
+    public string enemyType;
+
+    /// <summary>
+    /// Association of each status effect with its current duration
+    /// </summary>
+    Dictionary<Card.Status, float> statusDuration = new Dictionary<Card.Status, float>();
+
+    /// <summary>
     /// The tile the enemy started wallking from
     /// </summary>
-    TileController fromTile = null;
+    public TileController fromTile = null;
     /// <summary>
     /// The tile the enemy is walking to currently
     /// </summary>
-    TileController toTile = null;
+    public TileController toTile = null;
     /// <summary>
     /// The last tile that the enemy stopped at, and which it is travelling from. 
     /// Setting this publically automatically changes its destination tile if valid
     /// </summary>
+
     public TileController FromTile
     {
         set
@@ -46,10 +89,6 @@ public class EnemyController : MonoBehaviour
     /// </summary>
     float distance = 0f;
     /// <summary>
-    /// The enemy's health points. When they reach 0, FixedUpdate() will despawn the enemy
-    /// </summary>
-    float hp = 1;
-    /// <summary>
     /// When enemy is created, give it random additioanl speed so that enemies don''t all move the same exactly
     /// </summary>
     float randomSpeed;
@@ -58,12 +97,17 @@ public class EnemyController : MonoBehaviour
     /// <summary>
     /// Register a function to be called when this enemy is set to despawn from being destroyed
     /// </summary>
-    public void RegisterDespawnedCB(Action<EnemyController> cb){ cbDespawned += cb; }
+    public void RegisterDespawnedCB(Action<EnemyController> cb) { cbDespawned += cb; }
 
     /// <summary>
     /// Set to true when the enemy is hovered over which is then monitored in the next FixedUpdate()
     /// </summary>
     bool hovered = false;
+
+    /// <summary>
+    /// The current tower that the enemy is blocked from moving forward by and which it will attack.
+    /// </summary>
+    public TowerController currentTowerColliding;
 
     Action<EnemyController> cbHovered;
     /// <summary>
@@ -73,27 +117,77 @@ public class EnemyController : MonoBehaviour
 
     void OnEnable()
     {
-        hp = 1;
+        hp = baseHP;
         distance = 0f;
         cbDespawned = null;
-        randomSpeed = UnityEngine.Random.Range(0, SpeedVariance) + BaseSpeed;
+        randomSpeed = (UnityEngine.Random.Range(0, SpeedVariance) + BaseSpeed) * .01f;
+        hpBar.Maximum = baseHP;
+
+        //Walker running animation
+        if (this.enemyType == "Walker")
+            enemyModel.GetComponent<Animator>().Play("infantry_03_run");
+
+        //Wizard running animation
+        if (this.enemyType == "Wizard")
+            enemyModel.GetComponent<Animator>().Play("BattleWalkForward");
+
+        behaviours = GetComponents<EnemyBehaviour>();
+    }
+
+    void Initiate()
+    {
+        foreach (EnemyBehaviour behaviour in behaviours)
+        {
+            behaviour.OnInitiate();
+        }
     }
 
     void FixedUpdate()
     {
-        if (Vector2.Distance(toTile.FlatPosition(), this.FlatPosition()) < .02f)
+        if (toTile == null || fromTile == null)
         {
-            FromTile = toTile;
-            distance = 0f;
+            cbDespawned(this);
+        }
+
+        if (currentTowerColliding == null)
+        {
+            // move
+            if (Vector2.Distance(toTile.FlatPosition(), this.FlatPosition()) < .02f)
+            {
+                FromTile = toTile;
+                distance = 0f;
+            }
+
+            /*
+            // Ranged enemy detection range
+            // Moved this to the shoot projectile behaviour
+            if ((this.enemyType == "Wizard" | this.enemyType == "Paladin") && isProjectileUser() && enemyModel.GetComponent<ShootProjectile>().projectileTimer < 0)
+            {
+                DetectionRange();
+            }*/
+            distance += randomSpeed;
+
+            Vector2 flatPosition = Vector2.Lerp(fromTile.FlatPosition(), toTile.FlatPosition(), distance);
+            transform.position = new Vector3(flatPosition.x, 0, flatPosition.y);
+
+            this.RotateToFace(fromTile.Directions.to);
+            hpBar.transform.localPosition = (new Vector3(-.25f, 0, .25f)).Rotated(fromTile.Directions.to);
         }
         else
         {
-            distance += randomSpeed;
-                
-            Vector2 flatPosition = Vector2.Lerp(fromTile.FlatPosition(), toTile.FlatPosition(), distance);
-            transform.position = new Vector3(flatPosition.x, 0, flatPosition.y);
+            // attack tower
+            currentTowerColliding.DirectDamage(1f * Time.deltaTime);
         }
 
+        Card.Status[] activeStatuses = statusDuration.Keys.ToArray();
+        foreach(Card.Status status in activeStatuses)
+        {
+            Debug.Log(status);
+
+            statusDuration[status] -= Time.deltaTime;
+            if (statusDuration[status] < 0f)
+                statusDuration.Remove(status);
+        }
 
         if (hovered)
         {
@@ -105,9 +199,14 @@ public class EnemyController : MonoBehaviour
         }
         hovered = false;
 
-        if (hp < 0f)
+        if (hp <= 0f)
         {
             cbDespawned(this);
+        }
+        else
+        {
+            hpBar.Amount = hp;
+            hpBar.gameObject.SetActive(hp < baseHP);
         }
     }
 
@@ -117,7 +216,7 @@ public class EnemyController : MonoBehaviour
     public void Hover()
     {
         hovered = true;
-        if(cbHovered != null)
+        if (cbHovered != null)
             cbHovered(this);
     }
 
@@ -134,13 +233,68 @@ public class EnemyController : MonoBehaviour
     /// </summary>
     void projectileDamage(ProjectileController projectile)
     {
-        hp -= 2f;
-        projectile.HitEnemy();
+        hp -= projectile.GetDamage(this);
+        projectile.Hit();
+    }
+
+    void towerStartAttacking(TowerController tower)
+    {
+        currentTowerColliding = tower;
+        currentTowerColliding.RegisterDespawnedCB(towerStopAttacking);
+
+        //Walker attack animation
+        if (this.enemyType == "Walker")
+            enemyModel.GetComponent<Animator>().Play("infantry_04_attack_A");
+
+        //Wizard attack animation
+        if (this.enemyType == "Wizard")
+            enemyModel.GetComponent<Animator>().SetBool("Attacking", true);
+    }
+
+    void towerStopAttacking(TowerController tower)
+    {
+        if (tower == currentTowerColliding)
+        {
+            if (currentTowerColliding != null)
+            {
+                currentTowerColliding.UnregisterDespawnedCB(towerStopAttacking);
+                currentTowerColliding = null;
+            }
+
+            //Walker running animation
+            if (this.enemyType == "Walker")
+                enemyModel.GetComponent<Animator>().Play("infantry_03_run");
+
+            //Wizard running animation
+            if (this.enemyType == "Wizard")
+                enemyModel.GetComponent<Animator>().SetBool("Attacking", false);
+        }
+    }
+
+    /// <summary>
+    /// Add a new status to the list or continue its duration if its already present
+    /// </summary>
+    public void AddStatus(Card.Status status, float duration)
+    {
+        // if doesnt already have status or existing status has shorter duration
+        if (!statusDuration.ContainsKey(status) || statusDuration[status] < duration)
+            statusDuration[status] = duration;
     }
 
     public void OnTriggerEnter(Collider trigger)
     {
-        ProjectileController projectileHitBy = trigger.transform.parent.GetComponent<ProjectileController>();
-        projectileDamage(projectileHitBy);
+        ProjectileController projectileColliding = trigger.transform.parent.GetComponent<ProjectileController>();
+        if (projectileColliding != null && !projectileColliding.isEvil)
+            projectileDamage(projectileColliding);
+
+        TowerController towerColliding = trigger.GetComponent<TowerController>();
+        if (towerColliding != null)
+            towerStartAttacking(towerColliding);
+    }
+
+    public void OnTriggerExit(Collider trigger)
+    {
+        TowerController towerColliding = trigger.GetComponent<TowerController>();
+        towerStopAttacking(towerColliding);
     }
 }

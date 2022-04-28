@@ -170,7 +170,8 @@ public class TargetSelectionController : MonoBehaviour
         if (targetType != Card.TargetType.Tiles)
             return;
 
-        if (currentQuality == null || currentQuality.CheckQuality(tile, worldInfo, currentResolutionInfo))
+        // i know its bad
+        if ((currentQuality == null || currentQuality.CheckQuality(tile, worldInfo, currentResolutionInfo)) && (previewTower == null || !(Tile.TileType.Wall | Tile.TileType.Barrier).HasFlag(tile.Type)))
         {
             tileHovered = tile;
             AreaOfEffect previewArea = currentArea;
@@ -243,6 +244,7 @@ public class TargetSelectionController : MonoBehaviour
 
     public void OnSubmitTargets()
     {
+        Debug.Log(allowStop);
         if(allowStop)
             confirmSelection(true);
     }

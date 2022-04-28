@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: AOETower
   m_EditorClassIdentifier: 
   CardTitle: Thumper
-  ManaCosts: 0100000000000000000000000000000001000000
+  ManaCosts: 0000000000000000000000000000000000000000
+  canBuildWith: 1
   Type: 1
   TowerSubtypes: 2
   SpellSubtypes: 0

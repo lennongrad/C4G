@@ -27,6 +27,7 @@ public class ResolutionDisplayController : MonoBehaviour
         {
             card.gameObject.SetActive(true);
             card.transform.SetParent(this.transform);
+            card.transform.SetAsFirstSibling();
 
             card.horizontalEdge = RectTransform.Edge.Right;
             card.TargetX = 15;

@@ -26,6 +26,11 @@ public class Behaviour_AreaOfEffect : TowerBehaviour
     public int AnimationWait = 5;
 
     /// <summary>
+    /// Base amount of damage to do to enemies on hit
+    /// </summary>
+    public float baseDamage = 1f;
+
+    /// <summary>
     /// Amount of time units left until the tower attacks again
     /// </summary>
     int attackTimer;
@@ -71,14 +76,16 @@ public class Behaviour_AreaOfEffect : TowerBehaviour
         {
             List<EnemyController> tileEnemies = tile.GetPresentEnemies();
             foreach (EnemyController enemy in tileEnemies)
+            {
                 affectedEnemies.Add(enemy);
+            }
 
             tile.Ping(4);
         }
 
         foreach(EnemyController enemy in affectedEnemies)
         {
-            enemy.DirectDamage(5f);
+            enemy.DirectDamage(baseDamage);
         }
     }
 

@@ -2,15 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public class TowerController : MonoBehaviour
 {
-    public GameObject Cube;
+    public HPBarController hpBar;
 
     /// <summary>
-    /// The material of the tower's model by default. Must be stored in case it is changed to become transparent or otherwise
+    /// The name of the prefab asset for this tower
     /// </summary>
-    Material defaultMaterial;
+    public string Name;
+
+    /// <summary>
+    /// The card data of the card that created this tower.
+    /// </summary>
+    public CardData CardParent;
+
+    /// The amount of HP that the tower begins with by default
+    public float baseHP = 10;
+    float hp;
+
+    /// <summary>
+    /// Association of each status effect with its current duration
+    /// </summary>
+    Dictionary<Card.Status, float> statusDuration = new Dictionary<Card.Status, float>();
 
     /// <summary>
     /// The tile that the tower is sitting on
@@ -48,6 +63,7 @@ public class TowerController : MonoBehaviour
         set
         {
             performBehaviours = value;
+<<<<<<< HEAD
 
             // change towers transparency based on whether its enabled or not
             if (performBehaviours)
@@ -71,6 +87,9 @@ public class TowerController : MonoBehaviour
            
                 
             }
+=======
+            GetComponent<Collider>().enabled = performBehaviours;
+>>>>>>> main
         }
     }
 
@@ -83,17 +102,32 @@ public class TowerController : MonoBehaviour
     /// <summary>
     /// Register a method to be called when the tower is hovered over by the user's mouse cursor
     /// </summary>
-    public void RegisterHoveredCB(Action<TowerController> cb) { cbHovered += cb; }
+    public void RegisterHoveredCB(Action<TowerController> cb) { cbHovered -= cb; cbHovered += cb; }
+
+    Action<TowerController> cbDespawned;
+    /// <summary>
+    /// Register a function to be called when this tower is set to despawn from being destroyed
+    /// </summary>
+    public void RegisterDespawnedCB(Action<TowerController> cb) { cbDespawned -= cb; cbDespawned += cb; }
+    /// <summary>
+    /// Unregister a function to be called when this tower is set to despawn from being destroyed
+    /// </summary>
+    public void UnregisterDespawnedCB(Action<TowerController> cb) { cbDespawned -= cb; }
 
     void OnEnable()
     {
+<<<<<<< HEAD
         defaultMaterial = Cube.GetComponent<MeshRenderer>().sharedMaterial;
+=======
+>>>>>>> main
         behaviours = GetComponents<TowerBehaviour>();
+        hp = baseHP;
+        hpBar.Maximum = baseHP;
     }
 
     public void Initiate()
     {
-        foreach(TowerBehaviour behaviour in behaviours)
+        foreach (TowerBehaviour behaviour in behaviours)
         {
             behaviour.OnInitiate();
         }
@@ -101,7 +135,13 @@ public class TowerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(ParentTile != null)
+        hpBar.transform.localPosition = (new Vector3(-.25f, 0, .25f)).Rotated(facingDirection);
+        //switch (FacingDirection)
+        //{
+        //    case Tile.TileDirection.Up: hpBar.localPosition = new Vector3(); break;
+        //}
+
+        if (ParentTile != null)
         {
             transform.position = ParentTile.transform.position + new Vector3(0, ParentTile.Height, 0);
 
@@ -111,6 +151,27 @@ public class TowerController : MonoBehaviour
                 transform.localScale = new Vector3(1, 1, 1);
         }
         hovered = false;
+
+        Card.Status[] activeStatuses = statusDuration.Keys.ToArray();
+        foreach (Card.Status status in activeStatuses)
+        {
+            Debug.Log(status);
+
+            statusDuration[status] -= Time.deltaTime;
+            if (statusDuration[status] < 0f)
+                statusDuration.Remove(status);
+        }
+
+        if (hp <= 0f)
+        {
+            transform.position = new Vector3(10000, 10000, 10000);
+            cbDespawned(this);
+        }
+        else
+        {
+            hpBar.Amount = hp;
+            hpBar.gameObject.SetActive(hp < baseHP);
+        }
     }
 
     /// <summary>
@@ -119,12 +180,50 @@ public class TowerController : MonoBehaviour
     public void Hover()
     {
         hovered = true;
-        if(cbHovered != null)
+        if (cbHovered != null)
             cbHovered(this);
     }
 
+<<<<<<< HEAD
     public void DestroySelf()
     {
         Destroy(gameObject);
     }
 }
+=======
+    /// <summary>
+    /// Called when tower takes damage from usually a projectile
+    /// </summary>
+    /// <param name="damage"></param>
+    public void DirectDamage(float damage)
+    {
+        hp -= damage;
+    }
+
+    /// <summary>
+    /// Call when the tower collides with a projectile.
+    /// </summary>
+    void projectileDamage(ProjectileController projectile)
+    {
+        DirectDamage(projectile.GetDamage(this));
+        projectile.Hit();
+    }
+
+    /// <summary>
+    /// Add a new status to the list or continue its duration if its already present
+    /// </summary>
+    public void AddStatus(Card.Status status, float duration)
+    {
+        // if doesnt already have status or existing status has shorter duration
+        if (!statusDuration.ContainsKey(status) || statusDuration[status] < duration)
+            statusDuration[status] = duration;
+    }
+
+    public void OnTriggerEnter(Collider trigger)
+    {
+        ProjectileController projectileColliding = trigger.transform.parent.GetComponent<ProjectileController>();
+        if (projectileColliding != null && projectileColliding.isEvil)
+            projectileDamage(projectileColliding);
+    }
+}
+>>>>>>> main
