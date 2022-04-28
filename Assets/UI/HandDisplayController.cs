@@ -8,16 +8,21 @@ using System;
 public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public CardGameController cardGameController;
+    public CardResolutionController cardResolutionController;
     public PlayerResourceManager playerResourceManager;
 
     public float HorizontalCardDisplacement;
     public float VerticalCardDisplacement;
     public float RotationCardDisplacement;
+    public float ResolvingVerticalDisplacement;
     public float HoveredCardHorizontalDisplacement;
     public float NonHoveredCardHorizontalDisplacement;
     public float HoveredCardVerticalDisplacement;
     public float HoveredCardHorizontalScale = 1f;
     public float HoveredCardVerticalScale = 1f;
+
+    public Color UnplayableCardColor;
+    public Color PlayableCardColor;
 
     public GameObject cardHolder;
 
@@ -37,8 +42,9 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
     void Awake()
     {
         cardHolder = transform.GetChild(0).gameObject;
-        HandZone.RegisterCardsAdded(OnCardsAdded);
-        HandZone.RegisterCardsRemoved(OnCardsRemoved);
+        HandZone.RegisterCardsAdded(onCardsAdded);
+        HandZone.RegisterCardsRemoved(onCardsRemoved);
+        cardResolutionController.RegisterResolutionFinished(onResolutionFinished);
     }
 
     int debugTimer = 0;
@@ -86,6 +92,8 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
 
         // set target y position, with cards in the middle being higher
         card.TargetY = VerticalCardDisplacement * cardTransform.rect.width * yPositions[(int)Math.Abs((float)index - ((float)count - 1f) / 2f)];
+        if (cardResolutionController.IsBusy)
+            card.TargetY += ResolvingVerticalDisplacement;
 
         // set target rotation angle
         card.TargetRotation = RotationCardDisplacement * -((float)index - (float)(count - 1) / 2f);
@@ -119,11 +127,27 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
                 card.TargetX -= NonHoveredCardHorizontalDisplacement;
             }
         }
+        else
+        {
+            card.transform.SetSiblingIndex(index);
+        }
+
+        if (playerResourceManager.CanAfford(card.Data.ManaCostDictionary))
+        {
+            card.TargetGlowAlpha = 1f;
+            card.TargetBorderColor = PlayableCardColor;
+        }
+        else
+        {
+            card.TargetGlowAlpha = 0f;
+            card.TargetBorderColor = UnplayableCardColor;
+        }
     }
 
     void onCardHover(CardController cardController)
     {
         lastHovered = cardController;
+        cardController.transform.SetAsLastSibling();
         CardVisualUpdate();
     }
 
@@ -139,17 +163,7 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
             CardVisualUpdate();
     }
 
-    void OnCardsRemoved(List<CardController> removedCards)
-    {
-        foreach (CardController card in removedCards)
-        {
-            card.UnregisterHovered(onCardHover);
-            card.UnregisterUnhovered(onCardUnhover);
-            card.UnregisterPlayed(onCardPlayed);
-        }
-    }
-
-    void OnCardsAdded(List<CardController> addedCards)
+    void onCardsAdded(List<CardController> addedCards)
     {
         foreach(CardController card in addedCards)
         {
@@ -161,6 +175,21 @@ public class HandDisplayController : MonoBehaviour, IPointerEnterHandler, IPoint
             card.RegisterPlayed(onCardPlayed);
         }
 
+        CardVisualUpdate();
+    }
+
+    void onCardsRemoved(List<CardController> removedCards)
+    {
+        foreach (CardController card in removedCards)
+        {
+            card.UnregisterHovered(onCardHover);
+            card.UnregisterUnhovered(onCardUnhover);
+            card.UnregisterPlayed(onCardPlayed);
+        }
+    }
+
+    void onResolutionFinished(CardController resolvedCard)
+    {
         CardVisualUpdate();
     }
 

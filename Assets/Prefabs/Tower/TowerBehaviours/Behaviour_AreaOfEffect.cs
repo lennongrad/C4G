@@ -81,4 +81,9 @@ public class Behaviour_AreaOfEffect : TowerBehaviour
             enemy.DirectDamage(5f);
         }
     }
+
+    public override string GetDescription()
+    {
+        return "AOE";
+    }
 }

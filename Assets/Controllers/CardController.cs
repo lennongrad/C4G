@@ -2,33 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using System;
 
 /// <summary>
 /// The UI element representing a card in the user's hand or otherwise viewable by the user
 /// </summary>
-public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class CardController : MonoBehaviour
 {
-    public CostIcon CostIconPrefab;
+    public VisualCardController visualCard;
 
-    public Text CardName;
-    public Text CardDescription;
-    public GameObject CardCost;
-    public WorldInfo worldInfo;
-
-    CardData data;
-    /// <summary>
-    /// The card that is being visually represented
-    /// </summary>
     public CardData Data
     {
-        get { return data; }
+        get
+        {
+            return visualCard.Data;
+        }
         set
         {
-            data = value;
-            visualUpdate();
+            visualCard.Data = value;
         }
+    }
+
+    public float Width
+    {
+        get { return visualCard.Width; }
+    }
+    public float Height
+    {
+        get { return visualCard.Height; }
     }
 
     /// <summary>
@@ -72,17 +73,20 @@ public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     float targetScaleYSpeed = 0;
 
     /// <summary>
-    /// The width (before scaling) of the card
+    /// The alpha for the glowing border around the card
     /// </summary>
-    public float Width = 112f;
+    public float TargetGlowAlpha {
+        get { return visualCard.TargetGlowAlpha;  }
+        set { visualCard.TargetGlowAlpha = value; }
+    }
+
     /// <summary>
-    /// The height (before scaling) of the card
+    /// The colour of the card's border
     /// </summary>
-    public float Height {
-        get
-        {
-            return Width * 1.45f;
-        }
+    public Color TargetBorderColor
+    {
+        get { return visualCard.TargetBorderColor; }
+        set { visualCard.TargetBorderColor = value;  }
     }
     
     /// <summary>
@@ -99,7 +103,7 @@ public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     Action<CardController> cbUnhovered;
     /// <summary>
-    /// Register a function to be called when the useer stops hovering over this card
+    /// Register a function to be called when the user stops hovering over this card
     /// </summary>
     public void RegisterUnhovered(Action<CardController> cb) { cbUnhovered -= cb; cbUnhovered += cb; }
     public void UnregisterUnhovered(Action<CardController> cb) { cbUnhovered -= cb; }
@@ -111,78 +115,31 @@ public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public void RegisterPlayed(Action<CardController> cb) { cbPlayed -= cb; cbPlayed += cb; }
     public void UnregisterPlayed(Action<CardController> cb) { cbPlayed -= cb; }
 
-    /// <summary>
-    /// Updates the card to match the model's data
-    /// </summary>
-    void visualUpdate()
+    void Awake()
     {
-        CardName.text = data.CardTitle;
-        CardDescription.text = data.GetDescription(worldInfo);
-
-        CardCost.transform.Clear();
-
-        int addedIconsTotal = 0;
-        foreach (KeyValuePair<Mana.ManaType, int> entry in data.ManaCostDictionary)
-        {
-            if(entry.Value >= 1)
-                GetComponent<Image>().color = CardData.GetColorOfManaType(entry.Key).AdjustedBrightness(.8f);
-
-            for (int i = 0; i < entry.Value; i++)
-            {
-                CostIcon newIcon = Instantiate(CostIconPrefab, CardCost.transform.position, Quaternion.identity);
-                newIcon.Type = entry.Key;
-                newIcon.transform.SetParent(CardCost.transform);
-                newIcon.transform.localPosition = new Vector3(-newIcon.GetComponent<RectTransform>().rect.width * (data.ManaValue - addedIconsTotal - 1), 0, 0);
-                newIcon.transform.eulerAngles = currentEulerAngles;
-
-                addedIconsTotal++;
-            }
-        }
-
-        /*
-        int i = 0;
-        int costsAdded;
-        foreach (Mana.ManaType type in System.Enum.GetValues(typeof(Mana.ManaType)))
-        {
-            for (int e = 0; e < data.ManaCosts[i]; e++)
-            {
-                CostIcon newIcon = Instantiate(CostIconPrefab, CardCost.transform.position, Quaternion.identity);
-                newIcon.Type = type;
-                newIcon.transform.SetParent(CardCost.transform);
-                newIcon.transform.localPosition = new Vector3(-newIcon.GetComponent<RectTransform>().rect.width * i, 0, 0);
-                newIcon.transform.eulerAngles = currentEulerAngles;
-            }
-            i++;
-        }*/
+        visualCard.RegisterHovered(OnHover);
+        visualCard.RegisterUnhovered(OnUnhover);
+        visualCard.RegisterClicked(OnClick);
     }
 
-    // we continuously call visual update every so often
-    int debugTimer = 0;
     void FixedUpdate()
     {
         if (doubleClickedTimer > 0)
             doubleClickedTimer--;
 
-        debugTimer -= 1;
-        if(debugTimer < 0)
-        {
-            debugTimer += 200;
-            visualUpdate();
-        }    
-
         RectTransform cardTransform = GetComponent<RectTransform>();
 
         // set horizontal position with damping
         if(horizontalEdge == RectTransform.Edge.Left)
-            cardTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, Mathf.SmoothDamp(cardTransform.offsetMin.x, TargetX, ref targetXSpeed, .15f), Width);
+            cardTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, Mathf.SmoothDamp(cardTransform.offsetMin.x, TargetX, ref targetXSpeed, .15f), visualCard.Width);
         else
-            cardTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, Mathf.SmoothDamp(-cardTransform.offsetMax.x, TargetX, ref targetXSpeed, .15f), Width);
+            cardTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, Mathf.SmoothDamp(-cardTransform.offsetMax.x, TargetX, ref targetXSpeed, .15f), visualCard.Width);
 
         // set vertical position with damping
         if (verticalEdge == RectTransform.Edge.Bottom)
-            cardTransform.SetInsetAndSizeFromParentEdge(verticalEdge, Mathf.SmoothDamp(cardTransform.offsetMin.y, TargetY, ref targetYSpeed, .15f), Height);
+            cardTransform.SetInsetAndSizeFromParentEdge(verticalEdge, Mathf.SmoothDamp(cardTransform.offsetMin.y, TargetY, ref targetYSpeed, .15f), visualCard.Height);
         else
-            cardTransform.SetInsetAndSizeFromParentEdge(verticalEdge, Mathf.SmoothDamp(-cardTransform.offsetMax.y, TargetY, ref targetYSpeed, .15f), Height);
+            cardTransform.SetInsetAndSizeFromParentEdge(verticalEdge, Mathf.SmoothDamp(-cardTransform.offsetMax.y, TargetY, ref targetYSpeed, .15f), visualCard.Height);
 
         // set rotation with damping
         currentEulerAngles = new Vector3(cardTransform.eulerAngles.x, cardTransform.eulerAngles.y, Mathf.SmoothDamp(currentEulerAngles.z, TargetRotation, ref targetRotationSpeed, .15f));
@@ -190,22 +147,22 @@ public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
         // set scales with damping
         if(TargetScaleX != 0 && TargetScaleY != 0)
-            cardTransform.localScale = new Vector3(Mathf.SmoothDamp(cardTransform.localScale.x, TargetScaleX, ref targetScaleXSpeed, .15f), Mathf.SmoothDamp(cardTransform.localScale.y, TargetScaleY, ref targetScaleYSpeed, .15f), 1);
+            cardTransform.SetGlobalScale(new Vector3(Mathf.SmoothDamp(cardTransform.lossyScale.x, TargetScaleX, ref targetScaleXSpeed, .15f), Mathf.SmoothDamp(cardTransform.lossyScale.y, TargetScaleY, ref targetScaleYSpeed, .15f), 1));
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
+    public void OnHover(VisualCardController ownVisualCard)
     {
-        if(cbHovered != null)
+        if (cbHovered != null)
             cbHovered(this);
     }
 
-    public void OnPointerExit(PointerEventData eventData)
+    public void OnUnhover(VisualCardController ownVisualCard)
     {
-        if(cbUnhovered != null)
+        if (cbUnhovered != null)
             cbUnhovered(this);
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+    public void OnClick(VisualCardController ownVisualCard)
     {
         if(doubleClickedTimer > 0)
         {

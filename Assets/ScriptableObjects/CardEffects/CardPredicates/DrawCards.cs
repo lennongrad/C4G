@@ -10,12 +10,14 @@ public class DrawCards : CardEffectPredicate
 
     public int cardAmount = 1;
 
+#if UNITY_EDITOR
     public override void InputGUI()
     {
         cardAmount = EditorGUILayout.IntField("# of cards: ", cardAmount);
         if(cardAmount < 0)
             cardAmount = 0;
     }
+#endif
 
     public override void PerformPredicate(TargetInfo targetInfo, WorldInfo worldInfo, ResolutionInfo resolutionInfo)
     {

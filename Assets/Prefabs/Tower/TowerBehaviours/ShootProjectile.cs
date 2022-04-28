@@ -87,4 +87,9 @@ public class ShootProjectile : TowerBehaviour
         ProjectileController projectileController = projectileObject.GetComponent<ProjectileController>();
         projectileController.SetRotation(transform.localEulerAngles.y + rotation);
     }
+
+    public override string GetDescription()
+    {
+        return "Projectile";
+    }
 }

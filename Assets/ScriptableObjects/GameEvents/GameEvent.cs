@@ -9,7 +9,7 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/GameEvent", order = 1), System.Serializable]
 public class GameEvent : ScriptableObject
 {
-    private UnityEvent internalEvent;
+    private UnityEvent internalEvent = new UnityEvent();
     public void Raise(){ internalEvent.Invoke(); }
     public void RegisterListener(UnityAction listener){ internalEvent.AddListener(listener); }
     public void UnregisterListener(UnityAction listener){ internalEvent.RemoveListener(listener); }

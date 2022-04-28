@@ -24,6 +24,11 @@ abstract public class TowerBehaviour : MonoBehaviour
     protected abstract void Initiate();
 
     /// <summary>
+    /// Used for card description
+    /// </summary>
+    public abstract string GetDescription();
+
+    /// <summary>
     /// The main TowerController script of the tower this is attached to
     /// </summary>
     protected TowerController mainController;

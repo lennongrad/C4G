@@ -6,10 +6,11 @@ using UnityEditor;
 [System.Serializable]
 public class Condition_S : CardEffectCondition
 {
-
+#if UNITY_EDITOR
     public override void InputGUI()
     {
     }
+#endif
 
     public override bool CheckCondition(WorldInfo worldInfo, ResolutionInfo resolutionInfo)
     {

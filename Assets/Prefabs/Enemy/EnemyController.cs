@@ -6,6 +6,15 @@ using System;
 public class EnemyController : MonoBehaviour
 {
     /// <summary>
+    /// The speed the enemy will move at across the stage if they have a variance of 0
+    /// </summary>
+    public float BaseSpeed = 1f;
+    /// <summary>
+    /// The the maximum additional speed an enemy can spawn with randomly
+    /// </summary>
+    public float SpeedVariance = 1f;
+
+    /// <summary>
     /// The tile the enemy started wallking from
     /// </summary>
     TileController fromTile = null;
@@ -67,7 +76,7 @@ public class EnemyController : MonoBehaviour
         hp = 1;
         distance = 0f;
         cbDespawned = null;
-        randomSpeed = UnityEngine.Random.Range(0, 0.01f);
+        randomSpeed = UnityEngine.Random.Range(0, SpeedVariance) + BaseSpeed;
     }
 
     void FixedUpdate()
@@ -79,7 +88,7 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            distance += .02f + randomSpeed;
+            distance += randomSpeed;
                 
             Vector2 flatPosition = Vector2.Lerp(fromTile.FlatPosition(), toTile.FlatPosition(), distance);
             transform.position = new Vector3(flatPosition.x, 0, flatPosition.y);

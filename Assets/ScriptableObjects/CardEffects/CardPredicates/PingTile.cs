@@ -10,10 +10,12 @@ public class PingTile : CardEffectPredicate
 
     public int length = 60;
 
+#if UNITY_EDITOR
     public override void InputGUI()
     {
         length = EditorGUILayout.IntField("Ping Time: ", length);
     }
+#endif
 
     public override void PerformPredicate(TargetInfo targetInfo, WorldInfo worldInfo, ResolutionInfo resolutionInfo)
     {

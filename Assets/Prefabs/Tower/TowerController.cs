@@ -20,7 +20,7 @@ public class TowerController : MonoBehaviour
     Tile.TileDirection facingDirection = Tile.TileDirection.None;
     /// <summary>
     /// The direction the tower is facing, usually used for the tower's attacks and graphics;
-    /// Sstting it publically automatically changed its graphics
+    /// Setting it publically automatically changed its graphics
     /// </summary>
     public Tile.TileDirection FacingDirection
     {
@@ -28,7 +28,7 @@ public class TowerController : MonoBehaviour
         set
         {
             facingDirection = value;
-            this.RotateToFace(value);
+            this.RotateToFace(value);   
         }
     }
 
@@ -51,11 +51,11 @@ public class TowerController : MonoBehaviour
 
             // change towers transparency based on whether its enabled or not
             if (performBehaviours)
-                Cube.GetComponent<MeshRenderer>().material = defaultMaterial;
+                Cube.GetComponent<MeshRenderer>().sharedMaterial = defaultMaterial;
             else
             {
                 // disabled so make transparenty
-                Material material = Cube.GetComponent<MeshRenderer>().material;
+                Material material = Cube.GetComponent<MeshRenderer>().sharedMaterial;
 
                 material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
                 material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
@@ -68,6 +68,8 @@ public class TowerController : MonoBehaviour
                 material.color = new Color(material.color.r, material.color.g, material.color.b, 0.1f);
 
                 Cube.GetComponent<MeshRenderer>().material = material;
+           
+                
             }
         }
     }
@@ -85,7 +87,7 @@ public class TowerController : MonoBehaviour
 
     void OnEnable()
     {
-        defaultMaterial = Cube.GetComponent<MeshRenderer>().material;
+        defaultMaterial = Cube.GetComponent<MeshRenderer>().sharedMaterial;
         behaviours = GetComponents<TowerBehaviour>();
     }
 
@@ -119,5 +121,10 @@ public class TowerController : MonoBehaviour
         hovered = true;
         if(cbHovered != null)
             cbHovered(this);
+    }
+
+    public void DestroySelf()
+    {
+        Destroy(gameObject);
     }
 }

@@ -303,4 +303,32 @@ public static class ExtensionMethods
         }
         return newText.ToString();
     }
+
+    public static Color WithAlpha(this Color color, float alpha)
+    {
+        return new Color(color.r, color.g, color.b, alpha);
+    }
+
+    public static Color SmoothDamp(this Color baseColor, Color targetColor, ref float speed, float acceleration = .15f)
+    {
+        Color color = baseColor;
+
+        float newSpeedR = speed;
+        color.r = Mathf.SmoothDamp(color.r, targetColor.r, ref newSpeedR, acceleration);
+        float newSpeedG = speed;
+        color.g = Mathf.SmoothDamp(color.g, targetColor.g, ref newSpeedG, acceleration);
+        float newSpeedB = speed;
+        color.b = Mathf.SmoothDamp(color.b, targetColor.b, ref newSpeedB, acceleration);
+        float newSpeedA = speed;
+        color.a = Mathf.SmoothDamp(color.a, targetColor.a, ref newSpeedA, acceleration);
+
+        speed = (newSpeedR + newSpeedG + newSpeedB + newSpeedA) / 4f;
+        return color;
+    }
+
+    public static void SetGlobalScale(this Transform transform, Vector3 globalScale)
+    {
+        transform.localScale = Vector3.one;
+        transform.localScale = new Vector3(globalScale.x / transform.lossyScale.x, globalScale.y / transform.lossyScale.y, globalScale.z / transform.lossyScale.z);
+    }
 }

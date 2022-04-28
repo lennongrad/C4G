@@ -33,4 +33,9 @@ public class ProduceMana : TowerBehaviour
         if(performBehaviour && MainController.PerformBehaviours)
             playerResourceManager.AddMana(manaType, 1);
     }
+
+    public override string GetDescription()
+    {
+        return "Mana";
+    }
 }

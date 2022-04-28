@@ -10,10 +10,12 @@ public class Tiles_MatchesType : CardEffectQuality
 
     public Tile.TileType matchingType;
 
+#if UNITY_EDITOR
     public override void InputGUI()
     {
         matchingType = (Tile.TileType)EditorGUILayout.EnumFlagsField("Tile Type", matchingType);
     }
+#endif
 
     public override bool CheckQuality(TileController tileController, WorldInfo worldInfo, ResolutionInfo resolutionInfo)
     {

@@ -93,9 +93,10 @@ public class CardZone : ScriptableObject
         if (cards.Contains(card))
             return;
 
+        cards.Add(card);
+
         if (cbCardsAdded != null)
             cbCardsAdded(card.IndividualList());
-        cards.Add(card);
     }
 
     public bool Remove(CardController card)
@@ -116,6 +117,37 @@ public class CardZone : ScriptableObject
     {
         CardController removedCard = cards[0];
         cards.RemoveAt(0);
+
+        if (cbCardsRemoved != null)
+            cbCardsRemoved(removedCard.IndividualList());
+        return removedCard;
+    }
+
+    public CardController PopRight()
+    {
+        int rightmost = Count - 1;
+        if (rightmost < 0)
+        {
+            rightmost = 0;
+        }
+        CardController removedCard = cards[rightmost];
+        cards.RemoveAt(rightmost);
+
+        if (cbCardsRemoved != null)
+            cbCardsRemoved(removedCard.IndividualList());
+        return removedCard;
+    }
+
+    public CardController GetCard(int value)
+    {
+        CardController searchedCard = cards[value];
+        return searchedCard;
+    }
+
+    public CardController PopSpecific(int value)
+    {
+        CardController removedCard = cards[value];
+        cards.RemoveAt(value);
 
         if (cbCardsRemoved != null)
             cbCardsRemoved(removedCard.IndividualList());
