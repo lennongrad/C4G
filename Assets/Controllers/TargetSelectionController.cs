@@ -61,7 +61,7 @@ public class TargetSelectionController : MonoBehaviour
     /// The direction that the user has input for the preview tower to face,
     /// also used when the actual tower is placed downo
     /// </summary>
-    Tile.TileDirection previewDirection = Tile.TileDirection.Left;
+    Tile.TileDirection previewDirection = Tile.TileDirection.Up;
 
     /// <summary>
     /// Whether selection is enabled; is disabled while hovering other UI elements

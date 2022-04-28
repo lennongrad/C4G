@@ -119,6 +119,91 @@ public class CardGameController : MonoBehaviour
         }
     }
 
+    public void DrawYardTowers(int numberOfCards = 1)
+    {
+        for (int i = 0; i < numberOfCards; i++)
+        {
+            if (!AtMaximumHandSize())
+            {
+                // if our deck is still empty, dont bother drawing
+                if (DiscardZone.Count > 0)
+                {
+                    for (int j = DiscardZone.Count - 1; j >= 0; j--) {
+                        if (DiscardZone.GetCard(j).Data.Type == Card.CardType.Tower)
+                        {
+                            HandZone.Add(DiscardZone.PopSpecific(j));
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void DrawYardSpells(int numberOfCards = 1)
+    {
+        for (int i = 0; i < numberOfCards; i++)
+        {
+            if (!AtMaximumHandSize())
+            {
+                // if our deck is still empty, dont bother drawing
+                if (DiscardZone.Count > 0)
+                {
+                    for (int j = DiscardZone.Count - 1; j >= 0; j--)
+                    {
+                        if (DiscardZone.GetCard(j).Data.Type == Card.CardType.Spell || DiscardZone.GetCard(j).Data.Type == Card.CardType.Skill)
+                        {
+                            HandZone.Add(DiscardZone.PopSpecific(j));
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void PlayYardTower()
+    {
+        // if our deck is still empty, dont bother drawing
+        if (DiscardZone.Count > 0)
+        {
+            for (int j = DiscardZone.Count - 1; j >= 0; j--)
+            {
+                if (DiscardZone.GetCard(j).Data.Type == Card.CardType.Tower)
+                {
+                    Debug.Log("YUGE");
+                    cardResolutionController.cheatCard(DiscardZone.PopSpecific(j));
+                    break;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Discard one or more cards from their hand to discard
+    /// </summary>
+    public void DiscardCard(int numberOfCards = 1)
+    {
+        for (int i = 0; i < numberOfCards; i++)
+        {
+            if (HandZone.Count > 0)
+            {
+                DiscardZone.Add(HandZone.Pop());
+            }
+        }
+    }
+
+    public void DiscardRight(int numberOfCards = 1)
+    {
+        for (int i = 0; i < numberOfCards; i++)
+        {
+            if (HandZone.Count > 0)
+            {
+                DiscardZone.Add(HandZone.PopRight());
+            }
+        }
+    }
+
     /// <summary>
     /// When player tries to play a card from their hand
     /// </summary>
@@ -126,7 +211,14 @@ public class CardGameController : MonoBehaviour
     {
         if (!cardResolutionController.IsBusy && playerResourceManager.CanAfford(cardController.Data.ManaCostDictionary))
         {
-            if (HandZone.Remove(cardController))
+            if (cardController == HandZone.GetCard(0))
+            {
+                HandZone.Remove(cardController);
+                playerResourceManager.PayCost(cardController.Data.ManaCostDictionary);
+                cardResolutionController.PlayLeft(cardController);
+                return true;
+            }
+            else if (HandZone.Remove(cardController))
             {
                 playerResourceManager.PayCost(cardController.Data.ManaCostDictionary);
                 cardResolutionController.PlayCard(cardController);

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Linq;
 
+[CreateAssetMenu(fileName = "CardData", menuName = "testing", order = 1)]
 [System.Serializable]
 public class CardData : ScriptableObject
 {
@@ -11,6 +12,7 @@ public class CardData : ScriptableObject
     //public List<Mana.ManaType> ManaCost = new List<Mana.ManaType>();
     public int[] ManaCosts = { 0, 0, 0, 0, 0 };
     public bool canBuildWith = true;
+    public bool hasLeftBonus = true;
 
     public Card.CardType Type;
     public Card.TowerSubtype TowerSubtypes;
@@ -18,7 +20,9 @@ public class CardData : ScriptableObject
     public Card.SkillSubtype SkillSubtypes;
 
     public List<CardEffect> CardEffects = new List<CardEffect>();
+    public List<CardEffect> CardEffectsLeft = new List<CardEffect>();
     public GameObject TowerPrefab;
+    public GameObject LeftTowerPrefab;
 
     static public Color GetColorOfManaType(Mana.ManaType type)
     {
@@ -126,6 +130,11 @@ public class CardData : ScriptableObject
             }
         }
 
+        if (hasLeftBonus) 
+        {
+            resultString += "\nHas bonus when leftmost card.";
+        }
+
 
         return resultString;
     }
@@ -190,6 +199,7 @@ public class CardData : ScriptableObject
         EditorGUILayout.EndHorizontal();
 
         canBuildWith = EditorGUILayout.Toggle("Can start in deck:", canBuildWith);
+        hasLeftBonus = EditorGUILayout.Toggle("Has a left bonus:", hasLeftBonus);
 
         EditorGUILayout.EndFoldoutHeaderGroup();
         EditorGUILayout.Space(7);
@@ -210,6 +220,11 @@ public class CardData : ScriptableObject
 
         GUI.backgroundColor = Color.grey;
         TowerPrefab = (GameObject)EditorGUILayout.ObjectField("Tower Prefab", TowerPrefab, typeof(GameObject), false);
+
+        if (hasLeftBonus == true) {
+            GUI.backgroundColor = Color.grey;
+            LeftTowerPrefab = (GameObject)EditorGUILayout.ObjectField("Left Tower Prefab", LeftTowerPrefab, typeof(GameObject), false);
+        }
 
         EditorGUILayout.EndFoldoutHeaderGroup();
     }
@@ -240,6 +255,31 @@ public class CardData : ScriptableObject
             EditorGUILayout.LabelField("Effect " + i, EditorStyles.boldLabel);
             CardEffects[i].OnInputGUI();
             EditorGUILayout.Space(5);
+        }
+
+        EditorGUILayout.EndFoldoutHeaderGroup();
+
+        if (hasLeftBonus == true) {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.BeginFoldoutHeaderGroup(true, "Left Spell/Skill Configuration");
+            GUI.backgroundColor = Color.grey;
+            if (GUILayout.Button("Add Effect", EditorStyles.miniButtonLeft))
+                CardEffectsLeft.Add(new CardEffect());
+
+            if (CardEffectsLeft.Count == 0)
+                GUI.backgroundColor = Color.white;
+            else
+                GUI.backgroundColor = Color.grey;
+            if (GUILayout.Button("Remove Effect", EditorStyles.miniButtonRight) && CardEffectsLeft.Count > 0)
+                CardEffectsLeft.RemoveAt(CardEffectsLeft.Count - 1);
+            EditorGUILayout.EndHorizontal();
+
+            for (int i = 0; i < CardEffectsLeft.Count; i++)
+            {
+                EditorGUILayout.LabelField("Effect " + i, EditorStyles.boldLabel);
+                CardEffectsLeft[i].OnInputGUI();
+                EditorGUILayout.Space(5);
+            }
         }
 
         EditorGUILayout.EndFoldoutHeaderGroup();
