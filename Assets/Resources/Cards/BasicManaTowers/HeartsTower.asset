@@ -14,11 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CardTitle: Hearts Tower
   ManaCosts: 0200000000000000000000000000000000000000
+  canBuildWith: 1
+  hasLeftBonus: 0
   Type: 1
   TowerSubtypes: 1
   SpellSubtypes: 0
   SkillSubtypes: 0
   CardEffects: []
   TowerPrefab: {fileID: 1820236534691553018, guid: 93787d66688b9fe41be6330bd0880b1a, type: 3}
+  LeftTowerPrefab: {fileID: 0}
   references:
     version: 1

@@ -55,6 +55,8 @@ public class CardResolutionController : MonoBehaviour
     /// </summary>
     ResolutionInfo resolutionInfo;
 
+    public bool isLeft;
+
     /// <summary>
     /// Public access to tell whether a card is currently resolving
     /// </summary>
@@ -78,8 +80,28 @@ public class CardResolutionController : MonoBehaviour
     /// </summary>
     public bool PlayCard(CardController cardController)
     {
-        if(!IsBusy)
+        if (!IsBusy)
         {
+            isLeft = false;
+            if (cbCardAdded != null)
+                cbCardAdded(cardController);
+            setActiveCard(cardController);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Request for the leftmost card to be played.
+    /// </summary>
+    public bool PlayLeft(CardController cardController)
+    {
+        if (!IsBusy)
+        {
+            isLeft = true;
             if (cbCardAdded != null)
                 cbCardAdded(cardController);
             setActiveCard(cardController);
@@ -104,6 +126,12 @@ public class CardResolutionController : MonoBehaviour
         {
             // resolving a tower is pretty different so use different function
             resolveTower();
+            return;
+        }
+
+        if (activeCard.Data.hasLeftBonus && isLeft)
+        {
+            attemptResolutionLeft();
             return;
         }
 
@@ -160,20 +188,97 @@ public class CardResolutionController : MonoBehaviour
         attemptResolution();
     }
 
+    private void attemptResolutionLeft()
+    {
+        Debug.Log("cardPlayedLeft");
+
+        if (activeEffectIndex >= activeCard.Data.CardEffectsLeft.Count)
+        {
+            // have gone past last effect, so end resolution
+            removeActiveCard();
+            return;
+        }
+
+        // since we know the active effect is valid now, just get it by index for the rest of the method
+        CardEffect activeEffect = activeCard.Data.CardEffectsLeft[activeEffectIndex];
+
+        if (!checkedCondition)
+        {
+            Debug.Log("bingus");
+            // just got to this effect, so check if it is true
+            if (activeEffect.condition.CheckCondition(worldInfo, resolutionInfo))
+            {
+                Debug.Log("poggers");
+                // is true, so skip this later
+                checkedCondition = true;
+                // set up new target info
+                currentTargetInfo = new TargetInfo();
+            }
+            else
+            {
+                Debug.Log("sadge");
+                //not true, so skip this entire effect
+                activeEffectIndex += 1;
+                attemptResolution();
+                return;
+            }
+        }
+
+        int targetCount = currentTargetInfo.GetTargetCount(activeEffect.predicate.TargetType);
+        if (targetCount < activeEffect.maxTargets && !currentTargetInfo.StoppedBeforeMax)
+        {
+            // not enough targets selected
+
+            bool canSubmit = targetCount >= activeEffect.minTargets;
+            targetSelectionController.StartTargetSelection(activeEffect.predicate.TargetType, activeEffect.targetQuality, resolutionInfo, canSubmit, activeEffect.predicate.AffectedArea);
+
+            if (cbTargetCountChanged != null)
+                cbTargetCountChanged(targetCount, activeEffect.maxTargets, canSubmit);
+
+            return;
+        }
+
+        /// after all that we actually get to do the effect lol
+        activeEffect.predicate.PerformPredicate(currentTargetInfo, worldInfo, resolutionInfo);
+        activeEffectIndex += 1;
+        attemptResolution();
+    }
+
     /// <summary>
     /// Separate function for handling a tower card since its not like spells/skills
     /// </summary>
     private void resolveTower()
     {
-        if (currentTargetInfo.Tiles == null || currentTargetInfo.Tiles.Count < 1)
+        if (activeCard.Data.hasLeftBonus && isLeft)
         {
-            currentTargetInfo = new TargetInfo();
-            targetSelectionController.StartTowerPreview(activeCard.Data.TowerPrefab, resolutionInfo);
-            return;
-        }
+            if (currentTargetInfo.Tiles == null || currentTargetInfo.Tiles.Count < 1)
+            {
+                currentTargetInfo = new TargetInfo();
+                targetSelectionController.StartTowerPreview(activeCard.Data.LeftTowerPrefab, resolutionInfo);
+                return;
+            }
 
-        worldController.SpawnTower(activeCard.Data.TowerPrefab, currentTargetInfo.Tiles[0], currentTargetInfo.Direction, activeCard.Data);
+            worldController.SpawnTower(activeCard.Data.LeftTowerPrefab, currentTargetInfo.Tiles[0], currentTargetInfo.Direction);
+            removeActiveCard();
+        }
+        else
+        {
+            if (currentTargetInfo.Tiles == null || currentTargetInfo.Tiles.Count < 1)
+            {
+                currentTargetInfo = new TargetInfo();
+                targetSelectionController.StartTowerPreview(activeCard.Data.TowerPrefab, resolutionInfo);
+                return;
+            }
+
+            worldController.SpawnTower(activeCard.Data.TowerPrefab, currentTargetInfo.Tiles[0], currentTargetInfo.Direction);
+            removeActiveCard();
+        }
+    }
+
+    public void cheatCard(CardController CardController)
+    {
         removeActiveCard();
+        setActiveCard(CardController);
     }
 
     /// <summary>
