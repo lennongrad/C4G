@@ -112,6 +112,7 @@ public class VisualCardController : MonoBehaviour
     void visualUpdate()
     {
         CardName.text = data.CardTitle;
+
         CardDescription.text = data.GetDescription(worldInfo);
         TypeLine.text = data.GetTypeLine();
 

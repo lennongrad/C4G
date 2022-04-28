@@ -258,7 +258,7 @@ public class CardResolutionController : MonoBehaviour
                 return;
             }
 
-            worldController.SpawnTower(activeCard.Data.LeftTowerPrefab, currentTargetInfo.Tiles[0], currentTargetInfo.Direction);
+            worldController.SpawnTower(activeCard.Data.LeftTowerPrefab, currentTargetInfo.Tiles[0], currentTargetInfo.Direction, activeCard.Data);
             removeActiveCard();
         }
         else
@@ -270,7 +270,7 @@ public class CardResolutionController : MonoBehaviour
                 return;
             }
 
-            worldController.SpawnTower(activeCard.Data.TowerPrefab, currentTargetInfo.Tiles[0], currentTargetInfo.Direction);
+            worldController.SpawnTower(activeCard.Data.TowerPrefab, currentTargetInfo.Tiles[0], currentTargetInfo.Direction, activeCard.Data);
             removeActiveCard();
         }
     }

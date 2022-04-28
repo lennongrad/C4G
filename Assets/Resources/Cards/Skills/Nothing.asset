@@ -15,11 +15,14 @@ MonoBehaviour:
   CardTitle: Nothing
   ManaCosts: 0000000000000000000000000000000000000000
   canBuildWith: 0
+  hasLeftBonus: 1
   Type: 3
   TowerSubtypes: 0
   SpellSubtypes: 0
   SkillSubtypes: 0
   CardEffects: []
+  CardEffectsLeft: []
   TowerPrefab: {fileID: 0}
+  LeftTowerPrefab: {fileID: 0}
   references:
     version: 1

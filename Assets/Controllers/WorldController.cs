@@ -268,7 +268,7 @@ public class WorldController : MonoBehaviour
             foreach(TowerPositionData towerData in data.TowerData)
             {
                 TileController towerTile = Tiles[towerData.xPosition, towerData.yPosition];
-                if (towerTile.PresentTower == null)
+                if (towerTile.PresentTower == null && towerData.cardData != null && towerData.cardData.TowerPrefab != null)
                 {
                     SpawnTower(towerData.cardData.TowerPrefab, towerTile, towerData.directionFacing, towerData.cardData);
                 }
