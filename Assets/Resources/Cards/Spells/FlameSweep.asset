@@ -13,8 +13,14 @@ MonoBehaviour:
   m_Name: FlameSweep
   m_EditorClassIdentifier: 
   CardTitle: Flame Sweep
+<<<<<<< HEAD
+  ManaCosts: 0100000000000000000000000100000000000000
+  canBuildWith: 1
+  hasLeftBonus: 0
+=======
   ManaCosts: 0000000000000000000000000000000000000000
   canBuildWith: 1
+>>>>>>> main
   Type: 2
   TowerSubtypes: 0
   SpellSubtypes: 0
@@ -32,6 +38,7 @@ MonoBehaviour:
     predicate:
       id: 2
   TowerPrefab: {fileID: 0}
+  LeftTowerPrefab: {fileID: 0}
   references:
     version: 1
     00000000:
