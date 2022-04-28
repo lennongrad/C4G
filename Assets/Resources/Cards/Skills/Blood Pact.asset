@@ -43,6 +43,7 @@ MonoBehaviour:
       id: 4
     predicate:
       id: 5
+  CardEffectsLeft: []
   TowerPrefab: {fileID: 0}
   LeftTowerPrefab: {fileID: 0}
   references:

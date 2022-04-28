@@ -112,6 +112,9 @@ public class CardData : ScriptableObject
 
     public string GetDescription(WorldInfo worldInfo)
     {
+        if (CardEffects.Count() <= 0)
+            return "";
+
         string resultString = "";
         foreach (CardEffect effect in CardEffects)
         {
@@ -156,6 +159,9 @@ public class CardData : ScriptableObject
     /// </summary>
     public void OnInputGUI()
     {
+        if(CardEffects == null)
+            CardEffects = new List<CardEffect>();
+
         EditorGUILayout.Space(3);
         EditorGUILayout.HelpBox(GetDescription(null), MessageType.None);
         EditorGUILayout.Space(3);

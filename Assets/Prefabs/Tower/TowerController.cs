@@ -9,11 +9,6 @@ public class TowerController : MonoBehaviour
     public HPBarController hpBar;
 
     /// <summary>
-    /// The name of the prefab asset for this tower
-    /// </summary>
-    public string Name;
-
-    /// <summary>
     /// The card data of the card that created this tower.
     /// </summary>
     public CardData CardParent;
@@ -63,33 +58,7 @@ public class TowerController : MonoBehaviour
         set
         {
             performBehaviours = value;
-<<<<<<< HEAD
-
-            // change towers transparency based on whether its enabled or not
-            if (performBehaviours)
-                Cube.GetComponent<MeshRenderer>().sharedMaterial = defaultMaterial;
-            else
-            {
-                // disabled so make transparenty
-                Material material = Cube.GetComponent<MeshRenderer>().sharedMaterial;
-
-                material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
-                material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                material.SetInt("_ZWrite", 0);
-                material.DisableKeyword("_ALPHATEST_ON");
-                material.DisableKeyword("_ALPHABLEND_ON");
-                material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
-                material.renderQueue = 3000;
-
-                material.color = new Color(material.color.r, material.color.g, material.color.b, 0.1f);
-
-                Cube.GetComponent<MeshRenderer>().material = material;
-           
-                
-            }
-=======
             GetComponent<Collider>().enabled = performBehaviours;
->>>>>>> main
         }
     }
 
@@ -116,10 +85,6 @@ public class TowerController : MonoBehaviour
 
     void OnEnable()
     {
-<<<<<<< HEAD
-        defaultMaterial = Cube.GetComponent<MeshRenderer>().sharedMaterial;
-=======
->>>>>>> main
         behaviours = GetComponents<TowerBehaviour>();
         hp = baseHP;
         hpBar.Maximum = baseHP;
@@ -184,13 +149,11 @@ public class TowerController : MonoBehaviour
             cbHovered(this);
     }
 
-<<<<<<< HEAD
     public void DestroySelf()
     {
         Destroy(gameObject);
     }
-}
-=======
+
     /// <summary>
     /// Called when tower takes damage from usually a projectile
     /// </summary>
@@ -226,4 +189,3 @@ public class TowerController : MonoBehaviour
             projectileDamage(projectileColliding);
     }
 }
->>>>>>> main

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4666927718613392911}
   - component: {fileID: 6554999240240130182}
   m_Layer: 8
-  m_Name: ProjectileTower
+  m_Name: Slime1
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
