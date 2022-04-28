@@ -50,6 +50,19 @@ public class CardData : ScriptableObject
         return null;
     }
 
+    static public Sprite GetSpriteBackgroundOfManaType(Mana.ManaType type)
+    {
+        switch (type)
+        {
+            case Mana.ManaType.None: return Resources.Load<Sprite>("CostBackgrounds/none");
+            case Mana.ManaType.Clubs: return Resources.Load<Sprite>("CostBackgrounds/clubs");
+            case Mana.ManaType.Spades: return Resources.Load<Sprite>("CostBackgrounds/spades");
+            case Mana.ManaType.Hearts: return Resources.Load<Sprite>("CostBackgrounds/hearts");
+            case Mana.ManaType.Diamonds: return Resources.Load<Sprite>("CostBackgrounds/diamonds");
+        }
+        return null;
+    }
+
     static public string GetUnicodeOfManaType(Mana.ManaType type)
     {
         switch (type)

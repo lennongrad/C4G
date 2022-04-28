@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using TMPro;
 
 public class VisualCardController : MonoBehaviour
 {
     public CostIcon CostIconPrefab;
 
-    public Text CardName;
-    public Text TypeLine;
-    public Text CardDescription;
+    public TextMeshProUGUI CardName;
+    public TextMeshProUGUI TypeLine;
+    public TextMeshProUGUI CardDescription;
 
     public GameObject CardCost;
   
@@ -122,7 +123,9 @@ public class VisualCardController : MonoBehaviour
         foreach (KeyValuePair<Mana.ManaType, int> entry in data.ManaCostDictionary)
         {
             if (entry.Value >= 1)
-                cardBack.color = CardData.GetColorOfManaType(entry.Key).AdjustedBrightness(.8f);
+            {
+                cardBack.color = CardData.GetColorOfManaType(entry.Key).AdjustedBrightness(.6f);
+            }
 
             for (int i = 0; i < entry.Value; i++)
             {
@@ -158,6 +161,7 @@ public class VisualCardController : MonoBehaviour
 
         // set the color of the border of the card
         cardBorder.color = cardBorder.color.SmoothDamp(TargetBorderColor, ref targetBorderColorSpeed, .01f);
+        cardBorder.gameObject.SetActive(cardBorder.color.a > .1f);
     }
 
     public void OnHover()

@@ -55,6 +55,7 @@ public class CollectionCardController : MonoBehaviour
     {
         VisualCard.RegisterClicked(IncrementCount);
         VisualCard.RegisterRightClicked(DecrementCount);
+        VisualCard.TargetBorderColor = Color.clear;
     }
 
     void updateCountPips()

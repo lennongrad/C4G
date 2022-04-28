@@ -2243,10 +2243,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9426f5c4d26bc3045aed293c071a7b53, type: 2}
   - {fileID: 11400000, guid: 642209350b7dfea42b4ce0e2509e00f1, type: 2}
   - {fileID: 11400000, guid: 522bdea7d3db94f4ba9763d8a8abd9e6, type: 2}
-  - {fileID: 11400000, guid: eca6f7aade07fba44b00361de17ed117, type: 2}
-  - {fileID: 11400000, guid: 4a51a26d69dc64945a8cab193d3c5ab7, type: 2}
-  - {fileID: 11400000, guid: c0b6c0d105c593840800f3b94de6cd6c, type: 2}
-  - {fileID: 11400000, guid: 4c5c639f19329984dafdd101fa1548fc, type: 2}
+  - {fileID: 11400000, guid: 023e7a87cbd2d10488caa964a0b01d02, type: 2}
   DeckZone: {fileID: 11400000, guid: 6e9813d50e647c14c82a3b4473cc5f2c, type: 2}
   HandZone: {fileID: 11400000, guid: 9c1329845d257c94ca47cee3c04615bd, type: 2}
   DiscardZone: {fileID: 11400000, guid: 29a5b637ebded6e4fb210a7714446d64, type: 2}
