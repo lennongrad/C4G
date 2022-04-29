@@ -83,7 +83,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &1466299917831450512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -121,6 +121,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5498624028732580455}
     m_Modifications:
+    - target: {fileID: 1408961515545094186, guid: d354f6f65cabc1840a6e76728acbeade, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5834007478507942866, guid: d354f6f65cabc1840a6e76728acbeade, type: 3}
+      propertyPath: m_FillAmount
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6683340990587723142, guid: d354f6f65cabc1840a6e76728acbeade, type: 3}
       propertyPath: m_Name
       value: ProgressBar
@@ -209,6 +217,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7862255739792648428, guid: d354f6f65cabc1840a6e76728acbeade, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 9d50fceafab3c3c45875004544e7c7e6, type: 3}
+    - target: {fileID: 8662273813946436253, guid: d354f6f65cabc1840a6e76728acbeade, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 3ed1a676333f0d64c87f53b206901436, type: 3}
     - target: {fileID: 8662273813946436253, guid: d354f6f65cabc1840a6e76728acbeade, type: 3}
       propertyPath: m_Color.b
       value: 0.38300002

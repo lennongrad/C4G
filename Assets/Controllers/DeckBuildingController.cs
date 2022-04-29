@@ -7,6 +7,7 @@ using System;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Linq;
+using TMPro;
 
 public class DeckBuildingController : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class DeckBuildingController : MonoBehaviour
 	public Dropdown deckListDropdown;
 	public Dropdown stageListDropdown;
 	public InputField deckListName;
-	public Text deckListText;
+	public TextMeshProUGUI deckListText;
 	
 	DeckListData data = new DeckListData();
 	CardData[] allCards;
