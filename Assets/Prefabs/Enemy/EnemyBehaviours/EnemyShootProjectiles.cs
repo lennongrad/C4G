@@ -65,7 +65,7 @@ public class EnemyShootProjectiles : EnemyBehaviour
 
     protected override void Initiate()
     {
-        projectileTimer = InitialWait + AnimationWait;
+        projectileTimer = InitialWait + AnimationWait + 1;
         displacement = displacement.Rotated(-transform.localEulerAngles.y);
     }
 
@@ -73,12 +73,7 @@ public class EnemyShootProjectiles : EnemyBehaviour
     {
         TowerController targetTower = detectTower();
 
-        if (targetTower == null)
-        {
-            if (projectileTimer > AnimationWait)
-                projectileTimer -= 1;
-        }
-        else
+        if (targetTower != null)
         {
             projectileTimer -= 1;
 

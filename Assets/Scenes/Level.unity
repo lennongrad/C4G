@@ -4510,6 +4510,7 @@ MonoBehaviour:
   cardGameController: {fileID: 1104222496}
   cardResolutionController: {fileID: 607832950}
   playerResourceManager: {fileID: 11400000, guid: 8f692e2ce7bfc8b48b38c3c44f84f4d5, type: 2}
+  enemySpawnController: {fileID: 1719810934}
   HorizontalCardDisplacement: 25
   VerticalCardDisplacement: -1
   RotationCardDisplacement: 3.5

@@ -2407,13 +2407,13 @@ MonoBehaviour:
   EnemyAnimator: {fileID: 3151504034134065044}
   ProjectileInterval: 150
   InitialWait: 20
-  AnimationWait: 45
+  AnimationWait: 25
   baseDamage: 1
   ProjectileY: 0.5
   projectileTimer: 0
   rotation: 0
   range: 5
-  displacement: {x: 0, y: 0}
+  displacement: {x: 0.05, y: 0}
 --- !u!1 &3093641541102785176
 GameObject:
   m_ObjectHideFlags: 0

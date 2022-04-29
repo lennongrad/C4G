@@ -7,6 +7,8 @@ public class ProjectileController : MonoBehaviour
     // if evil, hurts towers, otherwise hurts enemies
     public bool isEvil = false;
 
+    public float acceleration = 100f;
+
     Tile.TileDirection facingDirection;
     public Tile.TileDirection FacingDirection
     {
@@ -36,7 +38,7 @@ public class ProjectileController : MonoBehaviour
     {
         if(GetComponent<Rigidbody>().velocity.magnitude < .01)
         {
-            GetComponent<Rigidbody>().AddForce(100 * transform.forward);
+            GetComponent<Rigidbody>().AddForce(acceleration * transform.forward);
         }
 
         TileController underTile;

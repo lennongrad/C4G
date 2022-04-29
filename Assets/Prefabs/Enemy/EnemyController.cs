@@ -132,10 +132,7 @@ public class EnemyController : MonoBehaviour
             enemyModel.GetComponent<Animator>().Play("BattleWalkForward");
 
         behaviours = GetComponents<EnemyBehaviour>();
-    }
 
-    void Initiate()
-    {
         foreach (EnemyBehaviour behaviour in behaviours)
         {
             behaviour.OnInitiate();
