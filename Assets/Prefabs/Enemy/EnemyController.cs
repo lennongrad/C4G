@@ -47,6 +47,11 @@ public class EnemyController : MonoBehaviour
     public float SpeedVariance = 1f;
 
     /// <summary>
+    /// How much life for the player to lose when the enemy gets through their defenses
+    /// </summary>
+    public int LifeLossAmount = 2;
+
+    /// <summary>
     /// Specifier of the enemy type. used to call the correct animation for each enemy.
     /// </summary>
     public string enemyType;
@@ -78,9 +83,13 @@ public class EnemyController : MonoBehaviour
 
             if (value.Directions.to != Tile.TileDirection.None)
                 if (value.Neighbors.ContainsKey(fromTile.Directions.to))
+                {
                     toTile = value.Neighbors[fromTile.Directions.to];
+                }
                 else
-                    cbDespawned(this);
+                {
+                    cbDespawned(this, true);
+                }
         }
     }
 
@@ -93,11 +102,11 @@ public class EnemyController : MonoBehaviour
     /// </summary>
     float randomSpeed;
 
-    Action<EnemyController> cbDespawned;
+    Action<EnemyController, bool> cbDespawned;
     /// <summary>
     /// Register a function to be called when this enemy is set to despawn from being destroyed
     /// </summary>
-    public void RegisterDespawnedCB(Action<EnemyController> cb) { cbDespawned += cb; }
+    public void RegisterDespawnedCB(Action<EnemyController, bool> cb) { cbDespawned -= cb; cbDespawned += cb; }
 
     /// <summary>
     /// Set to true when the enemy is hovered over which is then monitored in the next FixedUpdate()
@@ -143,7 +152,7 @@ public class EnemyController : MonoBehaviour
     {
         if (toTile == null || fromTile == null)
         {
-            cbDespawned(this);
+            cbDespawned(this, true);
         }
 
         if (currentTowerColliding == null)
@@ -198,7 +207,7 @@ public class EnemyController : MonoBehaviour
 
         if (hp <= 0f)
         {
-            cbDespawned(this);
+            cbDespawned(this, false);
         }
         else
         {

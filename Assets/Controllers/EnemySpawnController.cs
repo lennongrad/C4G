@@ -11,7 +11,9 @@ public class EnemySpawnController : MonoBehaviour
 {
     public TargetSelectionController targetSelectionController;
     public CycleController cycleController;
+    public PlayerResourceManager playerResourceManager;
     public GameObject startRoundButton;
+    public GameObject startCycleButton;
 
     int enemySpawnTimer = 0;
     public float beginRange = 60f;
@@ -83,6 +85,7 @@ public class EnemySpawnController : MonoBehaviour
                     {
                         spawnedAllEnemies = true;
                         startRoundButton.SetActive(true);
+                        startCycleButton.SetActive(false);
                         roundEnd.Raise();
                     }
                 }
@@ -107,6 +110,7 @@ public class EnemySpawnController : MonoBehaviour
             timeSinceRoundBegin = 0f;
             spawnedAllEnemies = false;
             startRoundButton.SetActive(false);
+            startCycleButton.SetActive(true);
 
             roundBegin.Raise();
             cycleController.OnRoundBegin();
@@ -151,8 +155,13 @@ public class EnemySpawnController : MonoBehaviour
             cbEnemySpawned(enemyController);
     }
 
-    void OnEnemyDespawn(EnemyController enemy)
+    void OnEnemyDespawn(EnemyController enemy, bool escaped)
     {
+        if (escaped)
+        {
+            playerResourceManager.LifeTotal -= enemy.LifeLossAmount;
+        }
+
         Destroy(enemy.gameObject);
         enemiesCount -= 1;
     }

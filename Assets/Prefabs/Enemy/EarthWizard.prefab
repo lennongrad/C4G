@@ -2370,6 +2370,7 @@ MonoBehaviour:
   baseHP: 5
   BaseSpeed: 1
   SpeedVariance: 0.1
+  LifeLossAmount: 2
   enemyType: Wizard
   fromTile: {fileID: 0}
   toTile: {fileID: 0}
