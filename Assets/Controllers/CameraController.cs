@@ -75,6 +75,7 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         goalScrollDistance = transform.position.y;
+        pauseMenu.SetActive(false);
     }
 
     void FixedUpdate()

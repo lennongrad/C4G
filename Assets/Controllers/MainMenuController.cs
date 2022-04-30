@@ -11,6 +11,7 @@ using System.Linq;
 public class MainMenuController : MonoBehaviour
 {
     public GameObject loadGameButton;
+    public WorldInfo worldInfo;
 
     string GetFileDirectory()
     {
@@ -36,6 +37,8 @@ public class MainMenuController : MonoBehaviour
     {
         if (File.Exists(GetFilename()))
         {
+            worldInfo.Restart();
+
             string jsonFile = File.ReadAllText(GetFilename());
             LevelSaveData data = JsonUtility.FromJson<LevelSaveData>(jsonFile);
             PlayerChoices.SelectedStage = data.savedStage;

@@ -2245,6 +2245,7 @@ MonoBehaviour:
   stageListDropdown: {fileID: 832713328}
   deckListName: {fileID: 150365419}
   deckListText: {fileID: 290699050}
+  worldInfo: {fileID: 11400000, guid: 523d4ba8fa444e24bbddab59b8085233, type: 2}
 --- !u!114 &684331962
 MonoBehaviour:
   m_ObjectHideFlags: 0
