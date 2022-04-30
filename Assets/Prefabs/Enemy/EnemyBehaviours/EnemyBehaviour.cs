@@ -24,11 +24,6 @@ abstract public class EnemyBehaviour : MonoBehaviour
     protected abstract void Initiate();
 
     /// <summary>
-    /// Used for card description
-    /// </summary>
-    public abstract string GetDescription();
-
-    /// <summary>
     /// The main EnemyController script of the enemy this is attached to
     /// </summary>
     protected EnemyController mainController;

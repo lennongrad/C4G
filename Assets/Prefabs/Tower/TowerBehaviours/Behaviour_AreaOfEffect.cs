@@ -31,6 +31,28 @@ public class Behaviour_AreaOfEffect : TowerBehaviour
     public float baseDamage = 1f;
 
     /// <summary>
+    /// Whether or not to apply a status to hit enemies
+    /// </summary>
+    public bool applyStatus = false;
+    /// <summary>
+    /// Which status to apply if so
+    /// </summary>
+    public Card.Status status;
+    /// <summary>
+    /// How long said status should last upon application
+    /// </summary>
+    public float duration;
+
+    /// <summary>
+    /// Whether or not to perform the AOE; if it should only be done on special occasions, turn this off
+    /// </summary>
+    public bool PerformAOE = true;
+    /// <summary>
+    /// Whether or not to perform the AOE when dying
+    /// </summary>
+    public bool AOEOnDeath = false;
+
+    /// <summary>
     /// Amount of time units left until the tower attacks again
     /// </summary>
     int attackTimer;
@@ -40,6 +62,7 @@ public class Behaviour_AreaOfEffect : TowerBehaviour
     /// </summary>
     public AreaOfEffect areaOfEffect;
 
+
     protected override void Initiate()
     {
         attackTimer = InitialWait + AnimationWait + 1;
@@ -47,6 +70,9 @@ public class Behaviour_AreaOfEffect : TowerBehaviour
 
     protected override void Behave()
     {
+        if (!PerformAOE)
+            return;
+
         attackTimer -= 1;
 
         if (attackTimer == AnimationWait)
@@ -86,11 +112,15 @@ public class Behaviour_AreaOfEffect : TowerBehaviour
         foreach(EnemyController enemy in affectedEnemies)
         {
             enemy.DirectDamage(baseDamage);
+
+            if (applyStatus)
+                enemy.AddStatus(status, duration);
         }
     }
 
-    public override string GetDescription()
+    protected override void Died()
     {
-        return "AOE";
+        if (AOEOnDeath)
+            Attack();
     }
 }

@@ -139,11 +139,6 @@ public class CardData : ScriptableObject
             Component[] towerBehaviourComponents = TowerPrefab.GetComponents(typeof(TowerBehaviour));
             TowerBehaviour[] towerBehaviours = new TowerBehaviour[towerBehaviourComponents.Length];
             System.Array.Copy(towerBehaviourComponents, towerBehaviours, towerBehaviourComponents.Length);
-
-            foreach (TowerBehaviour behaviour in towerBehaviours)
-            {
-                resultString += behaviour.GetDescription();
-            }
         }
 
         if (hasLeftBonus) 

@@ -91,8 +91,7 @@ public class ShootProjectile : TowerBehaviour
         projectileController.baseDamage = baseDamage;
     }
 
-    public override string GetDescription()
+    protected override void Died()
     {
-        return "Projectile";
     }
 }

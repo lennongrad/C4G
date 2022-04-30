@@ -127,9 +127,4 @@ public class EnemyShootProjectiles : EnemyBehaviour
         projectileController.SetRotation(transform.localEulerAngles.y + rotation);
         projectileController.baseDamage = baseDamage;
     }
-
-    public override string GetDescription()
-    {
-        return "Projectile";
-    }
 }

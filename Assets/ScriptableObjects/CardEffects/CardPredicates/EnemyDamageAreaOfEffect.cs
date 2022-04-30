@@ -11,8 +11,17 @@ public class EnemyDamageAreaOfEffect : CardEffectPredicate
 
     public float damage = 3f;
 
+    /// <summary>
+    /// Whether or not to apply a status to hit enemies
+    /// </summary>
     public bool applyStatus = false;
+    /// <summary>
+    /// Which status to apply if so
+    /// </summary>
     public Card.Status status;
+    /// <summary>
+    /// How long said status should last upon application
+    /// </summary>
     public float duration;
 
 #if UNITY_EDITOR

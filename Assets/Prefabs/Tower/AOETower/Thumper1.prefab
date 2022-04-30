@@ -49,7 +49,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hpBar: {fileID: 5300435639376637165}
-  Name: AOETower
   CardParent: {fileID: 0}
   baseHP: 20
   ParentTile: {fileID: 0}
@@ -173,6 +172,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6421332404865393083}
     m_Modifications:
+    - target: {fileID: 4038851426651701230, guid: cda60f1fabf8efb40a4472dc9320d3fe, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5498624028732580455, guid: cda60f1fabf8efb40a4472dc9320d3fe, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

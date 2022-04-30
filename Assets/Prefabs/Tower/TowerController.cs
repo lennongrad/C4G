@@ -95,6 +95,7 @@ public class TowerController : MonoBehaviour
         foreach (TowerBehaviour behaviour in behaviours)
         {
             behaviour.OnInitiate();
+            RegisterDespawnedCB(behaviour.OnDeath);
         }
     }
 
