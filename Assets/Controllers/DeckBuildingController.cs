@@ -17,13 +17,17 @@ public class DeckBuildingController : MonoBehaviour
 	public Dropdown stageListDropdown;
 	public InputField deckListName;
 	public TextMeshProUGUI deckListText;
+	public TextMeshProUGUI deckSizeRequirement;
 	public WorldInfo worldInfo;
-	
+
+	public int MinDeckSize = 20;
+
 	DeckListData data = new DeckListData();
 	CardData[] allCards;
 	StageData[] allStages;
 	List<string> savedDeckNames;
 	bool editingName = false;
+	int deckSize = 0;
 
 	string deckTitle = "Decklist";
 	StageData selectedStage;
@@ -98,6 +102,7 @@ public class DeckBuildingController : MonoBehaviour
 
 		// update current deck
 		deckListText.text = "";
+		deckSize = 0;
 		List<CardData> cardsList = new List<CardData>();
 
 		foreach(Transform child in collectionGrid.transform)
@@ -108,13 +113,23 @@ public class DeckBuildingController : MonoBehaviour
             {
 				string cardDescription = collectionCardController.Count + "/4 " + collectionCardController.Data.CardTitle + "\n";
 				deckListText.text += cardDescription;
+				deckSize += collectionCardController.Count;
 
-				for(int i = 0; i < collectionCardController.Count; i++)
+				for (int i = 0; i < collectionCardController.Count; i++)
                 {
 					cardsList.Add(collectionCardController.Data);
                 }
             }
         }
+
+		if(deckSize < MinDeckSize)
+		{
+			deckSizeRequirement.text = deckSize + "/20 Required";
+		}
+        else
+        {
+			deckSizeRequirement.text = "";
+		}
 
 		data.Cards = cardsList;
 	}
@@ -220,6 +235,7 @@ public class DeckBuildingController : MonoBehaviour
 			// activate the text input field and bring it to the front
 			deckListName.Select();
 			deckListName.ActivateInputField();
+			deckListDropdown.transform.SetAsFirstSibling();
 			deckListName.transform.SetAsLastSibling();
 			deckListName.text = deckTitle;
 		}
@@ -227,8 +243,9 @@ public class DeckBuildingController : MonoBehaviour
         {
 			// rename the current deck and move deck selector back to the front
 			submitDeckName(deckListName.text);
+			deckListName.transform.SetAsFirstSibling();
 			deckListDropdown.transform.SetAsLastSibling();
-        }
+		}
     }
 
 	public void OnMainMenu()
@@ -238,6 +255,9 @@ public class DeckBuildingController : MonoBehaviour
 
 	public void OnGameStart()
     {
+		if (deckSize < 20)
+			return;
+
 		PlayerChoices.DeckList = data;
 		PlayerChoices.SelectedStage = selectedStage;
 
