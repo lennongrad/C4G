@@ -11,6 +11,11 @@ public class Behaviour_AreaOfEffect : TowerBehaviour
     public Animator TowerAnimator;
 
     /// <summary>
+    /// The audio to play when shooting projectile
+    /// </summary>
+    public AudioSource attackNoise;
+
+    /// <summary>
     /// How long to wait before each attack after the last
     /// </summary>
     public int AttackInterval;
@@ -74,6 +79,8 @@ public class Behaviour_AreaOfEffect : TowerBehaviour
             return;
 
         attackTimer -= 1;
+        if (Random.Range(0, 1f) < .1f)
+            attackTimer -= 1;
 
         if (attackTimer == AnimationWait)
         {
@@ -94,6 +101,9 @@ public class Behaviour_AreaOfEffect : TowerBehaviour
     {
         if (areaOfEffect == null)
             return;
+
+        if (attackNoise != null)
+            attackNoise.Play();
 
         List<TileController> affectedTiles = MainController.ParentTile.GetAreaAroundTile(areaOfEffect, MainController.FacingDirection)[1];
 

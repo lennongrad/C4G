@@ -47,6 +47,7 @@ public class WorldController : MonoBehaviour
         water.SetActive(true);
 
         roundEnd.RegisterListener(SaveLevelData);
+        roundEnd.RegisterListener(RandomizePaths);
     }
 
     void Start()

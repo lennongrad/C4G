@@ -259,6 +259,9 @@ public class EnemyController : MonoBehaviour
 
     void towerStopAttacking(TowerController tower)
     {
+        if (this == null)
+            return;
+
         if (tower == currentTowerColliding)
         {
             if (currentTowerColliding != null)

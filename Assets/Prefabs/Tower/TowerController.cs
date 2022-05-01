@@ -7,6 +7,7 @@ using System.Linq;
 public class TowerController : MonoBehaviour
 {
     public HPBarController hpBar;
+    public Animator animator;
 
     /// <summary>
     /// The card data of the card that created this tower.
@@ -67,6 +68,15 @@ public class TowerController : MonoBehaviour
     /// </summary>
     bool hovered = false;
 
+    /// <summary>
+    /// How long to keep around object while dying
+    /// </summary>
+    public int timeToDeath = 21;
+    /// <summary>
+    /// Timer counting down in frames while it is at or below 0 HP
+    /// </summary>
+    int dyingTimer;
+
     Action<TowerController> cbHovered;
     /// <summary>
     /// Register a method to be called when the tower is hovered over by the user's mouse cursor
@@ -83,11 +93,18 @@ public class TowerController : MonoBehaviour
     /// </summary>
     public void UnregisterDespawnedCB(Action<TowerController> cb) { cbDespawned -= cb; }
 
+    Action<TowerController> cbDied;
+    /// <summary>
+    /// Register a function to be called when this tower starts to die from being destroyed
+    /// </summary>
+    public void RegisterDiedCB(Action<TowerController> cb) { cbDied -= cb; cbDied += cb; }
+
     void OnEnable()
     {
         behaviours = GetComponents<TowerBehaviour>();
         hp = baseHP;
         hpBar.Maximum = baseHP;
+        dyingTimer = timeToDeath;
     }
 
     public void Initiate()
@@ -95,7 +112,7 @@ public class TowerController : MonoBehaviour
         foreach (TowerBehaviour behaviour in behaviours)
         {
             behaviour.OnInitiate();
-            RegisterDespawnedCB(behaviour.OnDeath);
+            RegisterDiedCB(behaviour.OnDeath);
         }
     }
 
@@ -128,16 +145,37 @@ public class TowerController : MonoBehaviour
                 statusDuration.Remove(status);
         }
 
-        if (hp <= 0f)
+        if (hp <= 0f || dyingTimer < timeToDeath)
         {
-            transform.position = new Vector3(10000, 10000, 10000);
-            cbDespawned(this);
+            if (dyingTimer == timeToDeath)
+                die();
+
+            dyingTimer -= 1;
+            if (dyingTimer <= 0)
+            {
+                // actually despawn
+                cbDespawned(this);
+            }
+            else
+            {
+                // just shrinky dink
+                transform.localScale = new Vector3(1, 1, 1) * ((float)dyingTimer / (float)timeToDeath);
+            }
         }
         else
         {
             hpBar.Amount = hp;
             hpBar.gameObject.SetActive(hp < baseHP);
         }
+    }
+
+    void die()
+    {
+        if (animator != null)
+            animator.SetBool("Dead", true);
+
+        if(cbDied != null)
+            cbDied(this);
     }
 
     /// <summary>

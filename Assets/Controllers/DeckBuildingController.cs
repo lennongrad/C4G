@@ -111,7 +111,9 @@ public class DeckBuildingController : MonoBehaviour
 
 			if(collectionCardController != null && collectionCardController.Count != 0)
             {
-				string cardDescription = collectionCardController.Count + "/4 " + collectionCardController.Data.CardTitle + "\n";
+				int maxCount = collectionCardController.MaxCount;
+
+				string cardDescription = collectionCardController.Count + (maxCount != -1 ? "/" + (maxCount) : "") + " " + collectionCardController.Data.CardTitle + "\n";
 				deckListText.text += cardDescription;
 				deckSize += collectionCardController.Count;
 

@@ -13,6 +13,8 @@ public class PlayerResourceManager : ScriptableObject
         }
     }
 
+    public bool isDebug = false;
+
     int lifeTotal;
     public int LifeTotal { get { return lifeTotal; } set { lifeTotal = value; } }
 
@@ -46,6 +48,9 @@ public class PlayerResourceManager : ScriptableObject
 
     public bool CanAfford(CardData data)
     {
+        if (isDebug)
+            return true;
+
         if (data.TowerSubtypes.HasFlag(Card.TowerSubtype.Mana) && landPlaysTotal <= 0)
             return false;
 
@@ -54,6 +59,9 @@ public class PlayerResourceManager : ScriptableObject
 
     public bool CanAfford(Dictionary<Mana.ManaType, int> cost)
     {
+        if (isDebug)
+            return true;
+
         int totalUnused = 0;
         foreach (KeyValuePair<Mana.ManaType, int> kvp in cost)
         {

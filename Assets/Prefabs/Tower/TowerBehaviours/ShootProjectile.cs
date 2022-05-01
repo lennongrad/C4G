@@ -13,6 +13,11 @@ public class ShootProjectile : TowerBehaviour
     public GameObject ProjectilePrefab;
 
     /// <summary>
+    /// The audio to play when shooting projectile
+    /// </summary>
+    public AudioSource shootNoise;
+
+    /// <summary>
     /// The animator of the model that represents the tower
     /// </summary>
     public Animator TowerAnimator;
@@ -66,6 +71,8 @@ public class ShootProjectile : TowerBehaviour
     protected override void Behave()
     {
         projectileTimer -= 1;
+        if (Random.Range(0, 1f) < .1f)
+            projectileTimer -= 1;
 
         if(projectileTimer == AnimationWait)
         {
@@ -75,6 +82,9 @@ public class ShootProjectile : TowerBehaviour
         if (projectileTimer < 0)
         {
             projectileTimer += ProjectileInterval;
+
+            if (shootNoise != null)
+                shootNoise.Play();
             SpawnProjectile();
         }
     }

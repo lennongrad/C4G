@@ -11,6 +11,8 @@ public class CardGameController : MonoBehaviour
     public CardResolutionController cardResolutionController;
     public WorldInfo worldInfo;
 
+    public bool isDebug = false;
+
     /// <summary>
     /// Event that is invoked at the end of a cycle
     /// </summary>
@@ -43,6 +45,7 @@ public class CardGameController : MonoBehaviour
     void Awake()
     {
         worldInfo.cardGameController = this;
+        playerResourceManager.isDebug = isDebug;
     }
 
     void Start()

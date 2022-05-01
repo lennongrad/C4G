@@ -2457,9 +2457,10 @@ MonoBehaviour:
   playerResourceManager: {fileID: 11400000, guid: 8f692e2ce7bfc8b48b38c3c44f84f4d5, type: 2}
   cardResolutionController: {fileID: 607832950}
   worldInfo: {fileID: 11400000, guid: 523d4ba8fa444e24bbddab59b8085233, type: 2}
+  isDebug: 1
   cycleEnd: {fileID: 11400000, guid: 8f2969afe96018a488cb5c95ca53df53, type: 2}
   InitialDeck:
-  - {fileID: 11400000, guid: 4c5c639f19329984dafdd101fa1548fc, type: 2}
+  - {fileID: 11400000, guid: c5c40893830408043b911ddc01d8325b, type: 2}
   - {fileID: 11400000, guid: c0b6c0d105c593840800f3b94de6cd6c, type: 2}
   - {fileID: 11400000, guid: 4a51a26d69dc64945a8cab193d3c5ab7, type: 2}
   - {fileID: 11400000, guid: f60c7ef2666c9a24cb47ca9c5a15b205, type: 2}
