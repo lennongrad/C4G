@@ -221,6 +221,11 @@ public class TowerController : MonoBehaviour
             statusDuration[status] = duration;
     }
 
+    public bool HasStatus(Card.Status status)
+    {
+        return statusDuration.ContainsKey(status);
+    }
+
     public void OnTriggerEnter(Collider trigger)
     {
         ProjectileController projectileColliding = trigger.transform.parent.GetComponent<ProjectileController>();

@@ -15,7 +15,7 @@ MonoBehaviour:
   CardTitle: Nothing
   ManaCosts: 0000000000000000000000000000000000000000
   canBuildWith: 0
-  hasLeftBonus: 1
+  hasLeftBonus: 0
   Type: 3
   TowerSubtypes: 0
   SpellSubtypes: 0

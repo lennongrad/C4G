@@ -8,6 +8,8 @@ public class EnemyController : MonoBehaviour
 {
     public GameObject enemyModel;
     public HPBarController hpBar;
+    public ParticleSystem fireParticles;
+    public ParticleSystem iceParticles;
 
     /// <summary>
     /// The behaviours for the enemy to carry out, such as spawning materials, generating mana, etc.
@@ -171,7 +173,10 @@ public class EnemyController : MonoBehaviour
             {
                 DetectionRange();
             }*/
-            distance += randomSpeed;
+            if (!HasStatus(Card.Status.Frozen))
+                distance += randomSpeed;
+            else
+                distance += randomSpeed * .1f;
 
             Vector2 flatPosition = Vector2.Lerp(fromTile.FlatPosition(), toTile.FlatPosition(), distance);
             transform.position = new Vector3(flatPosition.x, 0, flatPosition.y);
@@ -188,11 +193,14 @@ public class EnemyController : MonoBehaviour
         Card.Status[] activeStatuses = statusDuration.Keys.ToArray();
         foreach(Card.Status status in activeStatuses)
         {
-            Debug.Log(status);
-
             statusDuration[status] -= Time.deltaTime;
             if (statusDuration[status] < 0f)
                 statusDuration.Remove(status);
+        }
+
+        if(HasStatus(Card.Status.Burn))
+        {
+            hp -= 1f * Time.deltaTime;
         }
 
         if (hovered)
@@ -288,6 +296,11 @@ public class EnemyController : MonoBehaviour
         // if doesnt already have status or existing status has shorter duration
         if (!statusDuration.ContainsKey(status) || statusDuration[status] < duration)
             statusDuration[status] = duration;
+    }
+
+    public bool HasStatus(Card.Status status)
+    {
+        return statusDuration.ContainsKey(status);
     }
 
     public void OnTriggerEnter(Collider trigger)

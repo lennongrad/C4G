@@ -15,6 +15,7 @@ MonoBehaviour:
   CardTitle: Lightning Flux
   ManaCosts: 0000000000000000000000000000000000000000
   canBuildWith: 1
+  hasLeftBonus: 1
   Type: 2
   TowerSubtypes: 0
   SpellSubtypes: 0
@@ -31,7 +32,9 @@ MonoBehaviour:
       id: 1
     predicate:
       id: 2
+  CardEffectsLeft: []
   TowerPrefab: {fileID: 0}
+  LeftTowerPrefab: {fileID: 0}
   references:
     version: 1
     00000000:

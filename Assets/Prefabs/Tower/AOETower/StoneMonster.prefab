@@ -151,13 +151,13 @@ MonoBehaviour:
   performBehaviour: 1
   TowerAnimator: {fileID: 222308439918764492}
   attackNoise: {fileID: -1014272464398767950}
-  AttackInterval: 150
+  AttackInterval: 500
   InitialWait: 0
   AnimationWait: 5
   baseDamage: 0
   applyStatus: 1
   status: 1
-  duration: 4
+  duration: 5
   PerformAOE: 1
   AOEOnDeath: 0
   areaOfEffect: {fileID: 11400000, guid: 21e71014d404aca479c973c268e47b56, type: 2}
