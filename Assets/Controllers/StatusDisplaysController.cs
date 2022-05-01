@@ -33,7 +33,6 @@ public class StatusDisplaysController : MonoBehaviour
         {
             if (iceParticles != null)
             {
-                Debug.Log("stop");
                 iceParticles.Stop();
             }
         }

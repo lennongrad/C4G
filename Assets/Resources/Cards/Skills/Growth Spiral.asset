@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1eae0be279bdd5f4caf48bac1284a64f, type: 3}
-  m_Name: Cadaver Scan
+  m_Name: Growth Spiral
   m_EditorClassIdentifier: 
-  CardTitle: Cadaver Scan
-  ManaCosts: 0100000000000000000000000000000002000000
+  CardTitle: Growth Spiral
+  ManaCosts: 0000000000000000010000000000000000000000
   canBuildWith: 1
   hasLeftBonus: 0
-  Type: 3
+  Type: 2
   TowerSubtypes: 0
   SpellSubtypes: 0
   SkillSubtypes: 0
@@ -25,13 +25,24 @@ MonoBehaviour:
     maxTargets: 0
     conditionScript: {fileID: 11500000, guid: cce934b28a7d1d44896c4bed0a3228cc, type: 3}
     qualityScript: {fileID: 0}
-    predicateScript: {fileID: 11500000, guid: dd9beea8a1397614f9c11ac0d006b09e, type: 3}
+    predicateScript: {fileID: 11500000, guid: 78d48e80a1514b142a6dbfd55aaf0e9a, type: 3}
     condition:
       id: 0
     targetQuality:
       id: 1
     predicate:
       id: 2
+  - minTargets: 0
+    maxTargets: 0
+    conditionScript: {fileID: 11500000, guid: cce934b28a7d1d44896c4bed0a3228cc, type: 3}
+    qualityScript: {fileID: 0}
+    predicateScript: {fileID: 11500000, guid: 2273637f20fc6c948a1b5302b9df75e8, type: 3}
+    condition:
+      id: 3
+    targetQuality:
+      id: 1
+    predicate:
+      id: 4
   CardEffectsLeft: []
   TowerPrefab: {fileID: 0}
   LeftTowerPrefab: {fileID: 0}
@@ -42,7 +53,16 @@ MonoBehaviour:
     00000001:
       type: {class: , ns: , asm: }
     00000002:
-      type: {class: YardReliantDraw, ns: , asm: Assembly-CSharp}
+      type: {class: ChangeResources, ns: , asm: Assembly-CSharp}
       data:
         AffectedArea: {fileID: 0}
-        perYardCard: 3
+        hpChange: 0
+        landPlaysChange: 1
+        noneManaChange: 0
+    00000003:
+      type: {class: NoCondition, ns: , asm: Assembly-CSharp}
+    00000004:
+      type: {class: DrawCards, ns: , asm: Assembly-CSharp}
+      data:
+        AffectedArea: {fileID: 0}
+        cardAmount: 1

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: IceMonster
   m_EditorClassIdentifier: 
   CardTitle: Ice Monster
-  ManaCosts: 0000000000000000000000000000000000000000
+  ManaCosts: 0100000000000000030000000000000000000000
   canBuildWith: 1
   hasLeftBonus: 0
   Type: 1

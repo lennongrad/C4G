@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SlimeSentinel
   m_EditorClassIdentifier: 
   CardTitle: Slime Sentinel
-  ManaCosts: 0000000000000000000000000000000000000000
+  ManaCosts: 0100000001000000000000000000000000000000
   canBuildWith: 1
   hasLeftBonus: 0
   Type: 1

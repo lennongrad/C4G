@@ -10,22 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1eae0be279bdd5f4caf48bac1284a64f, type: 3}
-  m_Name: Cadaver Scan
+  m_Name: Blizzard
   m_EditorClassIdentifier: 
-  CardTitle: Cadaver Scan
-  ManaCosts: 0100000000000000000000000000000002000000
+  CardTitle: Blizzard
+  ManaCosts: 0200000000000000020000000000000000000000
   canBuildWith: 1
   hasLeftBonus: 0
-  Type: 3
+  Type: 2
   TowerSubtypes: 0
   SpellSubtypes: 0
   SkillSubtypes: 0
   CardEffects:
-  - minTargets: 0
-    maxTargets: 0
+  - minTargets: 4
+    maxTargets: 4
     conditionScript: {fileID: 11500000, guid: cce934b28a7d1d44896c4bed0a3228cc, type: 3}
-    qualityScript: {fileID: 0}
-    predicateScript: {fileID: 11500000, guid: dd9beea8a1397614f9c11ac0d006b09e, type: 3}
+    qualityScript: {fileID: 11500000, guid: beb89bb9abdf38542a6b2843691b79f3, type: 3}
+    predicateScript: {fileID: 11500000, guid: f2d90d342df9683448ff85889635ae63, type: 3}
     condition:
       id: 0
     targetQuality:
@@ -40,9 +40,12 @@ MonoBehaviour:
     00000000:
       type: {class: NoCondition, ns: , asm: Assembly-CSharp}
     00000001:
-      type: {class: , ns: , asm: }
+      type: {class: Enemies_NoQuality, ns: , asm: Assembly-CSharp}
     00000002:
-      type: {class: YardReliantDraw, ns: , asm: Assembly-CSharp}
+      type: {class: DirectEnemyDamage, ns: , asm: Assembly-CSharp}
       data:
         AffectedArea: {fileID: 0}
-        perYardCard: 3
+        damage: 2
+        applyStatus: 1
+        status: 1
+        duration: 10

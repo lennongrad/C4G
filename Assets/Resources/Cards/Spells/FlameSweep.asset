@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FlameSweep
   m_EditorClassIdentifier: 
   CardTitle: Flame Sweep
-  ManaCosts: 0100000000000000000000000100000000000000
+  ManaCosts: 0100000000000000010000000000000000000000
   canBuildWith: 1
   hasLeftBonus: 0
   Type: 2

@@ -17,10 +17,13 @@ public class WorldController : MonoBehaviour
     public GameObject entrancePrefab;
     public GameObject exitPrefab;
 
+    public bool isDebug = false;
+
     public GameObject centralColumn;
     public GameObject initialManaTowerPrefab;
     public WorldInfo worldInfo;
     public StageData defaultStageData;
+    public PlayerResourceManager playerResourceManager;
 
     public GameEvent roundBegin;
     public GameEvent roundEnd;
@@ -30,6 +33,7 @@ public class WorldController : MonoBehaviour
     public TargetSelectionController targetSelectionController;
     public CardGameController cardGameController;
     public MinimapController minimapCameraController;
+    public CycleController cycleController;
     public GameObject water;
 
     public GameObject tilesContainer;
@@ -48,6 +52,9 @@ public class WorldController : MonoBehaviour
 
         roundEnd.RegisterListener(SaveLevelData);
         roundEnd.RegisterListener(RandomizePaths);
+
+        cycleController.isDebug = isDebug;
+        playerResourceManager.isDebug = isDebug;
     }
 
     void Start()

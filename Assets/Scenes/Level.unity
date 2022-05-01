@@ -1900,6 +1900,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemySpawnController: {fileID: 1719810934}
+  isDebug: 0
   playerResourceManager: {fileID: 11400000, guid: 8f692e2ce7bfc8b48b38c3c44f84f4d5, type: 2}
   cycleBegin: {fileID: 11400000, guid: 407dd6d5e16b44544a6128772020c3b9, type: 2}
   cycleEnd: {fileID: 11400000, guid: 8f2969afe96018a488cb5c95ca53df53, type: 2}
@@ -2457,7 +2458,6 @@ MonoBehaviour:
   playerResourceManager: {fileID: 11400000, guid: 8f692e2ce7bfc8b48b38c3c44f84f4d5, type: 2}
   cardResolutionController: {fileID: 607832950}
   worldInfo: {fileID: 11400000, guid: 523d4ba8fa444e24bbddab59b8085233, type: 2}
-  isDebug: 1
   cycleEnd: {fileID: 11400000, guid: 8f2969afe96018a488cb5c95ca53df53, type: 2}
   InitialDeck:
   - {fileID: 11400000, guid: c5c40893830408043b911ddc01d8325b, type: 2}
@@ -3109,10 +3109,12 @@ MonoBehaviour:
   wallPrefab: {fileID: 5995369394112928195, guid: 1913d6b5efbbcc2438c46ba357b0e5aa, type: 3}
   entrancePrefab: {fileID: 5995369394112928195, guid: cf0bcececac53124a8a7814b162c5831, type: 3}
   exitPrefab: {fileID: 5995369394112928195, guid: bc008a6c21982a247b505629d5f5da85, type: 3}
+  isDebug: 1
   centralColumn: {fileID: 1842944506}
   initialManaTowerPrefab: {fileID: 1820236534691553018, guid: d0040d1cbb8ac55448eccba5d8260d17, type: 3}
   worldInfo: {fileID: 11400000, guid: 523d4ba8fa444e24bbddab59b8085233, type: 2}
   defaultStageData: {fileID: 11400000, guid: e8e88bc2930503f4f8a18245659aba92, type: 2}
+  playerResourceManager: {fileID: 11400000, guid: 8f692e2ce7bfc8b48b38c3c44f84f4d5, type: 2}
   roundBegin: {fileID: 11400000, guid: f1f7bc1744bc9c54e89f8472d5230993, type: 2}
   roundEnd: {fileID: 11400000, guid: d21c8e630ebfc824daa0f65c7858e825, type: 2}
   cameraController: {fileID: 1853594731}
@@ -3120,6 +3122,7 @@ MonoBehaviour:
   targetSelectionController: {fileID: 306759815}
   cardGameController: {fileID: 1104222496}
   minimapCameraController: {fileID: 519495947}
+  cycleController: {fileID: 916140922}
   water: {fileID: 5822237}
   tilesContainer: {fileID: 955333173}
   towersContainer: {fileID: 765564506}

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BabyDragon
   m_EditorClassIdentifier: 
   CardTitle: Baby Dragon
-  ManaCosts: 0000000000000000000000000000000000000000
+  ManaCosts: 0100000000000000000000000300000000000000
   canBuildWith: 1
   hasLeftBonus: 0
   Type: 1

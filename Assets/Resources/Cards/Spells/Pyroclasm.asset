@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Pyroclasm
   m_EditorClassIdentifier: 
   CardTitle: Pyroclasm
-  ManaCosts: 0000000000000000000000000000000000000000
+  ManaCosts: 0100000000000000020000000100000000000000
   canBuildWith: 1
   hasLeftBonus: 0
   Type: 2

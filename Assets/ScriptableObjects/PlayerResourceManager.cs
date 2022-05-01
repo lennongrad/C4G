@@ -132,5 +132,7 @@ public class PlayerResourceManager : ScriptableObject
     public void AddMana(Mana.ManaType type, int amount)
     {
         manaTotal[type] += amount;
+        if (manaTotal[type] <= 0)
+            manaTotal[type] = 0;
     }
 }
