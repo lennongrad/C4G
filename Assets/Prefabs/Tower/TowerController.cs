@@ -138,11 +138,14 @@ public class TowerController : MonoBehaviour
         Card.Status[] activeStatuses = statusDuration.Keys.ToArray();
         foreach (Card.Status status in activeStatuses)
         {
-            Debug.Log(status);
-
             statusDuration[status] -= Time.deltaTime;
             if (statusDuration[status] < 0f)
                 statusDuration.Remove(status);
+        }
+
+        if (HasStatus(Card.Status.Burn))
+        {
+            hp -= 1f * Time.deltaTime;
         }
 
         if (hp <= 0f || dyingTimer < timeToDeath)

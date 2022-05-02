@@ -78,8 +78,10 @@ public class Behaviour_AreaOfEffect : TowerBehaviour
         if (!PerformAOE)
             return;
 
-        attackTimer -= 1;
-        if (Random.Range(0, 1f) < .1f)
+        if (!MainController.HasStatus(Card.Status.Frozen))
+            attackTimer -= 1;
+
+        if ((Random.Range(0, 1f) < .1f) || attackTimer < AnimationWait)
             attackTimer -= 1;
 
         if (attackTimer == AnimationWait)

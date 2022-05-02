@@ -152,7 +152,11 @@ public class EnemyController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (toTile == null || fromTile == null)
+        float speedModifier = 1f;
+        if (HasStatus(Card.Status.Frozen))
+            speedModifier *= .1f;
+
+            if (toTile == null || fromTile == null)
         {
             cbDespawned(this, true);
         }
@@ -173,10 +177,7 @@ public class EnemyController : MonoBehaviour
             {
                 DetectionRange();
             }*/
-            if (!HasStatus(Card.Status.Frozen))
-                distance += randomSpeed;
-            else
-                distance += randomSpeed * .1f;
+            distance += randomSpeed * speedModifier;
 
             Vector2 flatPosition = Vector2.Lerp(fromTile.FlatPosition(), toTile.FlatPosition(), distance);
             transform.position = new Vector3(flatPosition.x, 0, flatPosition.y);
@@ -187,7 +188,7 @@ public class EnemyController : MonoBehaviour
         else
         {
             // attack tower
-            currentTowerColliding.DirectDamage(1f * Time.deltaTime);
+            currentTowerColliding.DirectDamage(1f * Time.deltaTime * speedModifier);
         }
 
         Card.Status[] activeStatuses = statusDuration.Keys.ToArray();

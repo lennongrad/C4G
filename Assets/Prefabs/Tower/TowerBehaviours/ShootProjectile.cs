@@ -70,8 +70,10 @@ public class ShootProjectile : TowerBehaviour
 
     protected override void Behave()
     {
-        projectileTimer -= 1;
-        if (Random.Range(0, 1f) < .1f)
+        if (!MainController.HasStatus(Card.Status.Frozen))
+            projectileTimer -= 1;
+
+        if ((Random.Range(0, 1f) < .1f) || projectileTimer < AnimationWait)
             projectileTimer -= 1;
 
         if(projectileTimer == AnimationWait)

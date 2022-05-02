@@ -41,13 +41,17 @@ public class TargetInfo
     {
         switch (type)
         {
-            case Card.TargetType.Tiles: break;
-            case Card.TargetType.Towers: break;
+            case Card.TargetType.Tiles:
+                foreach (TileController tile in worldInfo.worldController.GetComponentsInChildren(typeof(TileController), true))
+                    Tiles.Add(tile);
+                break;
+            case Card.TargetType.Towers:
+                foreach (TowerController tower in worldInfo.worldController.GetComponentsInChildren(typeof(TowerController), true))
+                    Towers.Add(tower);
+                break;
             case Card.TargetType.Enemies:
                 foreach (EnemyController enemy in worldInfo.worldController.GetComponentsInChildren(typeof(EnemyController), true))
-                {
                     Enemies.Add(enemy);
-                }
                 break;
             case Card.TargetType.Cards: break;
         }
