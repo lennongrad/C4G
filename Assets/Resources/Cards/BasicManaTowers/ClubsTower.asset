@@ -24,5 +24,6 @@ MonoBehaviour:
   CardEffectsLeft: []
   TowerPrefab: {fileID: 1820236534691553018, guid: 26113d4449776494caf6271179d4f126, type: 3}
   LeftTowerPrefab: {fileID: 0}
+  additionalDescription: Generates <b>Clubs mana</b>.
   references:
     version: 1

@@ -57,7 +57,7 @@ public class ChangeResources : CardEffectPredicate
         }
         else if (noneManaChange < 0)
         {
-            returnString += "Lose " + -noneManaChange + " generic mana.";
+            returnString += "Lose " + -noneManaChange + " <b>Neutral</b> mana.";
         }
 
         return returnString;

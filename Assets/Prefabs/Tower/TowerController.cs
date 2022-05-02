@@ -119,10 +119,6 @@ public class TowerController : MonoBehaviour
     void FixedUpdate()
     {
         hpBar.transform.localPosition = (new Vector3(-.25f, 0, .25f)).Rotated(facingDirection);
-        //switch (FacingDirection)
-        //{
-        //    case Tile.TileDirection.Up: hpBar.localPosition = new Vector3(); break;
-        //}
 
         if (ParentTile != null)
         {
@@ -135,6 +131,7 @@ public class TowerController : MonoBehaviour
         }
         hovered = false;
 
+        // decrease duration of all statuses
         Card.Status[] activeStatuses = statusDuration.Keys.ToArray();
         foreach (Card.Status status in activeStatuses)
         {
@@ -143,9 +140,34 @@ public class TowerController : MonoBehaviour
                 statusDuration.Remove(status);
         }
 
+        // take damage from burn
         if (HasStatus(Card.Status.Burn))
         {
             hp -= 1f * Time.deltaTime;
+        }
+
+        // If has both burn and freeze then remove both and take damage
+        if (HasStatus(Card.Status.Burn) && HasStatus(Card.Status.Frozen))
+        {
+            RemoveStatus(Card.Status.Burn);
+            RemoveStatus(Card.Status.Frozen);
+
+            // "coldsnap" damage
+            hp -= 5f;
+        }
+
+        // If has both attack up and down, cancel out
+        if (HasStatus(Card.Status.Attack_Up) && HasStatus(Card.Status.Attack_Down))
+        {
+            RemoveStatus(Card.Status.Attack_Up);
+            RemoveStatus(Card.Status.Attack_Down);
+        }
+
+        // If has both defense up and down, cancel out
+        if (HasStatus(Card.Status.Defense_Up) && HasStatus(Card.Status.Defense_Down))
+        {
+            RemoveStatus(Card.Status.Defense_Up);
+            RemoveStatus(Card.Status.Defense_Down);
         }
 
         if (hp <= 0f || dyingTimer < timeToDeath)
@@ -200,9 +222,16 @@ public class TowerController : MonoBehaviour
     /// Called when tower takes damage from usually a projectile
     /// </summary>
     /// <param name="damage"></param>
-    public void DirectDamage(float damage)
+    public void DirectDamage(float damage, bool isProjectile = false)
     {
-        hp -= damage;
+        float damageModifier = 1f;
+
+        if (HasStatus(Card.Status.Defense_Up))
+            damageModifier *= 0.5f;
+        if (HasStatus(Card.Status.Defense_Down))
+            damageModifier *= 1.5f;
+
+        hp -= damage * damageModifier;
     }
 
     /// <summary>
@@ -210,7 +239,7 @@ public class TowerController : MonoBehaviour
     /// </summary>
     void projectileDamage(ProjectileController projectile)
     {
-        DirectDamage(projectile.GetDamage(this));
+        DirectDamage(projectile.GetDamage(this), true);
         projectile.Hit();
     }
 
@@ -222,6 +251,14 @@ public class TowerController : MonoBehaviour
         // if doesnt already have status or existing status has shorter duration
         if (!statusDuration.ContainsKey(status) || statusDuration[status] < duration)
             statusDuration[status] = duration;
+    }
+
+    /// <summary>
+    /// Remove a status from this object if it is active
+    /// </summary>
+    public void RemoveStatus(Card.Status status)
+    {
+        statusDuration.Remove(status);
     }
 
     public bool HasStatus(Card.Status status)

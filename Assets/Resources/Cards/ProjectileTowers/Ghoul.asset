@@ -24,5 +24,7 @@ MonoBehaviour:
   CardEffectsLeft: []
   TowerPrefab: {fileID: 8690978864182515900, guid: 1d71b54df69ab37469ef9836769a5ec6, type: 3}
   LeftTowerPrefab: {fileID: 1540968588547369608, guid: 614b5379dfdbb724f932744b433ce8ff, type: 3}
+  additionalDescription: ' Damages all enemies in front of it, or in a cross-shape
+    with <b>leftmost bonus</b>.'
   references:
     version: 1

@@ -24,5 +24,7 @@ MonoBehaviour:
   CardEffectsLeft: []
   TowerPrefab: {fileID: 5442949547794476351, guid: 872de8413406ca74480fe6848e9d232e, type: 3}
   LeftTowerPrefab: {fileID: 0}
+  additionalDescription: Explodes upon death, damaging and applying <b>Burn</b> to
+    enemies for 6s.
   references:
     version: 1

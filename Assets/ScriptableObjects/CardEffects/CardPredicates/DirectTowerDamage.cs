@@ -54,11 +54,11 @@ public class DirectTowerDamage : CardEffectPredicate
         {
             returnString += "deal " + damage + " damage to that tower";
             if (applyStatus)
-                returnString += " and";
+                returnString += " and ";
         }
 
         if (applyStatus)
-            returnString += " applies a status to that tower for " + duration + "s.";
+            returnString += "applies <b>" + CardData.GetStatusName(status) + "</b> to that tower for " + duration + "s.";
 
         return returnString;
     }

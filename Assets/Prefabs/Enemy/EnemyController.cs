@@ -170,13 +170,6 @@ public class EnemyController : MonoBehaviour
                 distance = 0f;
             }
 
-            /*
-            // Ranged enemy detection range
-            // Moved this to the shoot projectile behaviour
-            if ((this.enemyType == "Wizard" | this.enemyType == "Paladin") && isProjectileUser() && enemyModel.GetComponent<ShootProjectile>().projectileTimer < 0)
-            {
-                DetectionRange();
-            }*/
             distance += randomSpeed * speedModifier;
 
             Vector2 flatPosition = Vector2.Lerp(fromTile.FlatPosition(), toTile.FlatPosition(), distance);
@@ -188,9 +181,10 @@ public class EnemyController : MonoBehaviour
         else
         {
             // attack tower
-            currentTowerColliding.DirectDamage(1f * Time.deltaTime * speedModifier);
+            currentTowerColliding.DirectDamage(GetMeleeDamage() * Time.deltaTime * speedModifier);
         }
 
+        /// Count down status durations
         Card.Status[] activeStatuses = statusDuration.Keys.ToArray();
         foreach(Card.Status status in activeStatuses)
         {
@@ -199,11 +193,37 @@ public class EnemyController : MonoBehaviour
                 statusDuration.Remove(status);
         }
 
+        // Deal constant damage if burning
         if(HasStatus(Card.Status.Burn))
         {
             hp -= 1f * Time.deltaTime;
         }
 
+        // If has both burn and freeze then remove both and take damage
+        if(HasStatus(Card.Status.Burn) && HasStatus(Card.Status.Frozen))
+        {
+            RemoveStatus(Card.Status.Burn);
+            RemoveStatus(Card.Status.Frozen);
+
+            // "coldsnap" damage
+            hp -= 5f;
+        }
+
+        // If has both attack up and down, cancel out
+        if (HasStatus(Card.Status.Attack_Up) && HasStatus(Card.Status.Attack_Down))
+        {
+            RemoveStatus(Card.Status.Attack_Up);
+            RemoveStatus(Card.Status.Attack_Down);
+        }
+
+        // If has both defense up and down, cancel out
+        if (HasStatus(Card.Status.Defense_Up) && HasStatus(Card.Status.Defense_Down))
+        {
+            RemoveStatus(Card.Status.Defense_Up);
+            RemoveStatus(Card.Status.Defense_Down);
+        }
+
+        /// Make enemy appear larger if currently hovered
         if (hovered)
         {
             transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
@@ -214,6 +234,7 @@ public class EnemyController : MonoBehaviour
         }
         hovered = false;
 
+        // Despawn the enemy if health below 0
         if (hp <= 0f)
         {
             cbDespawned(this, false);
@@ -238,9 +259,32 @@ public class EnemyController : MonoBehaviour
     /// <summary>
     /// Call when something like a card effect deals damage directly to the enemy, rather than through a projectile
     /// </summary>
-    public void DirectDamage(float damage)
+    public void DirectDamage(float damage, bool isProjectile = false)
     {
-        hp -= damage;
+        float damageModifier = 1f;
+
+        if (HasStatus(Card.Status.Defense_Up))
+            damageModifier *= 0.5f;
+        if (HasStatus(Card.Status.Defense_Down))
+            damageModifier *= 1.5f;
+
+        hp -= damage * damageModifier;
+    }
+
+    /// <summary>
+    /// Returns the amount of damage the enemy should deal per second to intercepting targets
+    /// </summary>
+    /// <returns></returns>
+    public float GetMeleeDamage()
+    {
+        float damageAmount = 1f;
+
+        if (HasStatus(Card.Status.Attack_Up))
+            damageAmount *= 1.5f;
+        if (HasStatus(Card.Status.Attack_Down))
+            damageAmount *= 0.5f;
+
+        return damageAmount;
     }
 
     /// <summary>
@@ -248,7 +292,7 @@ public class EnemyController : MonoBehaviour
     /// </summary>
     void projectileDamage(ProjectileController projectile)
     {
-        hp -= projectile.GetDamage(this);
+        DirectDamage(projectile.GetDamage(this), true);
         projectile.Hit();
     }
 
@@ -299,6 +343,17 @@ public class EnemyController : MonoBehaviour
             statusDuration[status] = duration;
     }
 
+    /// <summary>
+    /// Remove a status from this object if it is active
+    /// </summary>
+    public void RemoveStatus(Card.Status status)
+    {
+        statusDuration.Remove(status);
+    }
+
+    /// <summary>
+    /// Returns true of the given status is active on this object
+    /// </summary>
     public bool HasStatus(Card.Status status)
     {
         return statusDuration.ContainsKey(status);

@@ -57,6 +57,9 @@ namespace Card
     {
         Burn,
         Frozen,
-        Poisoned
+        Attack_Up,
+        Attack_Down,
+        Defense_Up,
+        Defense_Down
     }
 }

@@ -49,9 +49,17 @@ public class DirectEnemyDamage : CardEffectPredicate
 
     public override string GetDescription(WorldInfo worldInfo)
     {
-        string returnString = "deal " + damage + " damage to that enemy";
+        string returnString = "";
+        if (damage > 0)
+        {
+            returnString += "deal " + damage + " damage to that enemy";
+            if (applyStatus)
+                returnString += " and ";
+        }
+
         if (applyStatus)
-            returnString += " and applies a status to that enemy for " + duration + "s.";
+            returnString += "applies <b>" + CardData.GetStatusName(status) + "</b> to that enemy for " + duration + "s.";
+
         return returnString;
     }
 }

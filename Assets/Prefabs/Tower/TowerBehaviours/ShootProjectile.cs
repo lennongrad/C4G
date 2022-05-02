@@ -100,7 +100,22 @@ public class ShootProjectile : TowerBehaviour
         GameObject projectileObject = Instantiate(ProjectilePrefab, projectilePosition, Quaternion.identity);
         ProjectileController projectileController = projectileObject.GetComponent<ProjectileController>();
         projectileController.SetRotation(transform.localEulerAngles.y + rotation);
-        projectileController.baseDamage = baseDamage;
+        projectileController.baseDamage = GetDamage();
+    }
+
+    /// <summary>
+    /// Returns how much damage the projectile should deal
+    /// </summary>
+    public float GetDamage()
+    {
+        float damageAmount = baseDamage;
+
+        if (MainController.HasStatus(Card.Status.Attack_Up))
+            damageAmount *= 1.5f;
+        if (MainController.HasStatus(Card.Status.Attack_Down))
+            damageAmount *= 0.5f;
+
+        return damageAmount;
     }
 
     protected override void Died()

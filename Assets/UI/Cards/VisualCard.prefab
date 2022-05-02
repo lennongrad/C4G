@@ -331,7 +331,7 @@ MonoBehaviour:
   m_text: Cadaver Scan
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 8df1a15684935584a8ab3962cc379c6d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -480,12 +480,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "\rLorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc posuere
-    pulvinar lorem eu fermentum. Aliquam consectetur, eros id maximus condimentum,
+    pulvinar lorem eu fermentum. <b>Aliquam consectetur</b>, eros id maximus condimentum,
     risus lacus elementum nisl, vel imperdiet neque est vel mi. Fusce et dui eget
-    orci pellentesque efficitur. Cras eu odio ut eros euismod pharetra. Suspendisse
-    nec nunc vitae dui rutrum cursus eget cursus nunc. Integer in consequat odio,
-    et dapibus quam. Etiam efficitur commodo erat, ut tempor mauris molestie vel.
-    Donec luctus vulputate convallis."
+    orci pellentesque efficitur. "
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -512,13 +509,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 6.75
+  m_fontSize: 9.15
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 6
-  m_fontSizeMax: 10
-  m_fontStyle: 1
+  m_fontSizeMax: 12
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535

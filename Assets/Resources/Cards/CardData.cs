@@ -24,6 +24,8 @@ public class CardData : ScriptableObject
     public GameObject TowerPrefab;
     public GameObject LeftTowerPrefab;
 
+    public string additionalDescription;
+
     static public Color GetColorOfManaType(Mana.ManaType type)
     {
         switch (type)
@@ -115,6 +117,20 @@ public class CardData : ScriptableObject
         }
     }
 
+    static public string GetStatusName(Card.Status status)
+    {
+        switch (status)
+        {
+            case Card.Status.Burn: return "Burn";
+            case Card.Status.Frozen: return "Frozen";
+            case Card.Status.Attack_Up: return "Attack Up";
+            case Card.Status.Attack_Down: return "Attack Down";
+            case Card.Status.Defense_Up: return "Defense Up";
+            case Card.Status.Defense_Down: return "Defense Down";
+        }
+        return "unknown status";
+    }
+
     public int ManaValue
     {
         get
@@ -125,20 +141,10 @@ public class CardData : ScriptableObject
 
     public string GetDescription(WorldInfo worldInfo)
     {
-        if (CardEffects.Count() <= 0)
-            return "";
-
         string resultString = "";
         foreach (CardEffect effect in CardEffects)
         {
             resultString += effect.GetDescription(worldInfo) + "\n";
-        }
-
-        if (TowerPrefab != null)
-        {
-            Component[] towerBehaviourComponents = TowerPrefab.GetComponents(typeof(TowerBehaviour));
-            TowerBehaviour[] towerBehaviours = new TowerBehaviour[towerBehaviourComponents.Length];
-            System.Array.Copy(towerBehaviourComponents, towerBehaviours, towerBehaviourComponents.Length);
         }
 
         if (hasLeftBonus) 
@@ -146,6 +152,7 @@ public class CardData : ScriptableObject
             resultString += "\nHas bonus when leftmost card.";
         }
 
+        resultString += additionalDescription;
 
         return resultString;
     }
@@ -173,6 +180,8 @@ public class CardData : ScriptableObject
         EditorGUILayout.Space(3);
         EditorGUILayout.HelpBox(GetDescription(null), MessageType.None);
         EditorGUILayout.Space(3);
+
+        additionalDescription = EditorGUILayout.TextField("Additional Description:", additionalDescription);
 
         GUI.backgroundColor = Color.clear;
         EditorGUILayout.BeginFoldoutHeaderGroup(true, "Card Information");

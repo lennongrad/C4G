@@ -24,5 +24,7 @@ MonoBehaviour:
   CardEffectsLeft: []
   TowerPrefab: {fileID: 5442949547794476351, guid: e41e7f5f373141b42b21884c501cd0da, type: 3}
   LeftTowerPrefab: {fileID: 0}
+  additionalDescription: Exhales fiery breath in an area in front of it, damaging
+    and applying <b>Burn</b> to enemies for 5s.
   references:
     version: 1

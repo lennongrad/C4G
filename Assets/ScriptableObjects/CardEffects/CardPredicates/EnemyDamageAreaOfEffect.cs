@@ -54,9 +54,9 @@ public class EnemyDamageAreaOfEffect : CardEffectPredicate
 
     public override string GetDescription(WorldInfo worldInfo)
     {
-        string returnString = "deal " + damage + " damage to each enemy adjacent to that tile"; 
+        string returnString = "deal " + damage + " damage to each enemy adjacent to that tile "; 
         if(applyStatus)
-            returnString += "and applies a status to those enemies for " + duration +  "s.";
+            returnString += "and applies <b>" + CardData.GetStatusName(status) + "</b> to those enemies for " + duration +  "s.";
         return returnString;
     }
 }

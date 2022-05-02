@@ -2370,7 +2370,7 @@ MonoBehaviour:
   hpBar: {fileID: 1633949222838291727}
   fireParticles: {fileID: 7705780182387695847}
   iceParticles: {fileID: 1569866021208504726}
-  baseHP: 5
+  baseHP: 10
   BaseSpeed: 1
   SpeedVariance: 0.1
   LifeLossAmount: 2
