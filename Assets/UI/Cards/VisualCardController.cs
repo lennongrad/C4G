@@ -12,6 +12,8 @@ public class VisualCardController : MonoBehaviour
     public TextMeshProUGUI CardName;
     public TextMeshProUGUI TypeLine;
     public TextMeshProUGUI CardDescription;
+    public Image cardIconImage;
+    public Image cardIconImageFrame;
 
     public GameObject CardCost;
   
@@ -113,6 +115,9 @@ public class VisualCardController : MonoBehaviour
     void visualUpdate()
     {
         CardName.text = data.CardTitle;
+        cardIconImage.sprite = data.CardImage;
+
+        cardIconImageFrame.gameObject.SetActive(data.ShowCardImageFrame);
 
         CardDescription.text = data.GetDescription(worldInfo);
         TypeLine.text = data.GetTypeLine();
@@ -120,11 +125,15 @@ public class VisualCardController : MonoBehaviour
         CardCost.transform.Clear();
 
         int addedIconsTotal = 0;
+        Mana.ManaType primaryColor = Mana.ManaType.None;
+        bool isGold = false;
         foreach (KeyValuePair<Mana.ManaType, int> entry in data.ManaCostDictionary)
         {
             if (entry.Value >= 1)
             {
-                cardBack.color = CardData.GetColorOfManaType(entry.Key).AdjustedBrightness(.6f);
+                if (primaryColor != Mana.ManaType.None && primaryColor != entry.Key)
+                    isGold = true;
+                primaryColor = entry.Key;
             }
 
             for (int i = 0; i < entry.Value; i++)
@@ -138,6 +147,11 @@ public class VisualCardController : MonoBehaviour
                 addedIconsTotal++;
             }
         }
+
+        if (isGold)
+            cardBack.color = CardData.GetGoldColor();
+        else
+            cardBack.color = CardData.GetColorOfManaType(primaryColor).AdjustedBrightness(.2f);
 
         GetComponent<RectTransform>().sizeDelta = new Vector2(Width, Height);
     }

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Nothing
   m_EditorClassIdentifier: 
   CardTitle: Nothing
+  CardImage: {fileID: 0}
   ManaCosts: 0000000000000000000000000000000000000000
   canBuildWith: 0
   hasLeftBonus: 0
@@ -24,5 +25,6 @@ MonoBehaviour:
   CardEffectsLeft: []
   TowerPrefab: {fileID: 0}
   LeftTowerPrefab: {fileID: 0}
+  additionalDescription: 
   references:
     version: 1

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Skeleton
   m_EditorClassIdentifier: 
   CardTitle: Skeleton
+  CardImage: {fileID: 21300000, guid: 0fe64d4b8467ddb43bf112041fc30a34, type: 3}
   ManaCosts: 0000000001000000000000000000000000000000
   canBuildWith: 1
   hasLeftBonus: 0

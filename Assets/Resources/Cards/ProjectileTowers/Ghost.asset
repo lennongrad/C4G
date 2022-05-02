@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Ghost
   m_EditorClassIdentifier: 
   CardTitle: Ghost
-  ManaCosts: 0100000002000000000000000200000000000000
+  CardImage: {fileID: 21300000, guid: 3d90bc9b14a51c74db3818b7b2d6a080, type: 3}
+  ManaCosts: 0100000002000000000000000000000000000000
   canBuildWith: 1
   hasLeftBonus: 0
   Type: 1

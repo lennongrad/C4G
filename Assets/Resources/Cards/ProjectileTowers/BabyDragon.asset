@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: BabyDragon
   m_EditorClassIdentifier: 
   CardTitle: Baby Dragon
+  CardImage: {fileID: 21300000, guid: f65981b3e3f83284287761b61be64fc0, type: 3}
   ManaCosts: 0100000000000000000000000300000000000000
   canBuildWith: 1
   hasLeftBonus: 0

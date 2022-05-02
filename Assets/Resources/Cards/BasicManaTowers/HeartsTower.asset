@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: HeartsTower
   m_EditorClassIdentifier: 
   CardTitle: Hearts Tower
+  CardImage: {fileID: 21300000, guid: 163c54423495bf741bc00a5614a6579a, type: 3}
+  ShowCardImageFrame: 0
   ManaCosts: 0000000000000000000000000000000000000000
   canBuildWith: 1
   hasLeftBonus: 0

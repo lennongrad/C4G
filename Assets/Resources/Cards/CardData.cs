@@ -9,6 +9,9 @@ using System.Linq;
 public class CardData : ScriptableObject
 {
     public string CardTitle = "";
+    public Sprite CardImage;
+    public bool ShowCardImageFrame = true;
+
     //public List<Mana.ManaType> ManaCost = new List<Mana.ManaType>();
     public int[] ManaCosts = { 0, 0, 0, 0, 0 };
     public bool canBuildWith = true;
@@ -32,11 +35,16 @@ public class CardData : ScriptableObject
         {
             case Mana.ManaType.None: return new Color(0.637416f, 0.681f, 0.6787649f);
             case Mana.ManaType.Clubs: return Color.green;
-            case Mana.ManaType.Spades: return new Color(.8f, 0, .8f);
+            case Mana.ManaType.Spades: return Color.blue;
             case Mana.ManaType.Hearts: return Color.red; 
-            case Mana.ManaType.Diamonds: return Color.yellow;
+            case Mana.ManaType.Diamonds: return new Color(1f, .2f, 1f);
         }
         return Color.white;
+    }
+
+    static public Color GetGoldColor()
+    {
+        return Color.yellow;
     }
 
     static public Sprite GetSpriteOfManaType(Mana.ManaType type)
@@ -149,7 +157,7 @@ public class CardData : ScriptableObject
 
         if (hasLeftBonus) 
         {
-            resultString += "\nHas bonus when leftmost card.";
+            resultString += "Has bonus when leftmost card.";
         }
 
         resultString += additionalDescription;
@@ -182,6 +190,9 @@ public class CardData : ScriptableObject
         EditorGUILayout.Space(3);
 
         additionalDescription = EditorGUILayout.TextField("Additional Description:", additionalDescription);
+
+        CardImage = (Sprite)EditorGUILayout.ObjectField("Icon:", CardImage, typeof(Sprite), false); 
+        ShowCardImageFrame = EditorGUILayout.Toggle("Show Frame:", ShowCardImageFrame);
 
         GUI.backgroundColor = Color.clear;
         EditorGUILayout.BeginFoldoutHeaderGroup(true, "Card Information");
