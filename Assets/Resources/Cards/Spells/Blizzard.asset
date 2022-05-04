@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Blizzard
   m_EditorClassIdentifier: 
   CardTitle: Blizzard
-  CardImage: {fileID: 21300000, guid: 2ddf0d36cdb6426428059d480d663c4d, type: 3}
+  CardImage: {fileID: 21300000, guid: 6479bf6468f5028468d14d8d3a683e4d, type: 3}
+  ShowCardImageFrame: 1
   ManaCosts: 0200000000000000020000000000000000000000
   canBuildWith: 1
   hasLeftBonus: 0

@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Cadaver Scan
   m_EditorClassIdentifier: 
   CardTitle: Cadaver Scan
-  CardImage: {fileID: 21300000, guid: 27f80d9562e5b5646af3dde73e967f06, type: 3}
+  CardImage: {fileID: 21300000, guid: 9a97cc096ed1895409cb5bd3f07f990e, type: 3}
+  ShowCardImageFrame: 1
   ManaCosts: 0100000000000000000000000000000002000000
   canBuildWith: 1
   hasLeftBonus: 0

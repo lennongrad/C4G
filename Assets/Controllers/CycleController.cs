@@ -32,6 +32,11 @@ public class CycleController : MonoBehaviour
     public GameEvent roundEnd;
 
     /// <summary>
+    /// Whether or not to start the next cycle without the player having to click
+    /// </summary>
+    public bool autoProgressCycle = true;
+
+    /// <summary>
     /// How many game ticks between the beginning and end of each cycle
     /// </summary>
     public int CycleDuration = 300;
@@ -51,6 +56,9 @@ public class CycleController : MonoBehaviour
         if (CycleTimer > 0 && cycleActive)
             CycleTimer -= 1;
         cycleProgressDisplay.GetComponent<ProgressBarController>().Amount = CycleDuration - CycleTimer;
+
+        if (CycleTimer <= -60 && autoProgressCycle)
+            NextCycle();
     }
 
     /// <summary>

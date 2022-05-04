@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f54c232167ed79b4b8c0c239f2eba46c, type: 3}
+  m_Name: RealRound
+  m_EditorClassIdentifier: 
+  EnemyWaves:
+  - Enemies:
+    - prefab: {fileID: 2976261093610815630, guid: 084fb09086e25c243b3b14895c9d7444, type: 3}
+      enemiesCount: 4
+      increasePerRound: 1
+      enemiesSpawned: 1
+    - prefab: {fileID: 2976261093610815630, guid: 8c4a19755e8888d4b889389d2df840b6, type: 3}
+      enemiesCount: 0
+      increasePerRound: 1
+      enemiesSpawned: 1
+    - prefab: {fileID: 2976261093610815630, guid: e6890087b6ffbd5409a767f186086141, type: 3}
+      enemiesCount: -1
+      increasePerRound: 1
+      enemiesSpawned: 3
+  - Enemies:
+    - prefab: {fileID: 2976261093610815630, guid: 084fb09086e25c243b3b14895c9d7444, type: 3}
+      enemiesCount: 3
+      increasePerRound: 0.5
+      enemiesSpawned: 0
+    - prefab: {fileID: 2976261093610815630, guid: 8c4a19755e8888d4b889389d2df840b6, type: 3}
+      enemiesCount: -1
+      increasePerRound: 0.5
+      enemiesSpawned: 0
+    - prefab: {fileID: 2976261093610815630, guid: e6890087b6ffbd5409a767f186086141, type: 3}
+      enemiesCount: -2
+      increasePerRound: 0.5
+      enemiesSpawned: 0
+    - prefab: {fileID: 2976261093610815630, guid: cc4a6f52328b0d644afaa72215443487, type: 3}
+      enemiesCount: 0
+      increasePerRound: 0.5
+      enemiesSpawned: 0
+    - prefab: {fileID: 2976261093610815630, guid: 7e03f3c9ee187c447bb0ead9096b7044, type: 3}
+      enemiesCount: -0.5
+      increasePerRound: 0.5
+      enemiesSpawned: 0
+    - prefab: {fileID: 2976261093610815630, guid: 8ad6893eb490a8a4291b4594275419a4, type: 3}
+      enemiesCount: 1
+      increasePerRound: 1
+      enemiesSpawned: 0
+    - prefab: {fileID: 2976261093610815630, guid: a5b8028d798cec849bcf70ff03689683, type: 3}
+      enemiesCount: -1
+      increasePerRound: 1
+      enemiesSpawned: 0
+    - prefab: {fileID: 2976261093610815630, guid: ce311779269ea954ca91464af2e04fba, type: 3}
+      enemiesCount: -2
+      increasePerRound: 0.5
+      enemiesSpawned: 0

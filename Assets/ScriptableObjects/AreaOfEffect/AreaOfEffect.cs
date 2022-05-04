@@ -70,9 +70,9 @@ public class AreaOfEffect : ScriptableObject, ISerializationCallbackReceiver
         { 1, Color.green }
     };
 
+#if UNITY_EDITOR
     int currentBrush = 0;
 
-#if UNITY_EDITOR
     [MenuItem("Assets/Create/ScriptableObjects/Area Of Effect 3x3", false, 10)]
     public static void CreateAreaOfEffect3x3()
     {

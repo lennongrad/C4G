@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SpadesTower
   m_EditorClassIdentifier: 
   CardTitle: Spades Tower
-  CardImage: {fileID: 21300000, guid: 3d75b65bfd882734cbab9df408af305d, type: 3}
+  CardImage: {fileID: 21300000, guid: b9d97194d45091847b49da7f7451a890, type: 3}
   ShowCardImageFrame: 0
   ManaCosts: 0000000000000000000000000000000000000000
   canBuildWith: 1

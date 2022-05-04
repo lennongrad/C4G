@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1eae0be279bdd5f4caf48bac1284a64f, type: 3}
+  m_Name: FlameSlime
+  m_EditorClassIdentifier: 
+  CardTitle: Flame Slime
+  CardImage: {fileID: 21300000, guid: e36622760c176ec41a3dd4eda91f72e2, type: 3}
+  ShowCardImageFrame: 1
+  ManaCosts: 0200000000000000000000000100000000000000
+  canBuildWith: 1
+  hasLeftBonus: 0
+  Type: 1
+  TowerSubtypes: 2
+  SpellSubtypes: 0
+  SkillSubtypes: 0
+  CardEffects: []
+  CardEffectsLeft: []
+  TowerPrefab: {fileID: 1820236534691553018, guid: 7c541cfcce2122f44958a085274ad92c, type: 3}
+  LeftTowerPrefab: {fileID: 0}
+  additionalDescription: Shoots a projectile forward that damages enemies and applies
+    <b>Burn</b> for 3s.
+  references:
+    version: 1

@@ -8,8 +8,6 @@ public class EnemyController : MonoBehaviour
 {
     public GameObject enemyModel;
     public HPBarController hpBar;
-    public ParticleSystem fireParticles;
-    public ParticleSystem iceParticles;
 
     /// <summary>
     /// The behaviours for the enemy to carry out, such as spawning materials, generating mana, etc.
@@ -54,11 +52,6 @@ public class EnemyController : MonoBehaviour
     public int LifeLossAmount = 2;
 
     /// <summary>
-    /// Specifier of the enemy type. used to call the correct animation for each enemy.
-    /// </summary>
-    public string enemyType;
-
-    /// <summary>
     /// Association of each status effect with its current duration
     /// </summary>
     Dictionary<Card.Status, float> statusDuration = new Dictionary<Card.Status, float>();
@@ -95,6 +88,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+
     /// <summary>
     /// The percentage distance along the path from the last to next tile that the enemy has travelled
     /// </summary>
@@ -116,6 +110,18 @@ public class EnemyController : MonoBehaviour
     bool hovered = false;
 
     /// <summary>
+    /// Whether the object has been recently hovered
+    /// </summary>
+    public bool IsHovered
+    {
+        get
+        {
+            return hoveredTimer >= 0;
+        }
+    }
+    int hoveredTimer = -1;
+
+    /// <summary>
     /// The current tower that the enemy is blocked from moving forward by and which it will attack.
     /// </summary>
     public TowerController currentTowerColliding;
@@ -133,14 +139,6 @@ public class EnemyController : MonoBehaviour
         cbDespawned = null;
         randomSpeed = (UnityEngine.Random.Range(0, SpeedVariance) + BaseSpeed) * .01f;
         hpBar.Maximum = baseHP;
-
-        //Walker running animation
-        if (this.enemyType == "Walker")
-            enemyModel.GetComponent<Animator>().Play("infantry_03_run");
-
-        //Wizard running animation
-        if (this.enemyType == "Wizard")
-            enemyModel.GetComponent<Animator>().Play("BattleWalkForward");
 
         behaviours = GetComponents<EnemyBehaviour>();
 
@@ -170,6 +168,8 @@ public class EnemyController : MonoBehaviour
                 distance = 0f;
             }
 
+            enemyModel.GetComponent<Animator>().SetBool("Attacking", false);
+
             distance += randomSpeed * speedModifier;
 
             Vector2 flatPosition = Vector2.Lerp(fromTile.FlatPosition(), toTile.FlatPosition(), distance);
@@ -182,6 +182,8 @@ public class EnemyController : MonoBehaviour
         {
             // attack tower
             currentTowerColliding.DirectDamage(GetMeleeDamage() * Time.deltaTime * speedModifier);
+
+            enemyModel.GetComponent<Animator>().SetBool("Attacking", true);
         }
 
         /// Count down status durations
@@ -233,6 +235,7 @@ public class EnemyController : MonoBehaviour
             transform.localScale = new Vector3(1, 1, 1);
         }
         hovered = false;
+        hoveredTimer -= 1;
 
         // Despawn the enemy if health below 0
         if (hp <= 0f)
@@ -252,6 +255,7 @@ public class EnemyController : MonoBehaviour
     public void Hover()
     {
         hovered = true;
+        hoveredTimer = 2;
         if (cbHovered != null)
             cbHovered(this);
     }
@@ -293,21 +297,13 @@ public class EnemyController : MonoBehaviour
     void projectileDamage(ProjectileController projectile)
     {
         DirectDamage(projectile.GetDamage(this), true);
-        projectile.Hit();
+        projectile.HitEnemy(this);
     }
 
     void towerStartAttacking(TowerController tower)
     {
         currentTowerColliding = tower;
         currentTowerColliding.RegisterDespawnedCB(towerStopAttacking);
-
-        //Walker attack animation
-        if (this.enemyType == "Walker")
-            enemyModel.GetComponent<Animator>().Play("infantry_04_attack_A");
-
-        //Wizard attack animation
-        if (this.enemyType == "Wizard")
-            enemyModel.GetComponent<Animator>().SetBool("Attacking", true);
     }
 
     void towerStopAttacking(TowerController tower)
@@ -322,14 +318,6 @@ public class EnemyController : MonoBehaviour
                 currentTowerColliding.UnregisterDespawnedCB(towerStopAttacking);
                 currentTowerColliding = null;
             }
-
-            //Walker running animation
-            if (this.enemyType == "Walker")
-                enemyModel.GetComponent<Animator>().Play("infantry_03_run");
-
-            //Wizard running animation
-            if (this.enemyType == "Wizard")
-                enemyModel.GetComponent<Animator>().SetBool("Attacking", false);
         }
     }
 

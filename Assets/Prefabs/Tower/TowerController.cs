@@ -69,6 +69,23 @@ public class TowerController : MonoBehaviour
     bool hovered = false;
 
     /// <summary>
+    /// Whether the object has been recently hovered
+    /// </summary>
+    public bool IsHovered
+    {
+        get
+        {
+            return hoveredTimer >= 0;
+        }
+    }
+    int hoveredTimer = -1;
+
+    /// <summary>
+    /// Whether or not the tower is just a preview tower
+    /// </summary>
+    public bool IsPreview;
+
+    /// <summary>
     /// How long to keep around object while dying
     /// </summary>
     public int timeToDeath = 21;
@@ -130,6 +147,7 @@ public class TowerController : MonoBehaviour
                 transform.localScale = new Vector3(1, 1, 1);
         }
         hovered = false;
+        hoveredTimer -= 1;
 
         // decrease duration of all statuses
         Card.Status[] activeStatuses = statusDuration.Keys.ToArray();
@@ -209,8 +227,27 @@ public class TowerController : MonoBehaviour
     public void Hover()
     {
         hovered = true;
+        hoveredTimer = 2;
         if (cbHovered != null)
             cbHovered(this);
+    }
+
+    /// <summary>
+    /// Rotate the tower to face clockwise, even after it is placed
+    /// </summary>
+    public void OnTowerRotateCW()
+    {
+        if(IsHovered)
+            this.FacingDirection = this.FacingDirection.RotatedCW();
+    }
+
+    /// <summary>
+    /// Rotate the tower to face counterclockwise, even after it is placed
+    /// </summary>
+    public void OnTowerRotateCCW()
+    {
+        if(IsHovered)
+            this.FacingDirection = this.FacingDirection.RotatedCCW();
     }
 
     public void DestroySelf()
@@ -240,7 +277,7 @@ public class TowerController : MonoBehaviour
     void projectileDamage(ProjectileController projectile)
     {
         DirectDamage(projectile.GetDamage(this), true);
-        projectile.Hit();
+        projectile.HitTower(this);
     }
 
     /// <summary>

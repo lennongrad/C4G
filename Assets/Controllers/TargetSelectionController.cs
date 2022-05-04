@@ -108,6 +108,7 @@ public class TargetSelectionController : MonoBehaviour
     {
         previewTower = (GameObject)Instantiate(towerPrefab, Vector3.zero, Quaternion.identity);
         previewTower.transform.parent = this.transform;
+        previewTower.GetComponent<TowerController>().IsPreview = true;
         previewTower.GetComponent<TowerController>().PerformBehaviours = false;
         previewTower.GetComponent<TowerController>().FacingDirection = previewDirection;
 
@@ -162,6 +163,11 @@ public class TargetSelectionController : MonoBehaviour
         }
     }
 
+    public bool CanPlaceTowerOnTile(TileController tile, TowerController tower)
+    {
+        return !(Tile.TileType.Wall | Tile.TileType.Barrier | Tile.TileType.Entrance | Tile.TileType.Exit).HasFlag(tile.Type) && tile.PresentTower == null;
+    }
+
     /// <summary>
     /// Called when the user hovers over a tile, sets it as the most recently hovered tile and moves the preview tower
     /// </summary>
@@ -171,7 +177,7 @@ public class TargetSelectionController : MonoBehaviour
             return;
 
         // i know its bad
-        if ((currentQuality == null || currentQuality.CheckQuality(tile, worldInfo, currentResolutionInfo)) && (previewTower == null || !(Tile.TileType.Wall | Tile.TileType.Barrier).HasFlag(tile.Type)))
+        if ((currentQuality == null || currentQuality.CheckQuality(tile, worldInfo, currentResolutionInfo)) && (previewTower == null || CanPlaceTowerOnTile(tile, previewTower.GetComponent<TowerController>())))
         {
             tileHovered = tile;
             AreaOfEffect previewArea = currentArea;

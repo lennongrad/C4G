@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: WeakeningWave
   m_EditorClassIdentifier: 
   CardTitle: Weakening Wave
-  CardImage: {fileID: 21300000, guid: 7ee5efdd1bc90af47855bc6d905be9d9, type: 3}
+  CardImage: {fileID: 21300000, guid: 5c58ec6aa65835841b1a6ead3fb8c3f3, type: 3}
+  ShowCardImageFrame: 1
   ManaCosts: 0100000000000000020000000000000000000000
   canBuildWith: 1
   hasLeftBonus: 0

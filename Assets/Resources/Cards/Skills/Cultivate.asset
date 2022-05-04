@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CardTitle: Cultivate
   CardImage: {fileID: 21300000, guid: b4b95bd26ca34184c97368538e9b354b, type: 3}
+  ShowCardImageFrame: 1
   ManaCosts: 0000000001000000000000000000000000000000
   canBuildWith: 1
   hasLeftBonus: 0

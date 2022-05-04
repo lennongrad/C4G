@@ -16,13 +16,15 @@ public class EnemySpawnController : MonoBehaviour
     public GameObject startCycleButton;
 
     int enemySpawnTimer = 0;
-    public float beginRange = 60f;
+    public float beginRange = 160f;
 
-    public RoundData CurrentRound;
+    public RoundData GameRound;
+    public RoundData DebugRound;
 
     public GameEvent roundBegin;
     public GameEvent roundEnd;
 
+    RoundData currentRound;
     float timeSinceRoundBegin = 0f;
     public int roundIndex = -1;
     public bool spawnedAllEnemies = true;
@@ -30,7 +32,7 @@ public class EnemySpawnController : MonoBehaviour
     int waveIndex;
     WaveData CurrentWave
     {
-        get { return CurrentRound.EnemyWaves[waveIndex]; }
+        get { return currentRound.EnemyWaves[waveIndex]; }
     }
 
     public List<TileController> activeEntrances;
@@ -55,6 +57,11 @@ public class EnemySpawnController : MonoBehaviour
 
     void Start()
     {
+        if (playerResourceManager.isDebug)
+            currentRound = DebugRound;
+        else
+            currentRound = GameRound;
+
         setWave(0);
     }
 
@@ -77,7 +84,7 @@ public class EnemySpawnController : MonoBehaviour
                 else
                 {
                     // no enemies are left to spawn in this wave
-                    if (waveIndex + 1 < CurrentRound.EnemyWaves.Count())
+                    if (waveIndex + 1 < currentRound.EnemyWaves.Count())
                     {
                         setWave(waveIndex + 1);
                     }
@@ -113,7 +120,6 @@ public class EnemySpawnController : MonoBehaviour
             startCycleButton.SetActive(true);
 
             roundBegin.Raise();
-            cycleController.OnRoundBegin();
         }
     }
 

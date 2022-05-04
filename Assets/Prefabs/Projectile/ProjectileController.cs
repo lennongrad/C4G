@@ -25,6 +25,19 @@ public class ProjectileController : MonoBehaviour
     }
 
     /// <summary>
+    /// Whether or not to apply a status to hit enemies
+    /// </summary>
+    public bool applyStatus = false;
+    /// <summary>
+    /// Which status to apply if so
+    /// </summary>
+    public Card.Status status;
+    /// <summary>
+    /// How long said status should last upon application
+    /// </summary>
+    public float duration;
+
+    /// <summary>
     /// How much damage to deal upon collision with enemy
     /// </summary>
     public float baseDamage;
@@ -98,8 +111,17 @@ public class ProjectileController : MonoBehaviour
     /// <summary>
     /// Called when the projectile collides wiht an enemy
     /// </summary>
-    public void Hit()
+    public void HitEnemy(EnemyController enemy = null)
     {
+        if (applyStatus && enemy != null)
+            enemy.AddStatus(status, duration);
+        Despawn();
+    }
+
+    public void HitTower(TowerController tower = null)
+    {
+        if (applyStatus && tower != null)
+            tower.AddStatus(status, duration);
         Despawn();
     }
 }

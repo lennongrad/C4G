@@ -12,6 +12,11 @@ public class CardGameController : MonoBehaviour
     public WorldInfo worldInfo;
 
     /// <summary>
+    /// Event that is invoked at beginning of a cycle
+    /// </summary>
+    public GameEvent roundBegin;
+
+    /// <summary>
     /// Event that is invoked at the end of a cycle
     /// </summary>
     public GameEvent cycleEnd;
@@ -43,6 +48,8 @@ public class CardGameController : MonoBehaviour
     void Awake()
     {
         worldInfo.cardGameController = this;
+        cycleEnd.RegisterListener(OnCycleEnd);
+        roundBegin.RegisterListener(OnRoundStart);
     }
 
     void Start()
@@ -52,33 +59,6 @@ public class CardGameController : MonoBehaviour
         else
             DeckZone.ConjureList(InitialDeck);
         DeckZone.Shuffle();
-
-        cycleEnd.RegisterListener(OnCycleEnd);
-
-        startRound();
-    }
-
-    /*
-    int debugTimer = 0;
-    void FixedUpdate()
-    {
-        debugTimer += 1;
-        if (debugTimer > 10)
-        {
-            debugTimer = 0;
-            Debug.Log(DiscardZone.Count);
-        }
-    }*/
-
-    /// <summary>
-    /// Called at the beginning of each round of the game
-    /// </summary>
-    void startRound()
-    {
-        while (!AtMaximumHandSize() && (DeckZone.Count > 0 || DiscardZone.Count > 0))
-        {
-            DrawCard();
-        }
     }
 
     /// <summary>
@@ -229,7 +209,15 @@ public class CardGameController : MonoBehaviour
 
     public void OnCycleEnd()
     {
-        if(true || playerResourceManager.WisdomTotal > 20 && !AtMaximumHandSize())
+        if(!AtMaximumHandSize())
+        {
+            DrawCard();
+        }
+    }
+
+    public void OnRoundStart()
+    {
+        while (!AtMaximumHandSize() && (DeckZone.Count > 0 || DiscardZone.Count > 0))
         {
             DrawCard();
         }

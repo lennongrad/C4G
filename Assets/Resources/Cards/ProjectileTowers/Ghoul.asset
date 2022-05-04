@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Ghoul
   m_EditorClassIdentifier: 
   CardTitle: Ghoul
-  CardImage: {fileID: 21300000, guid: ca14b3ce14ea4d140855b5fe421c96f7, type: 3}
+  CardImage: {fileID: 21300000, guid: 6fdc10a9eccb73447bd138e6b9551aa1, type: 3}
+  ShowCardImageFrame: 1
   ManaCosts: 0100000000000000000000000000000001000000
   canBuildWith: 1
   hasLeftBonus: 1

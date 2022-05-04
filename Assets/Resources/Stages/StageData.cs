@@ -46,12 +46,12 @@ public class StageData : ScriptableObject, ISerializationCallbackReceiver
         { Tile.TileType.Exit, Color.red },
     };
 
+#if UNITY_EDITOR
     /// <summary>
     /// The current tile type that the user has selected to draw with
     /// </summary>
     private Tile.TileType paintingType = Tile.TileType.Floor;
 
-#if UNITY_EDITOR
     public void OnInputGUI()
     {
         EditorGUILayout.BeginHorizontal();

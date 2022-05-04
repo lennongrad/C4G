@@ -23,6 +23,7 @@ public class ProduceMana : TowerBehaviour
     protected override void Initiate()
     {
         cycleBegin.RegisterListener(OnCycleBegin);
+        playerResourceManager.AddMana(manaType, 1);
     }
 
     // empty because mana tower reacts to cycles, not to behave calls

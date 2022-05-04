@@ -6,6 +6,7 @@ public class StatusDisplaysController : MonoBehaviour
 {
     public ParticleSystem fireParticles;
     public ParticleSystem iceParticles;
+    public GameObject arrowDisplay;
 
     public EnemyController enemy;
     public TowerController tower;
@@ -21,7 +22,7 @@ public class StatusDisplaysController : MonoBehaviour
         else
         {
             if (fireParticles != null)
-                fireParticles.Stop();
+                fireParticles.Stop(true);
         }
 
         if (HasStatus(Card.Status.Frozen))
@@ -33,9 +34,11 @@ public class StatusDisplaysController : MonoBehaviour
         {
             if (iceParticles != null)
             {
-                iceParticles.Stop();
+                iceParticles.Stop(true);
             }
         }
+
+        arrowDisplay.SetActive(IsHovered());
     }
 
     bool HasStatus(Card.Status status)
@@ -43,6 +46,15 @@ public class StatusDisplaysController : MonoBehaviour
         if (tower != null && tower.HasStatus(status))
             return true;
         if (enemy != null && enemy.HasStatus(status))
+            return true;
+        return false;
+    }
+
+    bool IsHovered()
+    {
+        if (tower != null && (tower.IsHovered || tower.IsPreview))
+            return true;
+        if (enemy != null && enemy.IsHovered)
             return true;
         return false;
     }

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CardTitle: Nothing
   CardImage: {fileID: 0}
+  ShowCardImageFrame: 1
   ManaCosts: 0000000000000000000000000000000000000000
   canBuildWith: 0
   hasLeftBonus: 0

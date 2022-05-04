@@ -62,10 +62,17 @@ public class ShootProjectile : TowerBehaviour
     /// </summary>
     public Vector2 displacement = new Vector2(0, 0);
 
+    public Vector2 Displacement
+    {
+        get
+        {
+            return displacement.Rotated(-transform.localEulerAngles.y);
+        }
+    }
+
     protected override void Initiate()
     {
         projectileTimer = InitialWait + AnimationWait;
-        displacement = displacement.Rotated(-transform.localEulerAngles.y);
     }
 
     protected override void Behave()
@@ -96,7 +103,7 @@ public class ShootProjectile : TowerBehaviour
     /// </summary>
     public void SpawnProjectile()
     {
-        Vector3 projectilePosition = new Vector3(transform.position.x + displacement.x, ProjectileY, transform.position.z + displacement.y);
+        Vector3 projectilePosition = new Vector3(transform.position.x + Displacement.x, ProjectileY, transform.position.z + Displacement.y);
         GameObject projectileObject = Instantiate(ProjectilePrefab, projectilePosition, Quaternion.identity);
         ProjectileController projectileController = projectileObject.GetComponent<ProjectileController>();
         projectileController.SetRotation(transform.localEulerAngles.y + rotation);

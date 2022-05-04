@@ -1906,6 +1906,7 @@ MonoBehaviour:
   cycleEnd: {fileID: 11400000, guid: 8f2969afe96018a488cb5c95ca53df53, type: 2}
   roundBegin: {fileID: 11400000, guid: f1f7bc1744bc9c54e89f8472d5230993, type: 2}
   roundEnd: {fileID: 11400000, guid: d21c8e630ebfc824daa0f65c7858e825, type: 2}
+  autoProgressCycle: 1
   CycleDuration: 300
   cycleProgressDisplay: {fileID: 1560836209}
 --- !u!1 &955333173
@@ -2458,15 +2459,16 @@ MonoBehaviour:
   playerResourceManager: {fileID: 11400000, guid: 8f692e2ce7bfc8b48b38c3c44f84f4d5, type: 2}
   cardResolutionController: {fileID: 607832950}
   worldInfo: {fileID: 11400000, guid: 523d4ba8fa444e24bbddab59b8085233, type: 2}
+  roundBegin: {fileID: 11400000, guid: d21c8e630ebfc824daa0f65c7858e825, type: 2}
   cycleEnd: {fileID: 11400000, guid: 8f2969afe96018a488cb5c95ca53df53, type: 2}
   InitialDeck:
   - {fileID: 11400000, guid: a1ad082b50e23af428f05ea5279f1726, type: 2}
   - {fileID: 11400000, guid: b45653b75226a9e4ab84db8afc4b19da, type: 2}
-  - {fileID: 11400000, guid: 4a51a26d69dc64945a8cab193d3c5ab7, type: 2}
+  - {fileID: 11400000, guid: eac80ba5fdab5ac47a2e7754486cd9d2, type: 2}
   - {fileID: 11400000, guid: f60c7ef2666c9a24cb47ca9c5a15b205, type: 2}
   - {fileID: 11400000, guid: 19fe8db01b008fd45ba8f2117ba4d12d, type: 2}
-  - {fileID: 11400000, guid: 642209350b7dfea42b4ce0e2509e00f1, type: 2}
-  - {fileID: 11400000, guid: 522bdea7d3db94f4ba9763d8a8abd9e6, type: 2}
+  - {fileID: 11400000, guid: 071320241ec16f84f8d81f9a0764b549, type: 2}
+  - {fileID: 11400000, guid: 3ad650fee3f26a441a825b831112348d, type: 2}
   DeckZone: {fileID: 11400000, guid: 6e9813d50e647c14c82a3b4473cc5f2c, type: 2}
   HandZone: {fileID: 11400000, guid: 9c1329845d257c94ca47cee3c04615bd, type: 2}
   DiscardZone: {fileID: 11400000, guid: 29a5b637ebded6e4fb210a7714446d64, type: 2}
@@ -4055,8 +4057,9 @@ MonoBehaviour:
   playerResourceManager: {fileID: 11400000, guid: 8f692e2ce7bfc8b48b38c3c44f84f4d5, type: 2}
   startRoundButton: {fileID: 1123612789}
   startCycleButton: {fileID: 1560836209}
-  beginRange: 0
-  CurrentRound: {fileID: 11400000, guid: a782bdcefe9ecc74a91dd694fe4ea44a, type: 2}
+  beginRange: 15
+  GameRound: {fileID: 11400000, guid: a693e32dc4bb74342a1dbdb6ad7b5d2c, type: 2}
+  DebugRound: {fileID: 11400000, guid: f2f4090aec37d35419e61cf9aa807705, type: 2}
   roundBegin: {fileID: 11400000, guid: f1f7bc1744bc9c54e89f8472d5230993, type: 2}
   roundEnd: {fileID: 11400000, guid: d21c8e630ebfc824daa0f65c7858e825, type: 2}
   roundIndex: -1
@@ -4942,8 +4945,8 @@ MonoBehaviour:
   HoveredCardHorizontalDisplacement: -5
   NonHoveredCardHorizontalDisplacement: 35
   HoveredCardVerticalDisplacement: 60
-  HoveredCardHorizontalScale: 1.1
-  HoveredCardVerticalScale: 1.1
+  HoveredCardHorizontalScale: 1.3
+  HoveredCardVerticalScale: 1.3
   UnplayableCardColor: {r: 0, g: 0, b: 0, a: 0}
   PlayableCardColor: {r: 0.020999968, g: 0.2627451, b: 1, a: 1}
   cardHolder: {fileID: 1688739967}

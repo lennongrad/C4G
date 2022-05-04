@@ -138,7 +138,7 @@ public class WorldController : MonoBehaviour
         RandomizePaths();
 
         // check if save data is present
-        if (File.Exists(GetFilename()))
+        if (File.Exists(GetFilename()) && !isDebug)
         {
             // load the existing save data
             LoadLevelData();
@@ -148,6 +148,8 @@ public class WorldController : MonoBehaviour
             // randomly generate some number of mana towers for the player to start with
             //RandomizeInitialTowers();
         }
+
+        roundEnd.Raise();
     }
 
     /// <summary>
