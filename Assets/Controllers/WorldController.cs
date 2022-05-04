@@ -16,6 +16,7 @@ public class WorldController : MonoBehaviour
     public GameObject wallPrefab;
     public GameObject entrancePrefab;
     public GameObject exitPrefab;
+    public GameObject deathMenu;
 
     public bool isDebug = false;
 
@@ -151,6 +152,15 @@ public class WorldController : MonoBehaviour
         }
 
         roundEnd.Raise();
+    }
+
+    void FixedUpdate()
+    {
+        if(playerResourceManager.LifeTotal <= 0)
+        {
+            Time.timeScale = 0;
+            deathMenu.SetActive(true);
+        }
     }
 
     /// <summary>

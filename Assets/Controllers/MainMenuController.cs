@@ -25,7 +25,7 @@ public class MainMenuController : MonoBehaviour
 
     public void Start()
     {
-        loadGameButton.SetActive(File.Exists(GetFilename()));
+        loadGameButton.SetActive(CanLoadGame());
     }
 
     public void StartGame()
@@ -35,7 +35,7 @@ public class MainMenuController : MonoBehaviour
 
     public void LoadGame()
     {
-        if (File.Exists(GetFilename()))
+        if (CanLoadGame())
         {
             worldInfo.Restart();
 
@@ -44,6 +44,26 @@ public class MainMenuController : MonoBehaviour
             PlayerChoices.SelectedStage = data.savedStage;
 
             SceneManager.LoadSceneAsync("Level");
+        }
+    }
+
+    public bool CanLoadGame()
+    {
+        if (!File.Exists(GetFilename()))
+            return false;
+
+        try
+        {
+            string jsonFile = File.ReadAllText(GetFilename());
+            LevelSaveData data = JsonUtility.FromJson<LevelSaveData>(jsonFile);
+            return true;
+        }
+        catch (Exception jex)
+        {
+            //Exception in parsing json
+            Console.WriteLine(jex.Message);
+            File.Delete(GetFilename());
+            return false;
         }
     }
 

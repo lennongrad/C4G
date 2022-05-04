@@ -66,13 +66,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyModel: {fileID: 350944341780192496}
   hpBar: {fileID: 1153846872171803100}
-  fireParticles: {fileID: 0}
-  iceParticles: {fileID: 0}
   baseHP: 5
   BaseSpeed: 1
   SpeedVariance: 0.2
-  LifeLossAmount: 2
-  enemyType: Walker
+  LifeLossAmount: 1
   fromTile: {fileID: 0}
   toTile: {fileID: 0}
   currentTowerColliding: {fileID: 0}
