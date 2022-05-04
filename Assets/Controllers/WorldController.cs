@@ -137,16 +137,17 @@ public class WorldController : MonoBehaviour
         // generate enemy paths
         RandomizePaths();
 
+
+
         // check if save data is present
-        if (File.Exists(GetFilename()) && !isDebug)
+        if (!isDebug && !PlayerChoices.RestartGame)
         {
             // load the existing save data
             LoadLevelData();
         }
         else
         {
-            // randomly generate some number of mana towers for the player to start with
-            //RandomizeInitialTowers();
+            DeleteLevelData();
         }
 
         roundEnd.Raise();
@@ -269,6 +270,7 @@ public class WorldController : MonoBehaviour
 
     public void LoadLevelData()
     {
+        Directory.CreateDirectory(GetFileDirectory());
         if (File.Exists(GetFilename()))
         {
             string jsonFile = File.ReadAllText(GetFilename());
@@ -284,5 +286,11 @@ public class WorldController : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void DeleteLevelData()
+    {
+        Directory.CreateDirectory(GetFileDirectory());
+        File.Delete(GetFilename());
     }
 }

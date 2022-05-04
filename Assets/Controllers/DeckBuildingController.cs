@@ -262,9 +262,9 @@ public class DeckBuildingController : MonoBehaviour
 
 		PlayerChoices.DeckList = data;
 		PlayerChoices.SelectedStage = selectedStage;
+		PlayerChoices.RestartGame = true;
 
 		worldInfo.Restart();
-		File.Delete(Application.persistentDataPath + "/SavedGames" + "/" + "mainSave" + ".json");
 		SceneManager.LoadSceneAsync("Level");
     }
 

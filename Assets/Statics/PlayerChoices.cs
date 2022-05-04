@@ -8,4 +8,5 @@ public static class PlayerChoices
 {
     public static DeckListData DeckList;
     public static StageData SelectedStage;
+    public static bool RestartGame = false;
 }
