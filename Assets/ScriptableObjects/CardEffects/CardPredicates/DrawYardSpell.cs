@@ -21,7 +21,7 @@ public class DrawYardSpell : CardEffectPredicate
 
     public override void PerformPredicate(TargetInfo targetInfo, WorldInfo worldInfo, ResolutionInfo resolutionInfo)
     {
-        worldInfo.cardGameController.DrawYardTowers(cardAmount);
+        worldInfo.cardGameController.DrawYardSpells(cardAmount);
     }
 
     public override string GetDescription(WorldInfo worldInfo)
