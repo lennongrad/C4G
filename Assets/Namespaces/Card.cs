@@ -62,4 +62,13 @@ namespace Card
         Defense_Up,
         Defense_Down
     }
+
+    public enum SortOption
+    {
+         Mana,
+         Towers,
+         Spells,
+         Skills,
+         All
+    }
 }

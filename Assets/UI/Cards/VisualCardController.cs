@@ -125,33 +125,22 @@ public class VisualCardController : MonoBehaviour
         CardCost.transform.Clear();
 
         int addedIconsTotal = 0;
-        Mana.ManaType primaryColor = Mana.ManaType.None;
-        bool isGold = false;
         foreach (KeyValuePair<Mana.ManaType, int> entry in data.ManaCostDictionary)
         {
-            if (entry.Value >= 1)
-            {
-                if (primaryColor != Mana.ManaType.None && primaryColor != entry.Key)
-                    isGold = true;
-                primaryColor = entry.Key;
-            }
-
             for (int i = 0; i < entry.Value; i++)
             {
                 CostIcon newIcon = Instantiate(CostIconPrefab, CardCost.transform.position, Quaternion.identity);
                 newIcon.Type = entry.Key;
                 newIcon.transform.SetParent(CardCost.transform);
                 newIcon.transform.localPosition = new Vector3(-newIcon.GetComponent<RectTransform>().rect.width * (data.ManaValue - addedIconsTotal - 1), 0, 0);
-                //newIcon.transform.eulerAngles = currentEulerAngles;
-
                 addedIconsTotal++;
             }
         }
 
-        if (isGold)
+        if (data.IsGold)
             cardBack.color = CardData.GetGoldColor();
         else
-            cardBack.color = CardData.GetColorOfManaType(primaryColor).AdjustedBrightness(.2f);
+            cardBack.color = CardData.GetColorOfManaType(data.PrimaryColor).AdjustedBrightness(.2f);
 
         GetComponent<RectTransform>().sizeDelta = new Vector2(Width, Height);
     }

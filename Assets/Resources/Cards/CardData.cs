@@ -147,6 +147,58 @@ public class CardData : ScriptableObject
         }
     }
 
+    public bool FitsSort(Card.SortOption sortOption)
+    {
+        switch (sortOption)
+        {
+            case Card.SortOption.All: return true;
+            case Card.SortOption.Mana: return TowerSubtypes.HasFlag(Card.TowerSubtype.Mana);
+            case Card.SortOption.Towers: return Type == Card.CardType.Tower && !TowerSubtypes.HasFlag(Card.TowerSubtype.Mana);
+            case Card.SortOption.Skills: return Type == Card.CardType.Skill;
+            case Card.SortOption.Spells: return Type == Card.CardType.Spell;
+        }
+        return false;
+    }
+
+    Mana.ManaType primaryColor = Mana.ManaType.None;
+    bool haveSetPrimary = false;
+    public Mana.ManaType PrimaryColor
+    {
+        get
+        {
+            if (!haveSetPrimary)
+                UpdatePrimaryColor();
+            return primaryColor;
+        }
+    }
+
+    bool isGold = false;
+    public bool IsGold
+    {
+        get
+        {
+            if (!haveSetPrimary)
+                UpdatePrimaryColor();
+            return isGold;
+        }
+    }
+
+    void UpdatePrimaryColor()
+    {
+        primaryColor = Mana.ManaType.None;
+        isGold = false;
+        foreach (KeyValuePair<Mana.ManaType, int> entry in ManaCostDictionary)
+        {
+            if (entry.Value >= 1)
+            {
+                if (primaryColor != Mana.ManaType.None && primaryColor != entry.Key)
+                    isGold = true;
+                primaryColor = entry.Key;
+            }
+        }
+        haveSetPrimary = true;
+    }
+
     public string GetDescription(WorldInfo worldInfo)
     {
         string resultString = "";
