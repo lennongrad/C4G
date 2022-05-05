@@ -13,6 +13,7 @@ public class DeckBuildingController : MonoBehaviour
 {
 	public GameObject collectionPrefab;
 	public GameObject collectionGrid;
+	public CardTabsController cardTabsController;
 	public Dropdown deckListDropdown;
 	public Dropdown stageListDropdown;
 	public InputField deckListName;
@@ -46,10 +47,16 @@ public class DeckBuildingController : MonoBehaviour
 		savedDeckNames = Directory.GetFiles(GetFileDirectory(), "*.json").Select(i => i.Split('\\').Last().Split('.').First()).ToList();
 	}
 
+	void Awake()
+	{
+		cardTabsController.RegisterChangeSortOptionCB(updateDeckCollection);
+	}
+
 	void Start()
 	{
 		// initialize card list
 		allCards = Resources.LoadAll("Cards", typeof(CardData)).Cast<CardData>().Where(n => n.canBuildWith).ToArray();
+		Array.Sort(allCards, (card1, card2) => card1.PrimaryColor.CompareTo(card2.PrimaryColor) + card1.IsGold.CompareTo(card2.IsGold) * 5);
 
 		// initialize stage dropdown
 		allStages = Resources.LoadAll("Stages", typeof(StageData)).Cast<StageData>().ToArray();
@@ -69,6 +76,8 @@ public class DeckBuildingController : MonoBehaviour
 
 		populateDeckCollection();
 		loadDeck();
+
+		cardTabsController.DeckCollectionReady();
 	}
 
 	void populateDeckCollection()
@@ -83,6 +92,19 @@ public class DeckBuildingController : MonoBehaviour
 			collectionController.RegisterCountChanged((card) => updateDeckList());
 		}
 	}
+
+	void updateDeckCollection(Card.SortOption sortingOption)
+    {
+		foreach(Transform child in collectionGrid.transform)
+		{
+			CollectionCardController collectionCardController = child.GetComponent<CollectionCardController>();
+
+			if (collectionCardController != null)
+			{
+				collectionCardController.gameObject.SetActive(collectionCardController.Data.FitsSort(sortingOption));
+			}
+		}
+    }
 
 	void updateDeckList()
 	{
