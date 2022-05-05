@@ -3614,7 +3614,7 @@ MonoBehaviour:
   entrancePrefab: {fileID: 5995369394112928195, guid: cf0bcececac53124a8a7814b162c5831, type: 3}
   exitPrefab: {fileID: 5995369394112928195, guid: bc008a6c21982a247b505629d5f5da85, type: 3}
   deathMenu: {fileID: 543767764}
-  isDebug: 1
+  isDebug: 0
   centralColumn: {fileID: 1842944506}
   initialManaTowerPrefab: {fileID: 1820236534691553018, guid: d0040d1cbb8ac55448eccba5d8260d17, type: 3}
   worldInfo: {fileID: 11400000, guid: 523d4ba8fa444e24bbddab59b8085233, type: 2}
