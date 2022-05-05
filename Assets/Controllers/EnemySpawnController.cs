@@ -73,7 +73,7 @@ public class EnemySpawnController : MonoBehaviour
             if (UnityEngine.Random.Range(0f, beginRange) < timeSinceRoundBegin)
                 enemySpawnTimer += 1;
 
-            if (enemySpawnTimer > (20 + enemiesCount * 10))
+            if (enemySpawnTimer > (20 + enemiesCount * 60))
             {
                 if (CurrentWave.Enemies.Where(x => x.canSpawnMore(roundIndex)).Count() >= 1)
                 {
@@ -86,6 +86,7 @@ public class EnemySpawnController : MonoBehaviour
                     // no enemies are left to spawn in this wave
                     if (waveIndex + 1 < currentRound.EnemyWaves.Count())
                     {
+                        timeSinceRoundBegin = 0;
                         setWave(waveIndex + 1);
                     }
                     else if (enemiesCount == 0)

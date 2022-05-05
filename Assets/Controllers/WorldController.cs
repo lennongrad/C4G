@@ -138,8 +138,6 @@ public class WorldController : MonoBehaviour
         // generate enemy paths
         RandomizePaths();
 
-
-
         // check if save data is present
         if (!isDebug && !PlayerChoices.RestartGame)
         {

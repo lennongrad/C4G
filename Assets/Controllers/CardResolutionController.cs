@@ -304,7 +304,17 @@ public class CardResolutionController : MonoBehaviour
     private void removeActiveCard()
     {
         if(ResolutionZone.Remove(activeCard))
-            DiscardZone.Add(activeCard);
+        {
+            if (!activeCard.Data.TowerSubtypes.HasFlag(Card.TowerSubtype.Mana))
+            {
+                DiscardZone.Add(activeCard);
+            }
+            else
+            {
+                activeCard.gameObject.SetActive(false);
+                Destroy(activeCard.gameObject);
+            }
+        }
 
         activeCard = null;
 

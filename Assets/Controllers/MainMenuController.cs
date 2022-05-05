@@ -38,6 +38,7 @@ public class MainMenuController : MonoBehaviour
         if (CanLoadGame())
         {
             worldInfo.Restart();
+            PlayerChoices.RestartGame = false;
 
             string jsonFile = File.ReadAllText(GetFilename());
             LevelSaveData data = JsonUtility.FromJson<LevelSaveData>(jsonFile);

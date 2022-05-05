@@ -15,7 +15,7 @@ MonoBehaviour:
   CardTitle: Baby Purple Dragon
   CardImage: {fileID: 21300000, guid: 270c030819cb5f94e819921c37f1f7da, type: 3}
   ShowCardImageFrame: 1
-  ManaCosts: 0100000000000000000000000000000003000000
+  ManaCosts: 0300000000000000000000000000000003000000
   canBuildWith: 1
   hasLeftBonus: 0
   Type: 1
