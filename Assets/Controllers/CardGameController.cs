@@ -197,9 +197,9 @@ public class CardGameController : MonoBehaviour
                 playerResourceManager.PayCost(cardController.Data);
 
                 if(isLeft)
-                    cardResolutionController.PlayCard(cardController);
-                else
                     cardResolutionController.PlayLeft(cardController);
+                else
+                    cardResolutionController.PlayCard(cardController);
 
                 return true;
             }

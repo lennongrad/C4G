@@ -106,6 +106,11 @@ public class TargetSelectionController : MonoBehaviour
 
     public void StartTowerPreview(GameObject towerPrefab, ResolutionInfo resolutionInfo)
     {
+        if (previewTower != null)
+        {
+            Destroy(previewTower);
+        }
+
         previewTower = (GameObject)Instantiate(towerPrefab, Vector3.zero, Quaternion.identity);
         previewTower.transform.parent = this.transform;
         previewTower.GetComponent<TowerController>().IsPreview = true;

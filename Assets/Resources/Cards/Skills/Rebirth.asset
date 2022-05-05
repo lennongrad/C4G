@@ -17,7 +17,7 @@ MonoBehaviour:
   ShowCardImageFrame: 1
   ManaCosts: 0000000001000000000000000000000001000000
   canBuildWith: 0
-  hasLeftBonus: 0
+  hasLeftBonus: 1
   Type: 3
   TowerSubtypes: 0
   SpellSubtypes: 0
@@ -28,14 +28,26 @@ MonoBehaviour:
     overrideDescription: 
     conditionScript: {fileID: 11500000, guid: cce934b28a7d1d44896c4bed0a3228cc, type: 3}
     qualityScript: {fileID: 0}
-    predicateScript: {fileID: 11500000, guid: 6743f16ef36d96d49b3e0ebc594ffd99, type: 3}
+    predicateScript: {fileID: 11500000, guid: 9349b14b78886d5408c866f2f01bacc2, type: 3}
     condition:
       id: 0
     targetQuality:
       id: 1
     predicate:
       id: 2
-  CardEffectsLeft: []
+  CardEffectsLeft:
+  - minTargets: 0
+    maxTargets: 0
+    overrideDescription: 
+    conditionScript: {fileID: 11500000, guid: cce934b28a7d1d44896c4bed0a3228cc, type: 3}
+    qualityScript: {fileID: 0}
+    predicateScript: {fileID: 11500000, guid: 6743f16ef36d96d49b3e0ebc594ffd99, type: 3}
+    condition:
+      id: 3
+    targetQuality:
+      id: 1
+    predicate:
+      id: 4
   TowerPrefab: {fileID: 0}
   LeftTowerPrefab: {fileID: 0}
   additionalDescription: 
@@ -46,6 +58,13 @@ MonoBehaviour:
     00000001:
       type: {class: , ns: , asm: }
     00000002:
+      type: {class: DrawYardTower, ns: , asm: Assembly-CSharp}
+      data:
+        AffectedArea: {fileID: 0}
+        cardAmount: 1
+    00000003:
+      type: {class: NoCondition, ns: , asm: Assembly-CSharp}
+    00000004:
       type: {class: Revive, ns: , asm: Assembly-CSharp}
       data:
         AffectedArea: {fileID: 0}
